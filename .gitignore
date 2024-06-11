@@ -7,3 +7,5 @@
 /Restaurant/obj
 /Restaurant.Domain/bin/Debug/net8.0
 /Restaurant.Domain/obj
+/Restaurant.Core/obj
+/Restaurant.Core/bin/Debug/net8.0
