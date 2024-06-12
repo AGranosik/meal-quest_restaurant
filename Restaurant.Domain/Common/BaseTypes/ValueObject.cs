@@ -1,14 +1,14 @@
 ﻿namespace Restaurant.Domain.Common.BaseTypes
 {
-    public abstract class ValueType<T> where T : ValueType<T>
+    public abstract class ValueObject<T> where T : ValueObject<T>
     {
         public abstract override bool Equals(object obj);
-        public static bool operator ==(ValueType<T> left, ValueType<T> right)
+        public static bool operator ==(ValueObject<T> left, ValueObject<T> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(ValueType<T> left, ValueType<T> right)
+        public static bool operator !=(ValueObject<T> left, ValueObject<T> right)
         {
             return !(left == right);
         }

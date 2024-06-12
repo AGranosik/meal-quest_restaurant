@@ -1,7 +1,7 @@
 ﻿namespace Restaurant.Domain.Common.BaseTypes
 {
     public abstract class Entity<TKey>(TKey id)
-        where TKey : ValueType<TKey>
+        where TKey : ValueObject<TKey>
     {
         public TKey Id { get; protected set; } = id;
 
