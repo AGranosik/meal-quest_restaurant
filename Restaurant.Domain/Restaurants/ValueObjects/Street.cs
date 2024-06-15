@@ -5,11 +5,16 @@ namespace Restaurant.Domain.Restaurants.ValueObjects
 {
     public class Street(string streetName) : ValueObject<Street>
     {
-        private readonly NotEmptyString _streetName = streetName;
+        public readonly NotEmptyString StreetName = streetName;
 
         public override bool Equals(object obj)
         {
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            Street other = obj as Street;
+            if (other == null) return false;
+            return StreetName == other.StreetName;
         }
     }
 }

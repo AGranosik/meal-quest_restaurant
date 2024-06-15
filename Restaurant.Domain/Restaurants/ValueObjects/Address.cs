@@ -12,6 +12,4 @@ namespace Restaurant.Domain.Restaurants.ValueObjects
             throw new NotImplementedException();
         }
     }
-
-
 }

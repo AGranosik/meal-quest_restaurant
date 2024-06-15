@@ -4,47 +4,47 @@ using Restaurant.Domain.Restaurants.ValueObjects;
 namespace Restaurant.UnitTests.Restaurants.ValueObjects
 {
     [TestFixture]
-    public class StreetTests
+    public class CityTests
     {
         [Test]
         public void CannotBeEmpty_ThrowsException()
         {
-            var action = () => new Street(string.Empty);
+            var action = () => new City(string.Empty);
             action.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void CannotBeNull_ThrowsException()
         {
-            var action = () => new Street(null);
+            var action = () => new City(null);
             action.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void CannotBeWhiteSpace_ThrowsException()
         {
-            var action = () => new Street(" ");
+            var action = () => new City(" ");
             action.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void CannotBeMultipleWhiteSpace_ThrowsException()
         {
-            var action = () => new Street("    ");
+            var action = () => new City("    ");
             action.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void DifferentStreetNamesNotEqual_False()
         {
-            (new Street("test") == new Street("different name")).Should().BeFalse();
+            (new City("test") == new City("different name")).Should().BeFalse();
         }
 
         [Test]
         public void SameName_True()
         {
             var name = "test name";
-            (new Street(name) == new Street(name))
+            (new City(name) == new City(name))
                 .Should().BeTrue();
         }
     }
