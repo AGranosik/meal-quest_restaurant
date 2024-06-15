@@ -5,7 +5,7 @@ namespace Restaurant.Domain.Restaurants.ValueObjects
 {
     public class Street(string streetName) : ValueObject<Street>
     {
-        public readonly NotEmptyString StreetName = streetName;
+        public NotEmptyString StreetName { get; } = streetName;
 
         public override bool Equals(object obj)
         {

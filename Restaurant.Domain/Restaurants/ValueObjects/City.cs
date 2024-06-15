@@ -3,9 +3,10 @@ using Restaurant.Domain.Common.BaseTypes;
 
 namespace Restaurant.Domain.Restaurants.ValueObjects
 {
-    public class City(string name) : ValueObject<City>
+    public class City(string cityName) : ValueObject<City>
     {
-        public readonly NotEmptyString CityName = name;
+        public NotEmptyString CityName { get; } = cityName;
+
         public override bool Equals(object? obj)
         {
             if (obj is null) return false;
