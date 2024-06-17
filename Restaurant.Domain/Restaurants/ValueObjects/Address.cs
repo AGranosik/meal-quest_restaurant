@@ -1,12 +1,12 @@
-﻿using Restaurant.Core.SimpleTypes;
-using Restaurant.Domain.Common.BaseTypes;
+﻿using Restaurant.Domain.Common.BaseTypes;
 
 namespace Restaurant.Domain.Restaurants.ValueObjects
 {
-    public class Address(Street street, City city) : ValueObject<Address>
+    public class Address(Street street, City city, Coordinates coordinates) : ValueObject<Address>
     {
         public Street Street { get; } = street ?? throw new ArgumentNullException();
         public City City { get; } = city ?? throw new ArgumentNullException();
+        public Coordinates Coordinates { get; } = coordinates ?? throw new ArgumentException();
 
         public override bool Equals(object obj)
         {
@@ -15,7 +15,7 @@ namespace Restaurant.Domain.Restaurants.ValueObjects
 
             Address? other = obj as Address;
             if (other == null) return false;
-            return Street == other.Street && City == other.City;
+            return Street == other.Street && City == other.City && Coordinates == other.Coordinates;
         }
     }
 }
