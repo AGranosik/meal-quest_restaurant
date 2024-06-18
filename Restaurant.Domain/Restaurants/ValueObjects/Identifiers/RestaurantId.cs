@@ -1,6 +1,6 @@
 ﻿using Restaurant.Domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Restaurants.ValueObjects
+namespace Restaurant.Domain.Restaurants.ValueObjects.Identifiers
 {
     public class RestaurantId(int id) : ValueObject<RestaurantId>
     {
