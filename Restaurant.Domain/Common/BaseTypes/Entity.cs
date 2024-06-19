@@ -3,7 +3,7 @@
     public abstract class Entity<TKey>(TKey id)
         where TKey : ValueObject<TKey>
     {
-        public TKey Id { get; protected set; } = id;
+        public TKey Id { get; protected set; } = id ?? throw new ArgumentNullException(typeof(TKey).Name);
 
         public override bool Equals(object obj)
         {
