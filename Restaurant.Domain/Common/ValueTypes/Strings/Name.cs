@@ -1,7 +1,7 @@
 ﻿using Restaurant.Core.SimpleTypes;
 using Restaurant.Domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Restaurants.ValueObjects
+namespace Restaurant.Domain.Common.ValueTypes.Strings
 {
     public class Name(string name) : ValueObject<Name>
     {

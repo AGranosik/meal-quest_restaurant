@@ -35,13 +35,13 @@ namespace Restaurant.UnitTests.Restaurants.ValueObjects
         }
 
         [Test]
-        public void DifferentStreetNamesNotEqual_False()
+        public void Equality_DifferentStreetNamesNotEqual_False()
         {
             (new City("test") == new City("different name")).Should().BeFalse();
         }
 
         [Test]
-        public void SameName_True()
+        public void Equality_SameName_True()
         {
             var name = "test name";
             (new City(name) == new City(name))

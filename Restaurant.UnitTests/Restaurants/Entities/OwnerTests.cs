@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Restaurant.Domain.Common.ValueTypes.Strings;
 using Restaurant.Domain.Restaurants.Entities;
 using Restaurant.Domain.Restaurants.ValueObjects;
 using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
