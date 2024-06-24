@@ -2,6 +2,7 @@
 using Restaurant.Core.Extensions;
 using Restaurant.Domain.Common.BaseTypes;
 using Restaurant.Domain.Common.ValueTypes.Numeric;
+using Restaurant.Domain.Common.ValueTypes.Strings;
 
 namespace Restaurant.Domain.Menus.ValueObjects
 {
@@ -14,7 +15,7 @@ namespace Restaurant.Domain.Menus.ValueObjects
         public List<Ingredient> Ingredients { get; }
         public Price Price { get; }
 
-        public Meal(List<Ingredient> ingredients, Price price)
+        public Meal(List<Ingredient> ingredients, Price price) //meals name
         {
             CreationValidation(ingredients, price);
             Ingredients = ingredients;
@@ -23,7 +24,13 @@ namespace Restaurant.Domain.Menus.ValueObjects
 
         public override bool Equals(object? obj)
         {
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+
+            Meal? other = obj as Meal;
+            if (other == null) return false;
+
+            return Ingredients.SequenceEqual(other.Ingredients) && Price == other.Price;
         }
 
         private static void CreationValidation(List<Ingredient> ingredients, Price price)

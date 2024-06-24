@@ -3,7 +3,7 @@ using Restaurant.Domain.Common.BaseTypes;
 
 namespace Restaurant.Domain.Menus.ValueObjects
 {
-    public class Ingredient(NotEmptyString ingedientName) : ValueObject<Ingredient>
+    public class Ingredient(NotEmptyString ingedientName) : ValueObject<Ingredient>, IEquatable<object?>
     {
         public NotEmptyString Name { get; } = ingedientName ?? throw new ArgumentNullException(nameof(ingedientName));
 
