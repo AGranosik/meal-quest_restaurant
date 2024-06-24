@@ -11,51 +11,51 @@ namespace Restaurant.UnitTests.Menus.ValueObejcts
         [Test]
         public void Creation_CannotBeNull_ThrowsException()
         {
-            var creation = () => new Ingedient(null);
+            var creation = () => new Ingredient(null);
             creation.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Creation_CannotBeEmpty_ThrowsException()
         {
-            var creation = () => new Ingedient(string.Empty);
+            var creation = () => new Ingredient(string.Empty);
             creation.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Creation_CannotBeWhiteSpaces_ThrowsException()
         {
-            var creation = () => new Ingedient("         ");
+            var creation = () => new Ingredient("         ");
             creation.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Creation_Success()
         {
-            var creation = () => new Ingedient(_validIngredientName);
+            var creation = () => new Ingredient(_validIngredientName);
             creation.Should().NotThrow();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var ingredient = new Ingedient(_validIngredientName);
+            var ingredient = new Ingredient(_validIngredientName);
             (ingredient == ingredient).Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameValue_True()
         {
-            var ingredient = new Ingedient(_validIngredientName);
-            var ingredient2 = new Ingedient(_validIngredientName);
+            var ingredient = new Ingredient(_validIngredientName);
+            var ingredient2 = new Ingredient(_validIngredientName);
             (ingredient == ingredient2).Should().BeTrue();
         }
 
         [Test]
         public void Equality_DifferentValue_False()
         {
-            var ingredient = new Ingedient(_validIngredientName);
-            var ingredient2 = new Ingedient(_validIngredientName + "hasd");
+            var ingredient = new Ingredient(_validIngredientName);
+            var ingredient2 = new Ingredient(_validIngredientName + "hasd");
             (ingredient == ingredient2).Should().BeFalse();
         }
     }
