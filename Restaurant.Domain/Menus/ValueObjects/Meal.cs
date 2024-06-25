@@ -14,12 +14,14 @@ namespace Restaurant.Domain.Menus.ValueObjects
     {
         public List<Ingredient> Ingredients { get; }
         public Price Price { get; }
+        public Name Name { get; set; }
 
-        public Meal(List<Ingredient> ingredients, Price price) //meals name
+        public Meal(List<Ingredient> ingredients, Price price, Name name)
         {
-            CreationValidation(ingredients, price);
+            CreationValidation(ingredients, price, name);
             Ingredients = ingredients;
             Price = price;
+            Name = name;
         }
 
         public override bool Equals(object? obj)
@@ -30,15 +32,19 @@ namespace Restaurant.Domain.Menus.ValueObjects
             Meal? other = obj as Meal;
             if (other == null) return false;
 
-            return Ingredients.SequenceEqual(other.Ingredients) && Price == other.Price;
+            return Ingredients.SequenceEqual(other.Ingredients)
+                && Price == other.Price
+                && Name == other.Name;
         }
 
-        private static void CreationValidation(List<Ingredient> ingredients, Price price)
+        private static void CreationValidation(List<Ingredient> ingredients, Price price, Name name)
         {
             ArgumentNullException.ThrowIfNull(price);
             ArgumentExceptionExtensions.ThrowIfNullOrEmpty(ingredients);
             if(!ingredients.HasUniqueValues())
                 throw new ArgumentException(nameof(ingredients));
+
+            ArgumentNullException.ThrowIfNull(name);
         }
     }
 }
