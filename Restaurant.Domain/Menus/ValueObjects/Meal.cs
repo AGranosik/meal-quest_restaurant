@@ -6,10 +6,7 @@ using Restaurant.Domain.Common.ValueTypes.Strings;
 
 namespace Restaurant.Domain.Menus.ValueObjects
 {
-    // should be different aggregate? or within restaurant
-    // add menu (has resId) -> rest.addMenu(menuId) // but how to create it within single transaction? events
-    // or
-    // rest.add(menu) ??
+    // size or weight of meal
     public class Meal : ValueObject<Meal>
     {
         public List<Ingredient> Ingredients { get; }
