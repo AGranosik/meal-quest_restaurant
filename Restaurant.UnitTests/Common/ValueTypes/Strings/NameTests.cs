@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Restaurant.Domain.Common.ValueTypes.Strings;
 
-namespace Restaurant.UnitTests.Common.Strings
+namespace Restaurant.UnitTests.Common.ValueTypes.Strings
 {
     [TestFixture]
     public class NameTests

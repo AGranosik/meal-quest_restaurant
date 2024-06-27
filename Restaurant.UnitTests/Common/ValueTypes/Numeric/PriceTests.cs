@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Restaurant.Domain.Common.ValueTypes.Numeric;
 
-namespace Restaurant.UnitTests.Common.Numeric
+namespace Restaurant.UnitTests.Common.ValueTypes.Numeric
 {
     [TestFixture]
     public class PriceTests
