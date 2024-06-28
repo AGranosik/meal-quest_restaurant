@@ -24,68 +24,47 @@ namespace Restaurant.UnitTests.Restaurants.Entities
         }
 
         [Test]
-        public void Creation_OwnerIdCanBeNegative_Success()
+        public void Creation_NameCannotBeNull_Failed()
         {
-            var creation = () => Owner.Create(new OwnerId(-3), new Name("name"), new Name("sss"), _validAddress);
-            creation.Should().NotThrow();
-        }
-
-        [Test]
-        public void Creation_OwnerIdCanBe0_Success()
-        {
-            var creation = () => Owner.Create(new OwnerId(0), new Name("name"), new Name("sss"), _validAddress);
-            creation.Should().NotThrow();
-        }
-
-        [Test]
-        public void Creation_OwnerIdCanBePositive_Success()
-        {
-            var creation = () => Owner.Create(new OwnerId(3), new Name("name"), new Name("sss"), _validAddress);
-            creation.Should().NotThrow();
-        }
-
-        [Test]
-        public void Creation_NameCannotBeNull_Success()
-        {
-            var creation = () => Owner.Create(_validOwnerId, null, new Name("sss"), _validAddress);
-            creation.Should().Throw<ArgumentException>();
+            var result = Owner.Create(_validOwnerId, null, new Name("sss"), _validAddress);
+            result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_SurnameCannotBeNull_Success()
         {
-            var creation = () => Owner.Create(_validOwnerId, new Name("name"), null, _validAddress);
-            creation.Should().Throw<ArgumentException>();
+            var result = Owner.Create(_validOwnerId, new Name("name"), null, _validAddress);
+            result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_AddressCannotBeNull_Success()
         {
-            var creation = () => Owner.Create(_validOwnerId, new Name("name"), _validSurname, null);
-            creation.Should().Throw<ArgumentException>();
+            var result = Owner.Create(_validOwnerId, new Name("name"), _validSurname, null);
+            result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var owner = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
-            (owner == owner).Should().BeTrue();
+            var result = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
+            (result.Value == result.Value).Should().BeTrue();
         }
 
         [Test]
         public void Equality_AlleTheSame_True()
         {
-            var owner = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
-            var owner2 = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
-            (owner == owner2).Should().BeTrue();
+            var result = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
+            var result2 = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
+            (result.Value == result2.Value).Should().BeTrue();
         }
 
         [Test]
         public void Equality_DifferentOWnerId_False()
         {
-            var owner = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
-            var owner2 = Owner.Create(new OwnerId(34), new Name("name"), _validSurname, _validAddress);
-            (owner == owner2).Should().BeFalse();
+            var result = Owner.Create(_validOwnerId, new Name("name"), _validSurname, _validAddress);
+            var result2 = Owner.Create(new OwnerId(34), new Name("name"), _validSurname, _validAddress);
+            (result.Value == result2.Value).Should().BeFalse();
         }
     }
 }

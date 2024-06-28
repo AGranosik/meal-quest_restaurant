@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using FluentResults;
+﻿using FluentResults;
 using Restaurant.Domain.Common.BaseTypes;
 using Restaurant.Domain.Common.ValueTypes.Strings;
 using Restaurant.Domain.Restaurants.Aggregates.DomainEvents;
