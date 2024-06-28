@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Restaurant.Domain.Common.ValueTypes.Numeric;
 using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Menus.Entities;
+using Restaurant.Domain.Menus.Aggregates.Entities;
 using Restaurant.Domain.Menus.ValueObjects;
 using Restaurant.Domain.Menus.ValueObjects.Identifiers;
 using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
