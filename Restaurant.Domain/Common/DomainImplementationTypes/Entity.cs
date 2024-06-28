@@ -5,7 +5,7 @@
     {
         public TKey Id { get; protected set; } = id ?? throw new ArgumentNullException(typeof(TKey).Name);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var other = obj as Entity<TKey>;
             if (other is null)
