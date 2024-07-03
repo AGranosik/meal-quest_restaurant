@@ -1,5 +1,5 @@
 ﻿using FluentResults;
-using Restaurant.Core.Extensions;
+using core.Extensions;
 using Restaurant.Domain.Common.BaseTypes;
 using Restaurant.Domain.Menus.Aggregates.DomainEvents;
 using Restaurant.Domain.Menus.ValueObjects;

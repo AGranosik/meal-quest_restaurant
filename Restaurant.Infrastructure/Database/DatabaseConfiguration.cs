@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurants.Infrastructure.Database.RestaurantContext;
+using infrastructure.Database.RestaurantContext;
 
-namespace Restaurants.Infrastructure.Database
+namespace infrastructure.Database
 {
     public static class DatabaseConfiguration
     {

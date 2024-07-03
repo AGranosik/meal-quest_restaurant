@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Core.Operations.Numeric
+﻿namespace core.Operations.Numeric
 {
     public static class RoundingExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Core.SimpleTypes
+﻿namespace core.SimpleTypes
 {
     public class NotEmptyString
     {

@@ -1,4 +1,4 @@
-﻿namespace Restaurants.Infrastructure.Database.RestaurantContext.Models
+﻿namespace infrastructure.Database.RestaurantContext.Models
 {
     public class Restaurant
     {

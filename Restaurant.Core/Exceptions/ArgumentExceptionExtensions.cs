@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Restaurant.Core.Exceptions
+namespace core.Exceptions
 {
     public static class ArgumentExceptionExtensions
     {

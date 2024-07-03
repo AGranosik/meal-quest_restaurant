@@ -1,5 +1,5 @@
-﻿using Restaurant.Core.Exceptions;
-using Restaurant.Core.Extensions;
+﻿using core.Exceptions;
+using core.Extensions;
 using Restaurant.Domain.Common.BaseTypes;
 using Restaurant.Domain.Common.ValueTypes.Numeric;
 using Restaurant.Domain.Common.ValueTypes.Strings;

@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Core.Extensions
+﻿namespace core.Extensions
 {
     public static class ListExtensions
     {

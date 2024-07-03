@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Api", "Restaurant.Api.csproj", "{2175DED8-3AB8-430A-B33C-6D1694188347}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "webapi.csproj", "{2175DED8-3AB8-430A-B33C-6D1694188347}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Domain", "..\Restaurant.Domain\Restaurant.Domain.csproj", "{93A875B3-2895-46C9-ACB0-420C53D45608}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "domain", "..\Restaurant.Domain\domain.csproj", "{93A875B3-2895-46C9-ACB0-420C53D45608}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Core", "..\Restaurant.Core\Restaurant.Core.csproj", "{DFD5FAA4-2015-40C2-BEC3-0751F168DD57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "core", "..\Restaurant.Core\core.csproj", "{DFD5FAA4-2015-40C2-BEC3-0751F168DD57}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{31542354-B254-48A3-B265-7A0A82DB04FC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.UnitTests", "..\Restaurant.UnitTests\Restaurant.UnitTests.csproj", "{CD3F6133-9A21-4983-854B-6D1A9744CDB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurants.Infrastructure", "..\Restaurant.Infrastructure\Restaurants.Infrastructure.csproj", "{44478D10-85C6-4E70-BE16-27DA41C53C9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "infrastructure", "..\Restaurant.Infrastructure\infrastructure.csproj", "{44478D10-85C6-4E70-BE16-27DA41C53C9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

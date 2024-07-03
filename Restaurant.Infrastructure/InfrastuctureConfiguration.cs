@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurants.Infrastructure.Database;
+using infrastructure.Database;
 
-namespace Restaurants.Infrastructure
+namespace infrastructure
 {
     public static class InfrastuctureConfiguration
     {

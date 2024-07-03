@@ -1,4 +1,4 @@
-﻿using Restaurant.Core.SimpleTypes;
+﻿using core.SimpleTypes;
 using Restaurant.Domain.Common.BaseTypes;
 
 namespace Restaurant.Domain.Common.ValueTypes.Strings

@@ -1,4 +1,4 @@
-﻿using Restaurant.Core.Operations.Numeric;
+﻿using core.Operations.Numeric;
 using Restaurant.Domain.Common.BaseTypes;
 
 namespace Restaurant.Domain.Common.ValueTypes.Numeric
