@@ -1,10 +1,15 @@
-﻿using Restaurant.Domain.Common.BaseTypes;
+﻿using domain.Restaurants.ValueObjects;
+using Restaurant.Domain.Common.BaseTypes;
+using Restaurant.Domain.Restaurants.Aggregates.Entities;
 using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
 
 namespace Restaurant.Domain.Restaurants.Aggregates
 {
-    public class Restaurant(RestaurantId id) : Aggregate<RestaurantId>(id)
+    public class Restaurant: Aggregate<RestaurantId>
     {
-        // ad menu here, just id, just check if and available hours/days
+        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
+        {
+            
+        }
     }
 }
