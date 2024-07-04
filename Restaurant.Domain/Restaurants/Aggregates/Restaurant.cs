@@ -8,17 +8,19 @@ namespace domain.Restaurants.Aggregates
 {
     public class Restaurant: Aggregate<RestaurantId>
     {
-        public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours, Coordinates coordinates)
+        public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours)
         {
-            CreationValidation(id, owner, openingHours);
-            return Result.Ok(new Restaurant(id, owner, openingHours, coordinates));
+            var creationResult = CreationValidation(id, owner, openingHours);
+            if (creationResult.IsFailed)
+                return creationResult;
+
+            return Result.Ok(new Restaurant(id, owner, openingHours));
         }
 
-        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours, Coordinates coordinates) : base(id)
+        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
         {
             Owner = owner;
             OpeningHours = openingHours;
-            Coordinates = coordinates;
         }
 
         private static Result CreationValidation(RestaurantId id, Owner owner, OpeningHours openingHours)
@@ -34,6 +36,5 @@ namespace domain.Restaurants.Aggregates
 
         public Owner Owner { get; }
         public OpeningHours OpeningHours { get; }
-        public Coordinates Coordinates { get; }
     }
 }
