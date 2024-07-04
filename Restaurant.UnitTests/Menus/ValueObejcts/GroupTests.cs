@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Common.ValueTypes.Numeric;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Menus.ValueObjects;
+﻿using domain.Common.ValueTypes.Numeric;
+using domain.Common.ValueTypes.Strings;
+using domain.Menus.ValueObjects;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Menus.ValueObejcts
+namespace unitTestsMenus.ValueObejcts
 {
     [TestFixture]
     public class GroupTests

@@ -1,7 +1,7 @@
 ﻿using core.SimpleTypes;
-using Restaurant.Domain.Common.BaseTypes;
+using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Menus.ValueObjects
+namespace domain.Menus.ValueObjects
 {
     public class Ingredient(NotEmptyString ingedientName) : ValueObject<Ingredient>, IEquatable<object?>
     {

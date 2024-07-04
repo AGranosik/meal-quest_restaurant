@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Common.BaseTypes;
+﻿using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Common.DomainImplementationTypes
+namespace domain.Common.DomainImplementationTypes
 {
     public abstract record DomainEvent<T>(T Id)
         where T : ValueObject<T>;

@@ -1,8 +1,8 @@
-﻿using Restaurant.Domain.Common.DomainImplementationTypes;
-using Restaurant.Domain.Menus.Aggregates.Entities;
-using Restaurant.Domain.Menus.ValueObjects.Identifiers;
+﻿using domain.Common.DomainImplementationTypes;
+using domain.Menus.Aggregates.Entities;
+using domain.Menus.ValueObjects.Identifiers;
 
-namespace Restaurant.Domain.Menus.Aggregates.DomainEvents
+namespace domain.Menus.Aggregates.DomainEvents
 {
     public sealed record MenuCreatedEvent(Menu Menu, MenuId Id) : DomainEvent<MenuId>(Id);
 }

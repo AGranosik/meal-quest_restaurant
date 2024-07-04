@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Menus.ValueObjects.Identifiers;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.ValueTypes.Strings;
+using domain.Menus.ValueObjects.Identifiers;
+using domain.Restaurants.ValueObjects.Identifiers;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Menus.ValueObejcts.Identifiers
+namespace unitTests.Menus.ValueObejcts.Identifiers
 {
     [TestFixture]
     public class MenuIdTests

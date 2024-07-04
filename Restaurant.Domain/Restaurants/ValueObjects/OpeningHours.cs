@@ -1,6 +1,5 @@
-﻿using FluentResults;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Restaurants.ValueObjects;
+﻿using domain.Common.BaseTypes;
+using FluentResults;
 
 namespace domain.Restaurants.ValueObjects
 {

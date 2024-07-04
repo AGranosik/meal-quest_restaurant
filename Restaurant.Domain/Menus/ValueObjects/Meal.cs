@@ -1,10 +1,10 @@
 ﻿using core.Exceptions;
 using core.Extensions;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Common.ValueTypes.Numeric;
-using Restaurant.Domain.Common.ValueTypes.Strings;
+using domain.Common.BaseTypes;
+using domain.Common.ValueTypes.Numeric;
+using domain.Common.ValueTypes.Strings;
 
-namespace Restaurant.Domain.Menus.ValueObjects
+namespace domain.Menus.ValueObjects
 {
     // size or weight of meal
     public class Meal : ValueObject<Meal>

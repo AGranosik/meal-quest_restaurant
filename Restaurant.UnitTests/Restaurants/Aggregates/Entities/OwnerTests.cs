@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Restaurants.Aggregates.Entities;
-using Restaurant.Domain.Restaurants.ValueObjects;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects;
+using domain.Restaurants.ValueObjects.Identifiers;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Restaurants.Entities
+namespace unitTests.Restaurants.Aggregates.Entities
 {
     [TestFixture]
     public class OwnerTests

@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Menus.ValueObjects;
+﻿using domain.Menus.ValueObjects;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Menus.ValueObejcts
+namespace unitTests.Menus.ValueObejcts
 {
     [TestFixture]
     public class IngredientTests

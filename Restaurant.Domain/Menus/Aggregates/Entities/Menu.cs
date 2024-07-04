@@ -1,11 +1,11 @@
 ﻿using FluentResults;
 using core.Extensions;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Menus.Aggregates.DomainEvents;
-using Restaurant.Domain.Menus.ValueObjects;
-using Restaurant.Domain.Menus.ValueObjects.Identifiers;
+using domain.Common.BaseTypes;
+using domain.Menus.ValueObjects.Identifiers;
+using domain.Menus.ValueObjects;
+using domain.Menus.Aggregates.DomainEvents;
 
-namespace Restaurant.Domain.Menus.Aggregates.Entities
+namespace domain.Menus.Aggregates.Entities
 {
     //available hours
     public sealed class Menu : Entity<MenuId>

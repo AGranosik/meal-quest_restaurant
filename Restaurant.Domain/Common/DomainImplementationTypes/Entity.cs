@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Common.DomainImplementationTypes;
+﻿using domain.Common.DomainImplementationTypes;
 
-namespace Restaurant.Domain.Common.BaseTypes
+namespace domain.Common.BaseTypes
 {
     public abstract class Entity<TKey>(TKey id)
         where TKey : ValueObject<TKey>

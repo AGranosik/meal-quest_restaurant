@@ -1,8 +1,8 @@
-﻿using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.BaseTypes;
+using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.ValueObjects.Identifiers;
 
-namespace Restaurant.Domain.Menus.ValueObjects.Identifiers
+namespace domain.Menus.ValueObjects.Identifiers
 {
     public class MenuId : ValueObject<MenuId>
     {

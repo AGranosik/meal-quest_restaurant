@@ -1,7 +1,7 @@
 ﻿using domain.Restaurants.ValueObjects;
 using FluentAssertions;
 
-namespace Restaurant.UnitTests.Restaurants.ValueObjects
+namespace unitTests.Restaurants.ValueObjects
 {
     [TestFixture]
     public class OpeningHoursTests

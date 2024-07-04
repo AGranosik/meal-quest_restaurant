@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Common.BaseTypes;
+﻿using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Restaurants.ValueObjects.Identifiers
+namespace domain.Restaurants.ValueObjects.Identifiers
 {
     public class OwnerId(int id) : ValueObject<OwnerId>
     {

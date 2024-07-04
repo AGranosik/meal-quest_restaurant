@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Common.ValueTypes.Numeric;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Menus.Aggregates.Entities;
-using Restaurant.Domain.Menus.ValueObjects;
-using Restaurant.Domain.Menus.ValueObjects.Identifiers;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.ValueTypes.Numeric;
+using domain.Common.ValueTypes.Strings;
+using domain.Menus.Aggregates.Entities;
+using domain.Menus.ValueObjects;
+using domain.Menus.ValueObjects.Identifiers;
+using domain.Restaurants.ValueObjects.Identifiers;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Menus.Entities
+namespace unitTests.Menus.Entities
 {
     [TestFixture]
     public class MenuTests

@@ -1,7 +1,7 @@
 ﻿using core.SimpleTypes;
-using Restaurant.Domain.Common.BaseTypes;
+using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Restaurants.ValueObjects
+namespace domain.Restaurants.ValueObjects
 {
     public class City(string cityName) : ValueObject<City>
     {

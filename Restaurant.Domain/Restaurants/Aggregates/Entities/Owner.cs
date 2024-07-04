@@ -1,11 +1,11 @@
-﻿using FluentResults;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Common.ValueTypes.Strings;
-using Restaurant.Domain.Restaurants.Aggregates.DomainEvents;
-using Restaurant.Domain.Restaurants.ValueObjects;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.BaseTypes;
+using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.ValueObjects;
+using domain.Restaurants.ValueObjects.Identifiers;
+using domainRestaurants.Aggregates.DomainEvents;
+using FluentResults;
 
-namespace Restaurant.Domain.Restaurants.Aggregates.Entities
+namespace domain.Restaurants.Aggregates.Entities
 {
     public class Owner : Entity<OwnerId>
     {

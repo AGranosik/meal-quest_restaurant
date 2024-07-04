@@ -1,7 +1,7 @@
 ﻿using core.Operations.Numeric;
-using Restaurant.Domain.Common.BaseTypes;
+using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Common.ValueTypes.Numeric
+namespace domain.Common.ValueTypes.Numeric
 {
     public class Price : ValueObject<Price>
     {

@@ -1,0 +1,1 @@
+[] clients microservice which will propagate clients to rabbit which restaurant service will consume

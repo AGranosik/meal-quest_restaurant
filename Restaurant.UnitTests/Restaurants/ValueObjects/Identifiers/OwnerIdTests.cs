@@ -1,7 +1,7 @@
-﻿using FluentAssertions;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Restaurants.ValueObjects.Identifiers;
+using FluentAssertions;
 
-namespace Restaurant.UnitTests.Restaurants.ValueObjects.Identifiers
+namespace unitTests.Restaurants.ValueObjects.Identifiers
 {
     [TestFixture]
     public class OwnerIdTests

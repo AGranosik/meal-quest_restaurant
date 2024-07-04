@@ -1,9 +1,9 @@
 ﻿using core.Exceptions;
 using core.Extensions;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Common.ValueTypes.Strings;
+using domain.Common.BaseTypes;
+using domain.Common.ValueTypes.Strings;
 
-namespace Restaurant.Domain.Menus.ValueObjects
+namespace domain.Menus.ValueObjects
 {
     public class Group : ValueObject<Group>
     {

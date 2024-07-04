@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Common.BaseTypes;
+﻿using domain.Common.BaseTypes;
 
-namespace Restaurant.Domain.Restaurants.ValueObjects
+namespace domain.Restaurants.ValueObjects
 {
     public class Address(Street street, City city, Coordinates coordinates) : ValueObject<Address>
     {

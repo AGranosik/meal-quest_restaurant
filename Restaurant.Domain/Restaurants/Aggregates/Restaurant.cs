@@ -1,15 +1,39 @@
-﻿using domain.Restaurants.ValueObjects;
-using Restaurant.Domain.Common.BaseTypes;
-using Restaurant.Domain.Restaurants.Aggregates.Entities;
-using Restaurant.Domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.BaseTypes;
+using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects;
+using domain.Restaurants.ValueObjects.Identifiers;
+using FluentResults;
 
-namespace Restaurant.Domain.Restaurants.Aggregates
+namespace domain.Restaurants.Aggregates
 {
     public class Restaurant: Aggregate<RestaurantId>
     {
-        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
+        public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours, Coordinates coordinates)
         {
-            
+            CreationValidation(id, owner, openingHours);
+            return Result.Ok(new Restaurant(id, owner, openingHours, coordinates));
         }
+
+        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours, Coordinates coordinates) : base(id)
+        {
+            Owner = owner;
+            OpeningHours = openingHours;
+            Coordinates = coordinates;
+        }
+
+        private static Result CreationValidation(RestaurantId id, Owner owner, OpeningHours openingHours)
+        {
+            if (owner is null)
+                return Result.Fail("Owner cannot be null.");
+
+            if (openingHours is null)
+                return Result.Fail("Owner cannot be null.");
+
+            return Result.Ok();
+        }
+
+        public Owner Owner { get; }
+        public OpeningHours OpeningHours { get; }
+        public Coordinates Coordinates { get; }
     }
 }
