@@ -1,14 +1,13 @@
 ﻿using domain.Common.BaseTypes;
 using domain.Common.ValueTypes.Strings;
 
-namespace domain.Menus.ValueObjects.Identifiers
+namespace domain.Restaurants.ValueObjects.Identifiers
 {
-    // add generic id identifiers
-    public class MenuId : ValueObject<MenuId>
+    public class MenuRestaurantId : ValueObject<MenuRestaurantId>
     {
-        public RestaurantIdMenuId RestaurantId { get; }
+        public RestaurantId RestaurantId { get; }
         public Name Name { get; }
-        public MenuId(RestaurantIdMenuId restaurantId, Name name)
+        public MenuRestaurantId(RestaurantId restaurantId, Name name)
         {
             RestaurantId = restaurantId ?? throw new ArgumentNullException(nameof(restaurantId));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -18,7 +17,7 @@ namespace domain.Menus.ValueObjects.Identifiers
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            MenuId other = obj as MenuId;
+            MenuRestaurantId other = obj as MenuRestaurantId;
             if (other == null) return false;
             return RestaurantId == other.RestaurantId && Name == other.Name;
         }

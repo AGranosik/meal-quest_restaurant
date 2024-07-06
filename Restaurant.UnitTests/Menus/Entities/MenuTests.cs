@@ -19,7 +19,7 @@ namespace unitTests.Menus.Entities
         public void SetUp()
         {
             _validName = new Name("test");
-            _validId = new MenuId(new RestaurantId(2), _validName);
+            _validId = new MenuId(new RestaurantIdMenuId(2), _validName);
             _validGroups =
             [
                 new Group(
@@ -94,7 +94,7 @@ namespace unitTests.Menus.Entities
         public void Equality_DifferentMenuId_False()
         {
             var menu = Menu.Create(_validId, _validGroups).Value;
-            var menu2 = Menu.Create(new MenuId(new RestaurantId(_validId.RestaurantId.Id + 1), _validName), _validGroups).Value;
+            var menu2 = Menu.Create(new MenuId(new MenuRestaurantId(_validId.RestaurantId.Id + 1), _validName), _validGroups).Value;
             (menu == menu2).Should().BeFalse();
         }
     }

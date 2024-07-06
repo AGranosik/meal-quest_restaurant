@@ -8,6 +8,10 @@ namespace domain.Restaurants.Aggregates
 {
     public class Restaurant: Aggregate<RestaurantId>
     {
+        private List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
+
+        public Owner Owner { get; }
+        public OpeningHours OpeningHours { get; }
         public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours)
         {
             var creationResult = CreationValidation(id, owner, openingHours);
@@ -15,6 +19,15 @@ namespace domain.Restaurants.Aggregates
                 return creationResult;
 
             return Result.Ok(new Restaurant(id, owner, openingHours));
+        }
+
+        public Result AddMenu(MenuRestaurantId menuId) // taking advantage of same project
+        {
+            if (_menus.Contains(menuId))
+                return Result.Fail("Menu already at restaurant.");
+
+            _menus.Add(menuId);
+            return Result.Ok();
         }
 
         private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
@@ -34,7 +47,6 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
-        public Owner Owner { get; }
-        public OpeningHours OpeningHours { get; }
+
     }
 }
