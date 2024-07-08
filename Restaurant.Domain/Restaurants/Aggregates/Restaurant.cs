@@ -42,7 +42,7 @@ namespace domain.Restaurants.Aggregates
                 return Result.Fail("Owner cannot be null.");
 
             if (openingHours is null)
-                return Result.Fail("Owner cannot be null.");
+                return Result.Fail("Opening houts cannot be null.");
 
             return Result.Ok();
         }

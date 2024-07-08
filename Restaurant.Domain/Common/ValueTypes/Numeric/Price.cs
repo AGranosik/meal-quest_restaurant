@@ -1,17 +1,14 @@
 ﻿using core.Operations.Numeric;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes.Identifiers;
 
 namespace domain.Common.ValueTypes.Numeric
 {
-    public class Price : ValueObject<Price>
+    public class Price : SimpleValueType<decimal, Price>
     {
-        public Price(decimal amount)
+        public Price(decimal amount) : base(amount)
         {
             Walidacja(amount);
-            Amount = amount;
         }
-
-        public decimal Amount { get; }
 
         private static void Walidacja(decimal amount)
         {
@@ -20,16 +17,6 @@ namespace domain.Common.ValueTypes.Numeric
 
             if(!amount.IsRoundedToSpecificPrecision(2))
                 throw new ArgumentException(nameof(amount));
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            Price? other = obj as Price;
-            if (other == null) return false;
-            return Amount == other.Amount;
         }
     }
 }

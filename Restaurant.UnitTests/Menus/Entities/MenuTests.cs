@@ -94,7 +94,7 @@ namespace unitTests.Menus.Entities
         public void Equality_DifferentMenuId_False()
         {
             var menu = Menu.Create(_validId, _validGroups).Value;
-            var menu2 = Menu.Create(new MenuId(new MenuRestaurantId(_validId.RestaurantId.Id + 1), _validName), _validGroups).Value;
+            var menu2 = Menu.Create(new MenuId(new RestaurantIdMenuId(_validId.RestaurantId.Value + 1), _validName), _validGroups).Value;
             (menu == menu2).Should().BeFalse();
         }
     }

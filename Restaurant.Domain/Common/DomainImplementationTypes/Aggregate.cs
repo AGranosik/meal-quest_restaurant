@@ -2,10 +2,9 @@
 
 namespace domain.Common.BaseTypes
 {
-    public abstract class Aggregate<TKey>(TKey id)
+    public abstract class Aggregate<TKey>(TKey id) : Entity<TKey>(id)
         where TKey : ValueObject<TKey>
     {
         protected List<DomainEvent<TKey>> _domainEvents;
-        public TKey Id { get; } = id ?? throw new ArgumentNullException(nameof(id));
     }
 }

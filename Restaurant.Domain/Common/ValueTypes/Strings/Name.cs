@@ -1,19 +1,9 @@
 ﻿using core.SimpleTypes;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes.Identifiers;
 
 namespace domain.Common.ValueTypes.Strings
 {
-    public class Name(string name) : ValueObject<Name>
+    public class Name(string name) : SimpleValueType<NotEmptyString, Name>(name)
     {
-        public NotEmptyString Value { get; } = name;
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            Name? other = obj as Name;
-            return other is not null && other.Value == Value;
-        }
     }
 }

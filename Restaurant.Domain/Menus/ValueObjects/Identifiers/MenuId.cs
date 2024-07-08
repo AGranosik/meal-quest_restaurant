@@ -3,7 +3,6 @@ using domain.Common.ValueTypes.Strings;
 
 namespace domain.Menus.ValueObjects.Identifiers
 {
-    // add generic id identifiers
     public class MenuId : ValueObject<MenuId>
     {
         public RestaurantIdMenuId RestaurantId { get; }

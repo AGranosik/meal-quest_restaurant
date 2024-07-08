@@ -2,22 +2,21 @@
 
 namespace domain.Common.DomainImplementationTypes.Identifiers
 {
-    public abstract class SimpleValueTypeId<TId> : ValueObject<TId>
-        where TId : IComparable<TId>
+    public abstract class SimpleValueType<TValue, TKey> : ValueObject<TKey>
     {
-        protected SimpleValueTypeId(TId value)
+        protected SimpleValueType(TValue value)
         {
             Value = value;
         }
 
-        public TId Value { get; set; }
+        public TValue Value { get; set; }
 
         public override bool Equals(object? obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            SimpleValueTypeId<TId> other = obj as SimpleValueTypeId<TId>;
+            SimpleValueType<TValue, TKey> other = obj as SimpleValueType<TValue, TKey>;
             if (other == null) return false;
             return Value.Equals(other.Value);
         }

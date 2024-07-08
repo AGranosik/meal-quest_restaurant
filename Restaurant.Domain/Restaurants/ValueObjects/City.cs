@@ -1,19 +1,9 @@
 ﻿using core.SimpleTypes;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes.Identifiers;
 
 namespace domain.Restaurants.ValueObjects
 {
-    public class City(string cityName) : ValueObject<City>
+    public class City(string cityName) : SimpleValueType<NotEmptyString, City>(cityName)
     {
-        public NotEmptyString CityName { get; } = cityName;
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            City? other = obj as City;
-            return other != null && CityName == other.CityName;
-        }
     }
 }
