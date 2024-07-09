@@ -9,6 +9,7 @@ namespace domain.Restaurants.Aggregates
     public class Restaurant: Aggregate<RestaurantId>
     {
         private List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
+        public IReadOnlyCollection<MenuRestaurantId> Menus => _menus.AsReadOnly();
 
         public Owner Owner { get; }
         public OpeningHours OpeningHours { get; }
@@ -21,7 +22,7 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok(new Restaurant(id, owner, openingHours));
         }
 
-        public Result AddMenu(MenuRestaurantId menuId) // taking advantage of same project
+        public Result AddMenu(MenuRestaurantId menuId)
         {
             if (_menus.Contains(menuId))
                 return Result.Fail("Menu already at restaurant.");
