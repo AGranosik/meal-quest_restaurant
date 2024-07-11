@@ -10,11 +10,11 @@ namespace domain.Restaurants.Aggregates
     // saving/modifing only on events
     public class Restaurant: Aggregate<RestaurantId>
     {
-        private List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
+        protected List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
         public IReadOnlyCollection<MenuRestaurantId> Menus => _menus.AsReadOnly();
 
-        public Owner Owner { get; }
-        public OpeningHours OpeningHours { get; }
+        public Owner Owner { get; protected set; }
+        public OpeningHours OpeningHours { get; protected set; }
         public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours)
         {
             var creationResult = CreationValidation(id, owner, openingHours);
@@ -33,7 +33,7 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
-        private Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
+        protected Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
         {
             Owner = owner;
             OpeningHours = openingHours;

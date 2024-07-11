@@ -2,11 +2,20 @@
 
 namespace domain.Restaurants.ValueObjects
 {
-    public class Address(Street street, City city, Coordinates coordinates) : ValueObject<Address>
+    public class Address : ValueObject<Address>
     {
-        public Street Street { get; } = street ?? throw new ArgumentNullException();
-        public City City { get; } = city ?? throw new ArgumentNullException();
-        public Coordinates Coordinates { get; } = coordinates ?? throw new ArgumentException();
+        public Address(Street street, City city, Coordinates coordinates)
+        {
+            Street = street ?? throw new ArgumentNullException();
+            City = city ?? throw new ArgumentNullException();
+            Coordinates = coordinates ?? throw new ArgumentNullException();
+        }
+
+        protected Address() { }
+
+        public Street Street { get; }
+        public City City { get; }
+        public Coordinates Coordinates { get; }
 
         public override bool Equals(object obj)
         {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using infrastructure.Database.RestaurantContext.Models;
+using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
 {
@@ -10,6 +10,11 @@ namespace infrastructure.Database.RestaurantContext
             
         }
 
-        public DbSet<Restaurant> Restaurants { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
