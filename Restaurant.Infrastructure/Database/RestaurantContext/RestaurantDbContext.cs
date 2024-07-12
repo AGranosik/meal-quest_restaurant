@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using infrastructure.Database.RestaurantContext.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
@@ -16,5 +17,8 @@ namespace infrastructure.Database.RestaurantContext
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
+
+        //public DbSet<Owner> Owners { get; set; }
+        //public DbSet<Address> Addresses { get; set; }
     }
 }

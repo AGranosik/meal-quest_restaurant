@@ -2,12 +2,19 @@
 
 namespace domain.Common.BaseTypes
 {
-    public abstract class Entity<TKey>(TKey id)
+    public abstract class Entity<TKey>
         where TKey : ValueObject<TKey>
     {
         protected List<DomainEvent<TKey>> _domainEvents = [];
 
-        public TKey Id { get; protected set; } = id ?? throw new ArgumentNullException(typeof(TKey).Name);
+        protected Entity() { }
+
+        protected Entity(TKey id)
+        {
+            Id = id ?? throw new ArgumentNullException(typeof(TKey).Name);
+        }
+
+        public TKey Id { get; protected set; }
 
         public DomainEvent<TKey>[] GetEvents()
             => [.. _domainEvents];

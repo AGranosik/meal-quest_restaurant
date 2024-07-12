@@ -21,8 +21,9 @@ namespace domain.Restaurants.Aggregates.Entities
 
             return Result.Ok(new Owner(id, name, surname, address));
         }
+        protected Owner() : base() { }
 
-        private Owner(OwnerId id, Name name, Name surname, Address address) : base(id)
+        protected Owner(OwnerId id, Name name, Name surname, Address address) : base(id)
         {
             Name = name;
             Surname = surname;
