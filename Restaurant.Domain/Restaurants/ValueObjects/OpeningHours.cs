@@ -7,7 +7,8 @@ namespace domain.Restaurants.ValueObjects
     // on which day when
     public class OpeningHours : ValueObject<OpeningHours>
     {
-        
+        protected OpeningHours() { }
+
         public static Result<OpeningHours> Create(TimeOnly from, TimeOnly to)
         {
             var validationResult = Validation(from, to);
@@ -17,7 +18,7 @@ namespace domain.Restaurants.ValueObjects
             return new OpeningHours(from, to);
         }
 
-        private OpeningHours(TimeOnly from, TimeOnly to)
+        protected OpeningHours(TimeOnly from, TimeOnly to)
         {
             From = from;
             To = to;
