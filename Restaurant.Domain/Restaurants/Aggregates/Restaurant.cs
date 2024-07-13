@@ -13,6 +13,7 @@ namespace domain.Restaurants.Aggregates
         protected List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
         public IReadOnlyCollection<MenuRestaurantId> Menus => _menus.AsReadOnly();
 
+        protected Restaurant() : base() { }
         public Owner Owner { get; protected set; }
         public OpeningHours OpeningHours { get; protected set; }
         public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours)

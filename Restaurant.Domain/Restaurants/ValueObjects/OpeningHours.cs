@@ -3,8 +3,7 @@ using FluentResults;
 
 namespace domain.Restaurants.ValueObjects
 {
-    // it will get more complicated like exceptions days
-    // on which day when
+    // range and what day it include.
     public class OpeningHours : ValueObject<OpeningHours>
     {
         protected OpeningHours() { }

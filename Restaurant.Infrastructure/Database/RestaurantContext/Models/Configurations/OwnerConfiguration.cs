@@ -9,7 +9,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Owner> builder)
         {
-            builder.ToTable("Owner", "restaurant");
+            builder.ToTable("Owners", "restaurant");
 
             builder.Property(o => o.Id)
                 .HasConversion(owner => owner.Value, db => new OwnerId(db));

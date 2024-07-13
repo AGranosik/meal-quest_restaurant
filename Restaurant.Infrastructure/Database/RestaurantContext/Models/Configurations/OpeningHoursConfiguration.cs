@@ -14,7 +14,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
 
             builder.HasKey(idName);
 
-            builder.Property(oh => oh.To)
+            builder.Property(oh => oh.From)
                 .HasConversion(
                 to => new TimeSpan(to.Hour, to.Minute, to.Second),
                 db => new TimeOnly(db.Hours, db.Minutes)
