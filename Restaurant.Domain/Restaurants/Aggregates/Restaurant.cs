@@ -16,7 +16,7 @@ namespace domain.Restaurants.Aggregates
         protected Restaurant() : base() { }
         public Owner Owner { get; protected set; }
         public OpeningHours OpeningHours { get; protected set; }
-        public static Result<Restaurant> Create(RestaurantId id, Owner owner, OpeningHours openingHours)
+        public static Result<Restaurant> Create(RestaurantId id,  Owner owner, OpeningHours openingHours)
         {
             var creationResult = CreationValidation(id, owner, openingHours);
             if (creationResult.IsFailed)
