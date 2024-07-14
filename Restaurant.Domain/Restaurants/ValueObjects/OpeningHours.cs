@@ -8,13 +8,13 @@ namespace domain.Restaurants.ValueObjects
     {
         protected OpeningHours() { }
 
-        public static Result<OpeningHours> Create(TimeOnly from, TimeOnly to)
+        public static Result<OpeningHours> Create(List<WorkingDay> workingDays)
         {
-            var validationResult = Validation(from, to);
-            if (validationResult.IsFailed)
-                return validationResult;
+            //var validationResult = Validation(from, to);
+            //if (validationResult.IsFailed)
+            //    return validationResult;
 
-            return new OpeningHours(from, to);
+            //return new OpeningHours(from, to);
         }
 
         protected OpeningHours(TimeOnly from, TimeOnly to)
@@ -28,22 +28,12 @@ namespace domain.Restaurants.ValueObjects
 
         //get rid of exceptions
         // work on results.
-        private static Result Validation(TimeOnly from, TimeOnly to)
-        {
-            if (from.Microsecond != 0 || to.Millisecond != 0)
-                return Result.Fail("Specify time without microseconds.");
+        //private static Result Validation(List<WorkingDay> workingDays)
+        //{
+        //    if(workingDays.Count != 7)
 
-            if (from.Millisecond != 0 || to.Millisecond != 0)
-                return Result.Fail("Specify time without ms.");
-
-            if (from.Second != 0 || to.Second != 0)
-                return Result.Fail("Specify time without ms.");
-
-            if (from >= to)
-                return Result.Fail("From cannot be greater than to.");
-
-            return Result.Ok();
-        }
+        //    return Result.Ok();
+        //}
 
         public override bool Equals(object? obj)
         {

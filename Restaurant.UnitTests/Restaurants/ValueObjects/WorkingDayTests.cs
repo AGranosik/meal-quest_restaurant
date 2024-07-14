@@ -84,6 +84,15 @@ namespace unitTests.Restaurants.ValueObjects
         }
 
         [Test]
+        public void Creation_FreeDay_Succcess()
+        {
+            var creationResult = WorkingDay.FreeDay(DayOfWeek.Monday);
+            creationResult.IsSuccess.Should().BeTrue();
+            var workingDay = creationResult.Value;
+            workingDay.IsFreeDay().Should().BeTrue();
+        }
+
+        [Test]
         public void Equality_SameReferenceTrue()
         {
             var creationResult = WorkingDay.Create(DayOfWeek.Monday, new TimeOnly(12, 00), new TimeOnly(13, 01));
@@ -156,5 +165,6 @@ namespace unitTests.Restaurants.ValueObjects
 
             (openingHours == openingHours2).Should().BeTrue();
         }
+
     }
 }

@@ -8,26 +8,35 @@ namespace domain.Restaurants.ValueObjects
 
         public static Result<WorkingDay> Create(DayOfWeek day, TimeOnly from, TimeOnly to)
         {
-            var validatioNResult = Validation(from, to);
+            var validatioNResult = Validation(day, from, to);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
             return new WorkingDay(day, from, to);
         }
 
+        public static Result<WorkingDay> FreeDay(DayOfWeek day)
+            => new WorkingDay(day, default, default, true);
+
+        public bool IsFreeDay()
+            => Free;
+
         protected WorkingDay() { }
-        protected WorkingDay(DayOfWeek day, TimeOnly from, TimeOnly to)
+        protected WorkingDay(DayOfWeek day, TimeOnly from, TimeOnly to, bool free = false)
         {
             Day = day;
             From = from;
             To = to;
+            Free = free;
         }
 
         public DayOfWeek Day { get; }
         public TimeOnly From { get; }
         public TimeOnly To { get; }
+        public bool Free { get; } = false;
 
-        private static Result Validation(TimeOnly from, TimeOnly to)
+
+        private static Result Validation(DayOfWeek? day, TimeOnly from, TimeOnly to)
         {
             if (from.Microsecond != 0 || to.Millisecond != 0)
                 return Result.Fail("Specify time without microseconds.");
