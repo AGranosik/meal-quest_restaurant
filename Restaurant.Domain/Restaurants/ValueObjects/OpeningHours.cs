@@ -1,4 +1,5 @@
-﻿using domain.Common.BaseTypes;
+﻿using core.Extensions;
+using domain.Common.BaseTypes;
 using FluentResults;
 
 namespace domain.Restaurants.ValueObjects
@@ -6,34 +7,43 @@ namespace domain.Restaurants.ValueObjects
     // range and what day it include.
     public class OpeningHours : ValueObject<OpeningHours>
     {
+        private const int WEEK_DAYS = 7;
+
+        public List<WorkingDay> WorkingDays { get; }
+
         protected OpeningHours() { }
 
         public static Result<OpeningHours> Create(List<WorkingDay> workingDays)
         {
-            //var validationResult = Validation(from, to);
-            //if (validationResult.IsFailed)
-            //    return validationResult;
+            var validatioNresult = Validation(workingDays);
+            if (validatioNresult.IsFailed)
+                return validatioNresult;
 
-            //return new OpeningHours(from, to);
+            return Result.Ok(new OpeningHours(workingDays));
         }
 
-        protected OpeningHours(TimeOnly from, TimeOnly to)
+        protected OpeningHours(List<WorkingDay> workingDays)
         {
-            From = from;
-            To = to;
+            WorkingDays = workingDays;
         }
 
-        public TimeOnly From { get; }
-        public TimeOnly To { get; }
+
 
         //get rid of exceptions
         // work on results.
-        //private static Result Validation(List<WorkingDay> workingDays)
-        //{
-        //    if(workingDays.Count != 7)
+        private static Result Validation(List<WorkingDay> workingDays)
+        {
+            if (workingDays is null)
+                return Result.Fail("");
 
-        //    return Result.Ok();
-        //}
+            if (workingDays.Count != WEEK_DAYS)
+                return Result.Fail("Not all days configured.");
+
+            if (!workingDays.Select(wd => wd.Day).ToList().HasUniqueValues())
+                return Result.Fail("Not all days are unique.");
+
+            return Result.Ok();
+        }
 
         public override bool Equals(object? obj)
         {
@@ -41,7 +51,7 @@ namespace domain.Restaurants.ValueObjects
             if (ReferenceEquals(this, obj)) return true;
 
             OpeningHours? other = obj as OpeningHours;
-            return other.From == From && other.To == To;
+            return Enumerable.SequenceEqual(WorkingDays, other.WorkingDays);
         }
     }
 }
