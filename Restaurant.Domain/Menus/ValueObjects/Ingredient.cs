@@ -1,11 +1,22 @@
-﻿using core.SimpleTypes;
+﻿using System.Runtime.InteropServices;
+using core.SimpleTypes;
 using domain.Common.BaseTypes;
+using FluentResults;
 
 namespace domain.Menus.ValueObjects
 {
-    public class Ingredient(NotEmptyString ingedientName) : ValueObject<Ingredient>, IEquatable<object?>
+    public class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
     {
-        public NotEmptyString Name { get; } = ingedientName ?? throw new ArgumentNullException(nameof(ingedientName));
+        public static Result<Ingredient> Create(NotEmptyString name)
+        {
+            return Result.Ok(new Ingredient(name));
+        }
+
+        private Ingredient(NotEmptyString name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+        public NotEmptyString Name { get; }
 
         public override bool Equals(object? obj)
         {

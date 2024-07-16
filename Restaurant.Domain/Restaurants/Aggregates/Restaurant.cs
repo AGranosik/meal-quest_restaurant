@@ -6,11 +6,9 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates
 {
-    // make private as protected, inherit and load into them from db.
-    // saving/modifing only on events
     public class Restaurant: Aggregate<RestaurantId>
     {
-        protected List<MenuRestaurantId> _menus = new(); // if there's gonna be need more info about menu then Menu entity in Resuraurant context will be added.
+        protected List<MenuRestaurantId> _menus = new();
         public IReadOnlyCollection<MenuRestaurantId> Menus => _menus.AsReadOnly();
 
         protected Restaurant() : base() { }

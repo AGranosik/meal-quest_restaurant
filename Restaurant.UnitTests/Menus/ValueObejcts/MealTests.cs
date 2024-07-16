@@ -20,9 +20,9 @@ namespace unitTests.Menus.ValueObejcts
             _price = new(20.23m);
             _ingredients =
             [
-                new Ingredient("ingedient"),
-                new Ingredient("ingedient2"),
-                new Ingredient("ingedient3")
+                Ingredient.Create("ingedient").Value,
+                Ingredient.Create("ingedient2").Value,
+                Ingredient.Create("ingedient3").Value,
             ];
             _name = new Name("name");
         }
@@ -46,9 +46,9 @@ namespace unitTests.Menus.ValueObejcts
         {
             var creation = () => new Meal(
             [
-                new("test"),
-                new("test2"),
-                new("test"),
+                Ingredient.Create("test").Value,
+                Ingredient.Create("test2").Value,
+                Ingredient.Create("test").Value,
             ], null, null);
             creation.Should().Throw<ArgumentException>();
         }
@@ -94,9 +94,9 @@ namespace unitTests.Menus.ValueObejcts
         {
             List<Ingredient> ingredients =
             [
-                new Ingredient("ingedient"),
-                new Ingredient("ingedient2"),
-                new Ingredient("ingedient3")
+                Ingredient.Create("ingedient").Value,
+                Ingredient.Create("ingedient2").Value,
+                Ingredient.Create("ingedient3").Value
             ];
             Price price = new(20.23m);
             Name name = new("name");
@@ -110,10 +110,10 @@ namespace unitTests.Menus.ValueObejcts
         {
             List<Ingredient> ingredients =
             [
-                new Ingredient("ingedient"),
-                new Ingredient("ingedient2"),
-                new Ingredient("ingedient3"),
-                new Ingredient("ingedient4")
+                Ingredient.Create("ingedient").Value,
+                Ingredient.Create("ingedient2").Value,
+                Ingredient.Create("ingedient3").Value,
+                Ingredient.Create("ingedient4").Value
             ];
 
             var meal = new Meal(_ingredients, _price, _name);
@@ -126,17 +126,17 @@ namespace unitTests.Menus.ValueObejcts
         {
             List<Ingredient> ingredients =
             [
-                new Ingredient("ingedient"),
-                new Ingredient("ingedient2"),
-                new Ingredient("ingedient3"),
-                new Ingredient("ingedient4")
+                Ingredient.Create("ingedient").Value,
+                Ingredient.Create("ingedient2").Value,
+                Ingredient.Create("ingedient3").Value,
+                Ingredient.Create("ingedient4").Value
             ];
             List<Ingredient> ingredients2 =
             [
-                new Ingredient("ingedient"),
-                new Ingredient("ingedient2"),
-                new Ingredient("ingedient3"),
-                new Ingredient("ingedient0")
+                Ingredient.Create("ingedient").Value,
+                Ingredient.Create("ingedient2").Value,
+                Ingredient.Create("ingedient3").Value,
+                Ingredient.Create("ingedient0").Value
             ];
             var meal = new Meal(ingredients, _price, _name);
             var meal2 = new Meal(ingredients2, _price, _name);

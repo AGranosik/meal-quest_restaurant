@@ -15,12 +15,12 @@ namespace unitTestsMenus.ValueObejcts
         [SetUp]
         public void SetUp()
         {
-            _validIngredients = new List<Ingredient>
-            {
-                new("test"),
-                new("test2"),
-                new("test3"),
-            };
+            _validIngredients =
+            [
+                Ingredient.Create("test").Value,
+                Ingredient.Create("test2").Value,
+                Ingredient.Create("test3").Value,
+            ];
             _validMeals = [
                 new Meal(_validIngredients.Take(1).ToList(), new Price(20), new Name("test")),
                 new Meal(_validIngredients.Skip(1).Take(1).ToList(), new Price(20), new Name("test")),
@@ -31,74 +31,74 @@ namespace unitTestsMenus.ValueObejcts
         }
 
         [Test]
-        public void Creation_MealsCannotBeNull_ThrowsException()
+        public void Creation_MealsCannotBeNull_Fail()
         {
-            var creation = () => new Group(null, null);
-            creation.Should().Throw<ArgumentNullException>();
+            var creationResult = Group.Create(null!, null!);
+            creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
-        public void Creation_MealsCannotBeEmpty_ThrowsException()
+        public void Creation_MealsCannotBeEmpty_Fail()
         {
-            var creation = () => new Group(new List<Meal>(), null);
-            creation.Should().Throw<ArgumentException>();
+            var creationResult = Group.Create([], null!);
+            creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
-        public void Creation_MealsHaveToBeUnique_ThrowsException()
+        public void Creation_MealsHaveToBeUnique_Fail()
         {
-            var creation = () => new Group(new List<Meal>
-            {
+            var creationResult = Group.Create(
+            [
                 _validMeals[0],
                 _validMeals[1],
                 _validMeals[2],
                 _validMeals[0],
-            }, null);
-            creation.Should().Throw<ArgumentException>();
+            ], null);
+            creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
-        public void Creation_NameCannotBeNull_ThrowsException()
+        public void Creation_NameCannotBeNull_Fail()
         {
-            var creation = () => new Group(_validMeals, null);
-            creation.Should().Throw<ArgumentNullException>();
+            var creationResult = Group.Create(_validMeals, null!);
+            creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_Success()
         {
-            var creation = () => new Group(_validMeals, _validName);
-            creation.Should().NotThrow();
+            var creationResult = Group.Create(_validMeals, _validName);
+            creationResult.IsSuccess.Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var group = new Group(_validMeals, _validName);
-            (group == group).Should().BeTrue();
+            var creationResult = Group.Create(_validMeals, _validName);
+            (creationResult.Value == creationResult.Value).Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameValues_True()
         {
-            var group = new Group(_validMeals, _validName);
-            var group2 = new Group(_validMeals, _validName);
+            var group = Group.Create(_validMeals, _validName).Value;
+            var group2 = Group.Create(_validMeals, _validName).Value;
             (group == group2).Should().BeTrue();
         }
 
         [Test]
         public void Equality_DifferentMeals_False()
         {
-            var group = new Group(_validMeals, _validName);
-            var group2 = new Group(_validMeals.Take(2).ToList(), _validName);
+            var group = Group.Create(_validMeals, _validName).Value;
+            var group2 = Group.Create(_validMeals.Take(2).ToList(), _validName).Value;
             (group == group2).Should().BeFalse();
         }
 
         [Test]
         public void Equality_DifferentName_False()
         {
-            var group = new Group(_validMeals, _validName);
-            var group2 = new Group(_validMeals, new Name("tedfgdfst"));
+            var group = Group.Create(_validMeals, _validName).Value;
+            var group2 = Group.Create(_validMeals, new Name("tedfgdfst")).Value;
             (group == group2).Should().BeFalse();
         }
     }

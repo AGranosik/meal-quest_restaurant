@@ -3,7 +3,6 @@ using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
-using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 
 namespace unitTests.Menus.Entities
@@ -22,20 +21,20 @@ namespace unitTests.Menus.Entities
             _validId = new MenuId(new RestaurantIdMenuId(2), _validName);
             _validGroups =
             [
-                new Group(
+                Group.Create(
                 [
                     new(
                     [
-                        new Ingredient("test")
+                        Ingredient.Create("test").Value
                     ], new Price(20), new Name("test"))
-                ], new Name("hehe")),
-                new Group(
+                ], new Name("hehe")).Value,
+                Group.Create(
                 [
                     new(
                     [
-                        new("test2")
+                        Ingredient.Create("test2").Value
                     ], new Price(20), new Name("test2"))
-                ], new Name("hehe2"))
+                ], new Name("hehe2")).Value
             ];
         }
 

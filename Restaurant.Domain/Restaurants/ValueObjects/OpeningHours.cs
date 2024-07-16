@@ -4,7 +4,6 @@ using FluentResults;
 
 namespace domain.Restaurants.ValueObjects
 {
-    // range and what day it include.
     public class OpeningHours : ValueObject<OpeningHours>
     {
         private const int WEEK_DAYS = 7;
