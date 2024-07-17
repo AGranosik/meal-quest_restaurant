@@ -25,8 +25,6 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
                 coordinates.Property(c => c.X);
                 coordinates.Property(c => c.Y);
             });
-
-            
         }
     }
 }

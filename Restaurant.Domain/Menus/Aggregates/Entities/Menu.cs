@@ -7,7 +7,7 @@ using domain.Menus.Aggregates.DomainEvents;
 
 namespace domain.Menus.Aggregates.Entities
 {
-    //available hours
+    // Test containers
     public sealed class Menu : Entity<MenuId>
     {
         // remove Id from constructors or it should be able to assign nulls? Before db creation

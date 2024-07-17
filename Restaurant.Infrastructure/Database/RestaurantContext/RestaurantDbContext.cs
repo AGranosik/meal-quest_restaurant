@@ -1,5 +1,4 @@
-﻿using infrastructure.Database.RestaurantContext.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
@@ -14,11 +13,15 @@ namespace infrastructure.Database.RestaurantContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            IgnoreDomainModels(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
 
-        //public DbSet<Owner> Owners { get; set; }
-        //public DbSet<Address> Addresses { get; set; }
+        private void IgnoreDomainModels(ModelBuilder modelBuilder)
+        {
+            // if there will occur more cases use reflection
+            modelBuilder.Ignore<domain.Restaurants.ValueObjects.WorkingDay>();
+        }
     }
 }

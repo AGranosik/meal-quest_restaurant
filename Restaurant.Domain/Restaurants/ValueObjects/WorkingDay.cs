@@ -12,7 +12,7 @@ namespace domain.Restaurants.ValueObjects
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
-            return new WorkingDay(day, from, to);
+            return new WorkingDay(day, from, to, false);
         }
 
         public static Result<WorkingDay> FreeDay(DayOfWeek day)
@@ -22,7 +22,7 @@ namespace domain.Restaurants.ValueObjects
             => Free;
 
         protected WorkingDay() { }
-        protected WorkingDay(DayOfWeek day, TimeOnly from, TimeOnly to, bool free = false)
+        protected WorkingDay(DayOfWeek day, TimeOnly from, TimeOnly to, bool free)
         {
             Day = day;
             From = from;
