@@ -2,7 +2,6 @@
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
-using domainRestaurants.Aggregates.DomainEvents;
 using FluentResults;
 
 namespace domain.Restaurants.Aggregates.Entities
@@ -28,8 +27,6 @@ namespace domain.Restaurants.Aggregates.Entities
             Name = name;
             Surname = surname;
             Address = address;
-
-            _domainEvents.Add(new OwnerCreatedEvent(this, id));
         }
 
         private static Result CreationValidation(OwnerId id, Name name, Name surname, Address address)
