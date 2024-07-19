@@ -14,13 +14,13 @@ namespace domain.Restaurants.Aggregates
         protected Restaurant() : base() { }
         public Owner Owner { get; protected set; }
         public OpeningHours OpeningHours { get; protected set; }
-        public static Result<Restaurant> Create(RestaurantId id,  Owner owner, OpeningHours openingHours)
+        public static Result<Restaurant> Create(Owner owner, OpeningHours openingHours)
         {
-            var creationResult = CreationValidation(id, owner, openingHours);
+            var creationResult = CreationValidation(owner, openingHours);
             if (creationResult.IsFailed)
                 return creationResult;
 
-            return Result.Ok(new Restaurant(id, owner, openingHours));
+            return Result.Ok(new Restaurant(owner, openingHours));
         }
 
         public Result AddMenu(MenuRestaurantId menuId)
@@ -32,13 +32,13 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
-        protected Restaurant(RestaurantId id, Owner owner, OpeningHours openingHours) : base(id)
+        protected Restaurant(Owner owner, OpeningHours openingHours)
         {
             Owner = owner;
             OpeningHours = openingHours;
         }
 
-        private static Result CreationValidation(RestaurantId id, Owner owner, OpeningHours openingHours)
+        private static Result CreationValidation(Owner owner, OpeningHours openingHours)
         {
             if (owner is null)
                 return Result.Fail("Owner cannot be null.");

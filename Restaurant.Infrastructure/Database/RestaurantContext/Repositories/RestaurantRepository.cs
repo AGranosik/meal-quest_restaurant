@@ -1,11 +1,12 @@
 ﻿using domain.Restaurants.Aggregates;
-using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
-using infrastructure.Database.Common;
 
 namespace infrastructure.Database.RestaurantContext.Repositories
 {
-    public interface IRestaurantRepository : IAggregateRepository<Restaurant, RestaurantId> { }
+    public interface IRestaurantRepository
+    {
+        Task<Result> CreateAsync(Restaurant restaurant);
+    }
 
     public class RestaurantReposiotry : IRestaurantRepository
     {
@@ -16,13 +17,9 @@ namespace infrastructure.Database.RestaurantContext.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Result> SaveAsync(Restaurant aggregate, CancellationToken cancellationToken)
+        public Task<Result> CreateAsync(Restaurant restaurant)
         {
-
+            throw new NotImplementedException();
         }
-
-        // cannot use events because its after save not before :/
-        // some other name convention?
-        private async Task RestaurantCreationAsync<RestaurantCreated>(RestaurantCreated @)
     }
 }

@@ -5,18 +5,18 @@ namespace domain.Common.BaseTypes
     public abstract class Entity<TKey>
         where TKey : ValueObject<TKey>
     {
-        protected List<DomainEvent<TKey>> _domainEvents = [];
+        protected List<DomainEvent> _domainEvents = [];
 
         protected Entity() { }
 
-        protected Entity(TKey id)
+        public TKey? Id { get; protected set; }
+
+        public void SetId(TKey id)
         {
-            Id = id ?? throw new ArgumentNullException(typeof(TKey).Name);
+            Id = id ?? throw new ArgumentNullException();
         }
 
-        public TKey Id { get; protected set; }
-
-        public DomainEvent<TKey>[] GetEvents()
+        public DomainEvent[] GetEvents()
             => [.. _domainEvents];
 
         #region Equality
@@ -24,6 +24,9 @@ namespace domain.Common.BaseTypes
         {
             var other = obj as Entity<TKey>;
             if (other is null)
+                return false;
+
+            if (Id is null || other.Id is null)
                 return false;
 
             return Id == other.Id;

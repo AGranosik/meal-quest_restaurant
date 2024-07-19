@@ -12,24 +12,24 @@ namespace domain.Restaurants.Aggregates.Entities
         public Name Surname { get; }
         public Address Address { get; }
 
-        public static Result<Owner> Create(OwnerId id, Name name, Name surname, Address address)
+        public static Result<Owner> Create(Name name, Name surname, Address address)
         {
-            var validationResult = CreationValidation(id, name, surname, address);
+            var validationResult = CreationValidation( name, surname, address);
             if (validationResult.IsFailed)
                 return validationResult;
 
-            return Result.Ok(new Owner(id, name, surname, address));
+            return Result.Ok(new Owner(name, surname, address));
         }
         protected Owner() : base() { }
 
-        protected Owner(OwnerId id, Name name, Name surname, Address address) : base(id)
+        protected Owner(Name name, Name surname, Address address) : base()
         {
             Name = name;
             Surname = surname;
             Address = address;
         }
 
-        private static Result CreationValidation(OwnerId id, Name name, Name surname, Address address)
+        private static Result CreationValidation(Name name, Name surname, Address address)
         {
             if (name is null)
                 return Result.Fail("Name cannot be null.");

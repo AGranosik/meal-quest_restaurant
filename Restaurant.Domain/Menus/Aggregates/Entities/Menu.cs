@@ -11,20 +11,20 @@ namespace domain.Menus.Aggregates.Entities
     public sealed class Menu : Entity<MenuId>
     {
         // remove Id from constructors or it should be able to assign nulls? Before db creation
-        public static Result<Menu> Create(MenuId id, List<Group> groups)
+        public static Result<Menu> Create(List<Group> groups)
         {
             var validatioNResult = CreationValidation(groups);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
-            var menu = new Menu(id, groups);
+            var menu = new Menu(groups);
             return Result.Ok(menu);
         }
         public List<Group> Groups { get; }
-        private Menu(MenuId id, List<Group> groups) : base(id)
+        private Menu(List<Group> groups) : base()
         {
             Groups = groups;
-            _domainEvents.Add(new MenuCreatedEvent(this, id));
+            _domainEvents.Add(new MenuCreatedEvent(this));
         }
 
         private static Result CreationValidation(List<Group> groups)

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using domain.Common.DomainImplementationTypes;
+﻿using domain.Common.DomainImplementationTypes;
 
 namespace domain.Common.BaseTypes
 {
@@ -7,12 +6,7 @@ namespace domain.Common.BaseTypes
         where TKey : ValueObject<TKey>
     {
 
-        protected Aggregate(TKey id) : base(id)
-        {
-            
-        }
-
-        protected List<DomainEvent<TKey>> _domainEvents;
+        protected List<DomainEvent> _domainEvents;
 
         protected Aggregate() : base() { }
     }

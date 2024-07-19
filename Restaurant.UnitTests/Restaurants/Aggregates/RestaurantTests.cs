@@ -1,4 +1,5 @@
-﻿using domain.Common.ValueTypes.Strings;
+﻿using domain.Common.BaseTypes;
+using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
@@ -10,13 +11,11 @@ namespace unitTests.Restaurants.Aggregates
     [TestFixture]
     public class RestaurantTests
     {
-        private RestaurantId _validRestaurantId;
         private Owner _validOwner;
         private OpeningHours _validOpeningHours;
         public RestaurantTests()
         {
-            _validRestaurantId = new RestaurantId(2);
-            _validOwner = Owner.Create(new OwnerId(2), new Name("test"), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
+            _validOwner = Owner.Create(new Name("test"), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
             _validOpeningHours = OpeningHours.Create(new List<WorkingDay>
             {
                 WorkingDay.Create(DayOfWeek.Monday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
@@ -30,30 +29,29 @@ namespace unitTests.Restaurants.Aggregates
         }
 
         [Test]
+        public void Restaurant_IstTypeOfEntity_True()
+        {
+            typeof(Entity<RestaurantId>).IsAssignableFrom(typeof(Restaurant)).Should().BeTrue();
+        }
+
+        [Test]
         public void Creation_IdOwnerCannotBeNull_Failure()
         {
-            var creationResult = Restaurant.Create(_validRestaurantId, null, null);
+            var creationResult = Restaurant.Create(null, null);
             creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_IdOpenningHoursCannotBeNull_Failure()
         {
-            var creationResult = Restaurant.Create(_validRestaurantId, _validOwner, null);
+            var creationResult = Restaurant.Create(_validOwner, null);
             creationResult.IsFailed.Should().BeTrue();
-        }
-
-        [Test]
-        public void Creation_IdCannotBeNull_ThrowsException()
-        {
-            var creation = () => Restaurant.Create(null, _validOwner, _validOpeningHours);
-            creation.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Creation_Success()
         {
-            var creationResult = Restaurant.Create(_validRestaurantId, _validOwner, _validOpeningHours);
+            var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             creationResult.IsSuccess.Should().BeTrue();
         }
 
@@ -61,7 +59,7 @@ namespace unitTests.Restaurants.Aggregates
         public void AddMenu_None_Success()
         {
             var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
-            var creationResult = Restaurant.Create(_validRestaurantId, _validOwner, _validOpeningHours);
+            var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
 
             var addResult = restaurant.AddMenu(menu);
@@ -78,7 +76,7 @@ namespace unitTests.Restaurants.Aggregates
         {
             var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
             var menu2 = new MenuRestaurantId(new RestaurantId(3), new Name("test2"));
-            var creationResult = Restaurant.Create(_validRestaurantId, _validOwner, _validOpeningHours);
+            var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
             restaurant.AddMenu(menu);
 
@@ -95,7 +93,7 @@ namespace unitTests.Restaurants.Aggregates
         {
             var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
             var menu2 = new MenuRestaurantId(new RestaurantId(3), new Name("test2"));
-            var creationResult = Restaurant.Create(_validRestaurantId, _validOwner, _validOpeningHours);
+            var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
             restaurant.AddMenu(menu);
             restaurant.AddMenu(menu2);
