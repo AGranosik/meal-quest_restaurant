@@ -6,6 +6,7 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates
 {
+    // add restaurant name
     public class Restaurant: Aggregate<RestaurantId>
     {
         protected List<MenuRestaurantId> _menus = new();

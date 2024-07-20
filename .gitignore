@@ -13,3 +13,5 @@
 /Restaurant.UnitTests/obj
 /Restaurant.Infrastructure/bin/Debug/net8.0
 /Restaurant.Infrastructure/obj
+/application/bin/Debug/net8.0
+/application/obj
