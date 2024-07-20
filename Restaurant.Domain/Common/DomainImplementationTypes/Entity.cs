@@ -40,6 +40,7 @@ namespace domain.Common.BaseTypes
         }
 
         public static bool operator !=(Entity<TKey> a, Entity<TKey> b) => !(a == b);
+
         #endregion
     }
 }

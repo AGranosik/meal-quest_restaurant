@@ -1,15 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using infrastructure.Database.RestaurantContext.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
 {
-    public class RestaurantDbContext : DbContext
+    internal class RestaurantDbContext : DbContext
     {
-        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        internal RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
         {
             
         }
 
+        internal DbSet<Restaurant> Restaurants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,7 +20,7 @@ namespace infrastructure.Database.RestaurantContext
             base.OnModelCreating(modelBuilder);
         }
 
-        private void IgnoreDomainModels(ModelBuilder modelBuilder)
+        private static void IgnoreDomainModels(ModelBuilder modelBuilder)
         {
             // if there will occur more cases use reflection
             modelBuilder.Ignore<domain.Restaurants.ValueObjects.WorkingDay>();
