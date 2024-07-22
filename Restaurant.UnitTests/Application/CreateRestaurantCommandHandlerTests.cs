@@ -1,4 +1,5 @@
 ﻿using application.Restaurants.Commands;
+using domain.Restaurants.Aggregates;
 using FluentAssertions;
 using infrastructure.Database.RestaurantContext.Repositories;
 using Moq;
@@ -8,7 +9,7 @@ namespace unitTests.Application
     [TestFixture]
     internal class CreateRestaurantCommandHandlerTests
     {
-        private IMock<IRestaurantRepository> _repositoryMock;
+        private Mock<IRestaurantRepository> _repositoryMock;
 
         [SetUp]
         public void SetUp()
@@ -125,7 +126,7 @@ namespace unitTests.Application
         }
 
         [Test]
-        public async Task Command_WorkingDaysCanntBeEmpty_Fail()
+        public async Task Command_WorkingDaysCannotBeEmpty_Fail()
         {
             var openingHours = new OpeningHoursCommand([]);
             var address = new CreateAddressCommand("street", "City", 0, 0);
@@ -135,6 +136,29 @@ namespace unitTests.Application
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
+        }
+
+        [Test]
+        public async Task Coomand_PassedToRepoWhenValid_Success()
+        {
+            var openingHours = new OpeningHoursCommand(
+            [
+                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+            ]);
+            var address = new CreateAddressCommand("street", "City", 0, 0);
+            var owner = new CreateOwnerCommand("name", "surname", address);
+            var handler = CreateHandler();
+            var command = new CreateRestaurantCommand(owner, openingHours);
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            _repositoryMock.Verify(m => m.CreateAsync(It.IsAny<Restaurant>(), It.IsAny<CancellationToken>()), Times.Once());
+            result.IsSuccess.Should().BeTrue();
         }
 
         private CreateRestaurantCommandHandler CreateHandler()

@@ -1,4 +1,7 @@
-﻿using domain.Restaurants.Aggregates;
+﻿using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.Aggregates;
+using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 using infrastructure.Database.RestaurantContext.Repositories;
@@ -17,9 +20,11 @@ namespace application.Restaurants.Commands
             if (validationResult.IsFailed)
                 return validationResult;
 
-            var restaurant = Restaurant.Create()
+            var domainResult = CreateDomainModel(request);
+            if (domainResult.IsFailed) return domainResult.ToResult();
 
-            return Result.Ok();
+            await _repo.CreateAsync(domainResult.Value, cancellationToken);
+            return Result.Ok(domainResult.Value.Id!);
         }
 
         private static Result CommandValidation(CreateRestaurantCommand command)
@@ -60,6 +65,47 @@ namespace application.Restaurants.Commands
                 return Result.Fail("Working days cannot be empty.");
 
             return Result.Ok();
+        }
+
+        private static Result<Restaurant> CreateDomainModel(CreateRestaurantCommand request)
+        {
+            var requestOwner = request.Owner;
+            var addressResult = Address.Create(
+                new Street(requestOwner!.Address!.Street!),
+                new City(requestOwner!.Address!.City!),
+                new Coordinates(requestOwner.Address.XCoordinate, requestOwner.Address.YCoordinate)
+            );
+
+            if (addressResult.IsFailed) return addressResult.ToResult();
+
+            var owner = Owner.Create(
+                new Name(request!.Owner!.Name!),
+                new Name(request!.Owner!.Surname!),
+                addressResult.Value
+            );
+
+            if(owner.IsFailed) return owner.ToResult();
+
+            var requestOpeningHours = request.OpeningHours;
+
+            var workingDaysResults = requestOpeningHours!.WorkingDays.Select(wd =>
+                    WorkingDay.Create(
+                        wd.Day,
+                        TimeOnly.FromDateTime(wd.From),
+                        TimeOnly.FromDateTime(wd.To)
+                    )).ToList();
+
+            var failedResult = workingDaysResults.Where(r => r.IsFailed).ToList();
+
+            if (failedResult.Count > 0) return Result.Fail(failedResult.SelectMany(r => r.Errors).ToList());
+
+            var openingHours = OpeningHours.Create(
+                workingDaysResults.Select(r => r.Value).ToList()
+            );
+
+            if (openingHours.IsFailed) return openingHours.ToResult();
+
+            return Restaurant.Create(owner.Value, openingHours.Value);
         }
     }
 
