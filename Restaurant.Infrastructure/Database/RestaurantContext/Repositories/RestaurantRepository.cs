@@ -9,11 +9,11 @@ namespace infrastructure.Database.RestaurantContext.Repositories
         Task<Result<RestaurantId?>> CreateAsync(domain.Restaurants.Aggregates.Restaurant restaurant, CancellationToken cancellationToken);
     }
 
-    internal class RestaurantReposiotry : IRestaurantRepository
+    public class RestaurantReposiotry : IRestaurantRepository
     {
         private readonly RestaurantDbContext _dbContext;
 
-        internal RestaurantReposiotry(RestaurantDbContext dbContext)
+        public RestaurantReposiotry(RestaurantDbContext dbContext)
         {
             _dbContext = dbContext;
         }

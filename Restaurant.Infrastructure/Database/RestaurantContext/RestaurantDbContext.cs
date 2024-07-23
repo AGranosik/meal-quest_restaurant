@@ -4,14 +4,14 @@ using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
 {
-    internal class RestaurantDbContext : DbContext
+    public class RestaurantDbContext : DbContext
     {
-        internal RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+        public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
         {
             
         }
 
-        internal DbSet<Restaurant> Restaurants { get; set; }
+        public DbSet<Restaurant> Restaurants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
