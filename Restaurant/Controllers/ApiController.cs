@@ -6,6 +6,7 @@ namespace webapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
     public class ApiController : ControllerBase
     {
         protected readonly IMediator _mediator;

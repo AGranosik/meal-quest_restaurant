@@ -1,5 +1,6 @@
 using application;
 using infrastructure;
+using webapi.Controllers.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UserErrorLogging();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
