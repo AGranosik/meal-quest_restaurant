@@ -4,9 +4,12 @@ using Testcontainers.PostgreSql;
 
 namespace integrationTests
 {
-    public class BaseContainerIntegratioNTests
+    public class BaseContainerIntegrationTests
     {
-        public static IContainer _postgresContainer;
+        protected IContainer _postgresContainer;
+        private ApiWebApplicationFactory _factory;
+
+        protected HttpClient _client;
 
         public BaseContainerIntegrationTests()
         {
@@ -17,6 +20,28 @@ namespace integrationTests
                 .WithPortBinding(5432)
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
                 .Build();
+
+            _factory = new ApiWebApplicationFactory();
         }
+
+        [OneTimeSetUp]
+        public async Task OneTimeSetUp()
+        {
+            if (_postgresContainer.State != TestcontainersStates.Running)
+                await _postgresContainer.StartAsync();
+
+            _client = _factory.CreateClient();
+        }
+
+        [OneTimeTearDown]
+        public async Task OneTimeTearDown()
+        {
+            await _postgresContainer.StopAsync();
+            await _postgresContainer.DisposeAsync();
+            _factory.Dispose();
+            _client.Dispose();
+        }
+
+
     }
 }

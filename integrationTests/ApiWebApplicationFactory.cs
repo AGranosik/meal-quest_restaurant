@@ -1,21 +1,31 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Testcontainers;
-using Npgsql;
-using DotNet.Testcontainers.Containers;
-using DotNet.Testcontainers.Builders;
-using Testcontainers.PostgreSql;
+﻿using infrastructure.Database.RestaurantContext;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace integrationTests
 {
-    public class ApiWebApplicationFactory
+    class ApiWebApplicationFactory : WebApplicationFactory<Program>
     {
-        
-        protected override async Task ConfigureWebHost(IWebHostBuilder builder)
+        public IConfiguration Configuration { get; private set; }
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.ConfigureAppConfiguration(config =>
+            {
+                Configuration = new ConfigurationBuilder()
+                    .AddJsonFile("integrationsettings.json")
+                .Build();
 
+                config.AddConfiguration(Configuration);
+            });
 
-
-            builder.
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("postgres")));
+            });
         }
     }
 }

@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Restaurant.Infrastructure\infrastructure.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="integrationTests"/>
+	</ItemGroup>
+
 </Project>

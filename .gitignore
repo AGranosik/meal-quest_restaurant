@@ -16,3 +16,4 @@
 /application/bin/Debug/net8.0
 /application/obj
 /integrationTests/obj
+/integrationTests/bin/Debug/net8.0

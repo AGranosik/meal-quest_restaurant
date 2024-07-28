@@ -1,0 +1,5 @@
+﻿{
+    "ConnectionStrings": {
+        "postgres": "Host=localhost;Database=Restaurant;Username=admin;Password=S3cret"
+    }
+}
