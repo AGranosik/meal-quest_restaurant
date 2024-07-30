@@ -11,12 +11,13 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
             builder.ToTable("Restaurants", "restaurant");
 
             builder.Property(r => r.Id)
-                .HasConversion(restaurant => restaurant.Value, db => new RestaurantId(db));
+                .HasConversion(restaurant => restaurant!.Value, db => new RestaurantId(db))
+                .ValueGeneratedOnAdd();
 
             builder.HasKey(r => r.Id);
 
-            builder.HasOne<Owner>("Owner")
-                .WithMany();
+            //builder.HasOne<Owner>("Owner")
+            //    .WithMany();
 
             builder.HasOne<OpeningHours>("OpeningHours");
 

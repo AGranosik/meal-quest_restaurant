@@ -4,7 +4,7 @@ using FluentAssertions;
 using infrastructure.Database.RestaurantContext.Repositories;
 using Moq;
 
-namespace unitTests.Application
+namespace unitTests.Application.Restaurants
 {
     [TestFixture]
     internal class CreateRestaurantCommandHandlerTests
@@ -45,7 +45,7 @@ namespace unitTests.Application
             var handler = CreateHandler();
             var command = new CreateRestaurantCommand(null, null);
             var result = await handler.Handle(command, CancellationToken.None);
-            
+
             result.IsFailed.Should().BeTrue();
         }
 

@@ -1,5 +1,8 @@
 ﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using infrastructure.Database.RestaurantContext;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.PostgreSql;
 
 namespace integrationTests
@@ -10,6 +13,8 @@ namespace integrationTests
         private ApiWebApplicationFactory _factory;
 
         protected HttpClient _client;
+        protected RestaurantDbContext _dbContext;
+        protected IServiceScope _scope;
 
         public BaseContainerIntegrationTests()
         {
@@ -17,7 +22,7 @@ namespace integrationTests
                 .WithImage("postgres:14-alpine")
                 .WithUsername("admin")
                 .WithPassword("S3cret")
-                .WithPortBinding(5432)
+                .WithPortBinding("5431", "5432")
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
                 .Build();
 
@@ -31,6 +36,26 @@ namespace integrationTests
                 await _postgresContainer.StartAsync();
 
             _client = _factory.CreateClient();
+            _scope = _factory.Services.CreateScope();
+            SetUpDbContext();
+
+            
+            await _dbContext.Database.EnsureCreatedAsync();
+            //await _dbContext.Database.MigrateAsync();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _scope = _factory.Services.CreateScope();
+            SetUpDbContext();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _dbContext.Dispose();
+            _scope.Dispose();
         }
 
         [OneTimeTearDown]
@@ -40,8 +65,15 @@ namespace integrationTests
             await _postgresContainer.DisposeAsync();
             _factory.Dispose();
             _client.Dispose();
+            _dbContext.Dispose();
+            _scope.Dispose();
         }
 
+
+        private void SetUpDbContext()
+        {
+            _dbContext = _scope.ServiceProvider.GetRequiredService<RestaurantDbContext>();
+        }
 
     }
 }
