@@ -20,10 +20,10 @@ namespace infrastructure.Database.RestaurantContext.Repositories
 
         public async Task<Result<RestaurantId?>> CreateAsync(domain.Restaurants.Aggregates.Restaurant restaurant, CancellationToken cancellationToken)
         {
-            var dbModel = Restaurant.CastToDbModel(restaurant);
-            _dbContext.Restaurants.Add(dbModel);
+            //var dbModel = Restaurant.CastToDbModel(restaurant);
+            _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync(cancellationToken);
-            return Result.Ok(dbModel.Id);
+            return Result.Ok(restaurant.Id);
         }
     }
 }

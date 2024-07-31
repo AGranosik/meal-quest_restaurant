@@ -1,4 +1,7 @@
-﻿using domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Restaurants.Aggregates;
+using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects;
+using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,8 +19,8 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
 
             builder.HasKey(r => r.Id);
 
-            //builder.HasOne<Owner>("Owner")
-            //    .WithMany();
+            builder.HasOne<Owner>("Owner")
+                .WithMany();
 
             builder.HasOne<OpeningHours>("OpeningHours");
 

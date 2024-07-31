@@ -1,4 +1,6 @@
 ﻿using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +14,8 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
             builder.ToTable("Owners", "restaurant");
 
             builder.Property(o => o.Id)
-                .HasConversion(owner => owner.Value, db => new OwnerId(db));
+                .HasConversion(owner => owner!.Value, db => new OwnerId(db))
+                .ValueGeneratedOnAdd();
 
             builder.HasKey(o => o.Id);
 

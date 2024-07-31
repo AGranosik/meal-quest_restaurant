@@ -68,12 +68,37 @@ namespace infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkingDays",
+                schema: "restaurant",
+                columns: table => new
+                {
+                    WorkingDayID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Day = table.Column<int>(type: "integer", nullable: false),
+                    From = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    To = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    Free = table.Column<bool>(type: "boolean", nullable: false),
+                    OpeningHoursID = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkingDays", x => x.WorkingDayID);
+                    table.ForeignKey(
+                        name: "FK_WorkingDays_OpeningHours_OpeningHoursID",
+                        column: x => x.OpeningHoursID,
+                        principalSchema: "restaurant",
+                        principalTable: "OpeningHours",
+                        principalColumn: "OpeningHoursID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Restaurants",
                 schema: "restaurant",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    OwnerId = table.Column<int>(type: "integer", nullable: false),
                     OpeningHoursID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -86,30 +111,13 @@ namespace infrastructure.Migrations
                         principalTable: "OpeningHours",
                         principalColumn: "OpeningHoursID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WorkingDays",
-                schema: "restaurant",
-                columns: table => new
-                {
-                    WorkingDayID = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OpeningHoursID = table.Column<int>(type: "integer", nullable: true),
-                    Day = table.Column<int>(type: "integer", nullable: false),
-                    From = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    To = table.Column<TimeSpan>(type: "interval", nullable: false),
-                    Free = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkingDays", x => x.WorkingDayID);
                     table.ForeignKey(
-                        name: "FK_WorkingDays_OpeningHours_OpeningHoursID",
-                        column: x => x.OpeningHoursID,
+                        name: "FK_Restaurants_Owners_OwnerId",
+                        column: x => x.OwnerId,
                         principalSchema: "restaurant",
-                        principalTable: "OpeningHours",
-                        principalColumn: "OpeningHoursID");
+                        principalTable: "Owners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -125,6 +133,12 @@ namespace infrastructure.Migrations
                 column: "OpeningHoursID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Restaurants_OwnerId",
+                schema: "restaurant",
+                table: "Restaurants",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WorkingDays_OpeningHoursID",
                 schema: "restaurant",
                 table: "WorkingDays",
@@ -135,10 +149,6 @@ namespace infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Owners",
-                schema: "restaurant");
-
-            migrationBuilder.DropTable(
                 name: "Restaurants",
                 schema: "restaurant");
 
@@ -147,11 +157,15 @@ namespace infrastructure.Migrations
                 schema: "restaurant");
 
             migrationBuilder.DropTable(
-                name: "Addresses",
+                name: "Owners",
                 schema: "restaurant");
 
             migrationBuilder.DropTable(
                 name: "OpeningHours",
+                schema: "restaurant");
+
+            migrationBuilder.DropTable(
+                name: "Addresses",
                 schema: "restaurant");
         }
     }

@@ -22,41 +22,7 @@ namespace infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Address", b =>
-                {
-                    b.Property<int>("AddressID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AddressID"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("AddressID");
-
-                    b.ToTable("Addresses", "restaurant");
-                });
-
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.OpeningHours", b =>
-                {
-                    b.Property<int>("OpeningHoursID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OpeningHoursID"));
-
-                    b.HasKey("OpeningHoursID");
-
-                    b.ToTable("OpeningHours", "restaurant");
-                });
-
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Owner", b =>
+            modelBuilder.Entity("domain.Restaurants.Aggregates.Entities.Owner", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("integer");
@@ -79,7 +45,7 @@ namespace infrastructure.Migrations
                     b.ToTable("Owners", "restaurant");
                 });
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Restaurant", b =>
+            modelBuilder.Entity("domain.Restaurants.Aggregates.Restaurant", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,14 +56,53 @@ namespace infrastructure.Migrations
                     b.Property<int>("OpeningHoursID")
                         .HasColumnType("integer");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OpeningHoursID");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Restaurants", "restaurant");
                 });
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.WorkingDay", b =>
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.Address", b =>
+                {
+                    b.Property<int>("AddressID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AddressID"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("AddressID");
+
+                    b.ToTable("Addresses", "restaurant");
+                });
+
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.OpeningHours", b =>
+                {
+                    b.Property<int>("OpeningHoursID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OpeningHoursID"));
+
+                    b.HasKey("OpeningHoursID");
+
+                    b.ToTable("OpeningHours", "restaurant");
+                });
+
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.WorkingDay", b =>
                 {
                     b.Property<int>("WorkingDayID")
                         .ValueGeneratedOnAdd()
@@ -127,7 +132,37 @@ namespace infrastructure.Migrations
                     b.ToTable("WorkingDays", "restaurant");
                 });
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Address", b =>
+            modelBuilder.Entity("domain.Restaurants.Aggregates.Entities.Owner", b =>
+                {
+                    b.HasOne("domain.Restaurants.ValueObjects.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("domain.Restaurants.Aggregates.Restaurant", b =>
+                {
+                    b.HasOne("domain.Restaurants.ValueObjects.OpeningHours", "OpeningHours")
+                        .WithMany()
+                        .HasForeignKey("OpeningHoursID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("domain.Restaurants.Aggregates.Entities.Owner", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OpeningHours");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.Address", b =>
                 {
                     b.OwnsOne("domain.Restaurants.ValueObjects.Coordinates", "Coordinates", b1 =>
                         {
@@ -152,36 +187,14 @@ namespace infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Owner", b =>
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.WorkingDay", b =>
                 {
-                    b.HasOne("infrastructure.Database.RestaurantContext.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.Restaurant", b =>
-                {
-                    b.HasOne("infrastructure.Database.RestaurantContext.Models.OpeningHours", "OpeningHours")
-                        .WithMany()
-                        .HasForeignKey("OpeningHoursID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OpeningHours");
-                });
-
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.WorkingDay", b =>
-                {
-                    b.HasOne("infrastructure.Database.RestaurantContext.Models.OpeningHours", null)
+                    b.HasOne("domain.Restaurants.ValueObjects.OpeningHours", null)
                         .WithMany("WorkingDays")
                         .HasForeignKey("OpeningHoursID");
                 });
 
-            modelBuilder.Entity("infrastructure.Database.RestaurantContext.Models.OpeningHours", b =>
+            modelBuilder.Entity("domain.Restaurants.ValueObjects.OpeningHours", b =>
                 {
                     b.Navigation("WorkingDays");
                 });

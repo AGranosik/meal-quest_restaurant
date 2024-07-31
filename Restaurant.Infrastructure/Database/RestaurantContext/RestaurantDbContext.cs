@@ -1,4 +1,5 @@
-﻿using infrastructure.Database.RestaurantContext.Models;
+﻿using domain.Restaurants.Aggregates;
+using infrastructure.Database.RestaurantContext.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
