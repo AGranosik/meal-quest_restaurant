@@ -1,4 +1,6 @@
-﻿using infrastructure.Database.RestaurantContext.Repositories;
+﻿using application.Restaurants.Commands.Interfaces;
+using application.Restaurants.Queries.Interfaces;
+using infrastructure.Database.RestaurantContext.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +20,11 @@ namespace infrastructure.Database.RestaurantContext
 
         private static IServiceCollection ConfigureRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IRestaurantRepository, RestaurantReposiotry>();
+            services
+                .AddScoped<IRestaurantRepository, RestaurantReposiotry>()
+                .AddScoped<IRestaurantQueryRepository, RestaurantQueryRepository>();
+
+
             return services;
         }
 

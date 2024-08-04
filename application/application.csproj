@@ -7,13 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Restaurants\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Restaurant.Core\core.csproj" />
     <ProjectReference Include="..\Restaurant.Domain\domain.csproj" />
-    <ProjectReference Include="..\Restaurant.Infrastructure\infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

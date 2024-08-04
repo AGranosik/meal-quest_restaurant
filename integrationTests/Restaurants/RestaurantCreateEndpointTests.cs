@@ -8,7 +8,7 @@ using webapi.Controllers.Restaurants.Requests;
 namespace integrationTests.Restaurants
 {
     [TestFixture]
-    public class RestaurantCreateEndpointTestes : BaseContainerIntegrationTests
+    public class RestaurantCreateEndpointTests : BaseContainerIntegrationTests
     {
         [Test]
         public async Task CreateRestaurant_RequestIsNull_Repsonse()

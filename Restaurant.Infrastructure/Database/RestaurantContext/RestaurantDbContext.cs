@@ -16,18 +16,18 @@ namespace infrastructure.Database.RestaurantContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            IgnoreDomainModels(modelBuilder);
+            //IgnoreDomainModels(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }
 
-        private static void IgnoreDomainModels(ModelBuilder modelBuilder)
-        {
-            // if there will occur more cases use reflection
-            modelBuilder.Ignore<domain.Restaurants.ValueObjects.WorkingDay>();
-            modelBuilder.Ignore<domain.Restaurants.ValueObjects.OpeningHours>();
-            modelBuilder.Ignore<domain.Restaurants.Aggregates.Entities.Owner>();
-            modelBuilder.Ignore<domain.Restaurants.Aggregates.Restaurant>();
-        }
+        //private static void IgnoreDomainModels(ModelBuilder modelBuilder)
+        //{
+        //    // if there will occur more cases use reflection
+        //    modelBuilder.Ignore<domain.Restaurants.ValueObjects.WorkingDay>();
+        //    modelBuilder.Ignore<domain.Restaurants.ValueObjects.OpeningHours>();
+        //    modelBuilder.Ignore<domain.Restaurants.Aggregates.Entities.Owner>();
+        //    modelBuilder.Ignore<domain.Restaurants.Aggregates.Restaurant>();
+        //}
     }
 }

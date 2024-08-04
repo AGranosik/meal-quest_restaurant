@@ -1,7 +1,7 @@
 ﻿using application.Restaurants.Commands;
+using application.Restaurants.Commands.Interfaces;
 using domain.Restaurants.Aggregates;
 using FluentAssertions;
-using infrastructure.Database.RestaurantContext.Repositories;
 using Moq;
 
 namespace unitTests.Application.Restaurants
