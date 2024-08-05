@@ -9,7 +9,8 @@ namespace infrastructure.Database.RestaurantContext.Repositories
         private readonly RestaurantDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         public Task<List<RestaurantDto>> GetRestaurantsForOwner(int ownerId, CancellationToken cancellationToken)
-            => _dbContext.Restaurants.Where(r => r.Owner!.Id!.Value == ownerId)
+            => _dbContext.Restaurants
+            .Where(r => r.Owner.Id == new domain.Restaurants.ValueObjects.Identifiers.OwnerId(ownerId))
             .Select(r => new RestaurantDto(null, null))
             .ToListAsync(cancellationToken);
     }

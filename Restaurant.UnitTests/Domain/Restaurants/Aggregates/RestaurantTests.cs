@@ -16,8 +16,8 @@ namespace unitTests.Domain.Restaurants.Aggregates
         public RestaurantTests()
         {
             _validOwner = Owner.Create(new Name("test"), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
-            _validOpeningHours = OpeningHours.Create(new List<WorkingDay>
-            {
+            _validOpeningHours = OpeningHours.Create(
+            [
                 WorkingDay.Create(DayOfWeek.Monday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                 WorkingDay.FreeDay(DayOfWeek.Tuesday).Value,
                 WorkingDay.Create(DayOfWeek.Wednesday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
@@ -25,7 +25,7 @@ namespace unitTests.Domain.Restaurants.Aggregates
                 WorkingDay.Create(DayOfWeek.Friday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                 WorkingDay.Create(DayOfWeek.Saturday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                 WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-            }).Value;
+            ]).Value;
         }
 
         [Test]
