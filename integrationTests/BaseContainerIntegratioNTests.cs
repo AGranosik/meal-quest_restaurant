@@ -39,9 +39,8 @@ namespace integrationTests
             _scope = _factory.Services.CreateScope();
             SetUpDbContext();
 
-            
+            // create once just purge
             await _dbContext.Database.EnsureCreatedAsync();
-            //await _dbContext.Database.MigrateAsync();
         }
 
         [SetUp]
