@@ -1,4 +1,5 @@
-﻿using DotNet.Testcontainers.Builders;
+﻿using System.Data.Common;
+using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using infrastructure.Database.RestaurantContext;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ namespace integrationTests
         protected RestaurantDbContext _dbContext;
         protected IServiceScope _scope;
         protected Respawner _respawner;
+        protected DbConnection _connection;
 
         public BaseContainerIntegrationTests()
         {
@@ -40,17 +42,17 @@ namespace integrationTests
             _client = _factory.CreateClient();
             _scope = _factory.Services.CreateScope();
             SetUpDbContext();
-
-            // create once just purge
             await _dbContext.Database.EnsureCreatedAsync();
         }
 
         [SetUp]
-        public void SetUp()
+        public async Task SetUp()
         {
             _scope = _factory.Services.CreateScope();
             SetUpDbContext();
-            _respawner.ResetAsync(_dbContext.Database.GetConnectionString());
+            var connection = _dbContext.Database.GetDbConnection();
+            await connection.OpenAsync();
+            await _respawner.ResetAsync(connection);
         }
 
         [TearDown]
@@ -61,7 +63,7 @@ namespace integrationTests
         }
 
         [OneTimeTearDown]
-        public async Task OneTimeTearDown()
+        public virtual async Task OneTimeTearDown()
         {
             await _postgresContainer.StopAsync();
             await _postgresContainer.DisposeAsync();
