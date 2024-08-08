@@ -6,6 +6,9 @@ using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Respawn;
+using Respawn.Graph;
 
 namespace integrationTests.Restaurants
 {
@@ -94,6 +97,23 @@ namespace integrationTests.Restaurants
             CompareRestaurants(result, ownersRestaurants);
         }
 
+        protected override async Task OneTimeSetUp()
+        {
+            await base.OneTimeSetUp();
+            _respawner = await Respawner.CreateAsync(_dbContext.Database.GetConnectionString(), new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                TablesToInclude =
+                [
+                    new Table("restaurant", "WorkingDays"),
+                    new Table("restaurant", "Restaurants"),
+                    new Table("restaurant", "OpeningHours"),
+                    new Table("restaurant", "Addresses"),
+                    new Table("restaurant", "Owners"),
+                ]
+            });
+        }
+
         private async Task<List<Restaurant>> AddRestaurants(int numberOfRestaurants, int restaurantsPerOwner)
         {
             var restaurants = new List<Restaurant>(numberOfRestaurants);
@@ -167,7 +187,7 @@ namespace integrationTests.Restaurants
             return true;
         }
 
-        private int MaxId(List<Restaurant> restaurants)
+        private static int MaxId(List<Restaurant> restaurants)
             => restaurants.Select(r => r.Id!.Value).Max();
     }
 }

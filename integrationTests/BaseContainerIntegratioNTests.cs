@@ -1,7 +1,9 @@
 ﻿using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using infrastructure.Database.RestaurantContext;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Respawn;
 using Testcontainers.PostgreSql;
 
 namespace integrationTests
@@ -14,6 +16,7 @@ namespace integrationTests
         protected HttpClient _client;
         protected RestaurantDbContext _dbContext;
         protected IServiceScope _scope;
+        protected Respawner _respawner;
 
         public BaseContainerIntegrationTests()
         {
@@ -29,7 +32,7 @@ namespace integrationTests
         }
 
         [OneTimeSetUp]
-        public async Task OneTimeSetUp()
+        protected virtual async Task OneTimeSetUp()
         {
             if (_postgresContainer.State != TestcontainersStates.Running)
                 await _postgresContainer.StartAsync();
@@ -47,6 +50,7 @@ namespace integrationTests
         {
             _scope = _factory.Services.CreateScope();
             SetUpDbContext();
+            _respawner.ResetAsync(_dbContext.Database.GetConnectionString());
         }
 
         [TearDown]

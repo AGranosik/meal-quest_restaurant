@@ -23,6 +23,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Respawn" Version="6.2.1" />
+    <PackageReference Include="Respawn.Postgres" Version="1.0.15" />
     <PackageReference Include="Testcontainers" Version="3.9.0" />
     <PackageReference Include="Testcontainers.PostgreSql" Version="3.9.0" />
   </ItemGroup>
