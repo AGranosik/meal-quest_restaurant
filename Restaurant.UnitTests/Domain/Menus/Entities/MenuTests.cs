@@ -46,14 +46,14 @@ namespace unitTests.Domain.Menus.Entities
         [Test]
         public void Creation_GroupsCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(null);
+            var result = Menu.Create(null, null);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_GroupsCannotBeEmpty_FailureResult()
         {
-            var result = Menu.Create([]);
+            var result = Menu.Create([], null);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -61,21 +61,36 @@ namespace unitTests.Domain.Menus.Entities
         public void Creation_GroupsHaveToBeUnique_FailureResult()
         {
             var group = _validGroups.First();
-            var result = Menu.Create([group, group]);
+            var result = Menu.Create([group, group], null);
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [Test]
+        public void Creation_NameCannotBeNull_FailureResult()
+        {
+            var result = Menu.Create(_validGroups, null);
+            result.IsFailed.Should().BeTrue();
+        }
+
+
+        [Test]
+        public void Creation_NameCannotBeEmpty_FailureResult()
+        {
+            var result = Menu.Create(_validGroups, new Name(""));
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_SuccessResult()
         {
-            var menu = Menu.Create(_validGroups);
+            var menu = Menu.Create(_validGroups, _validName);
             menu.IsSuccess.Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var menu = Menu.Create(_validGroups).Value;
+            var menu = Menu.Create(_validGroups, _validName).Value;
             (menu == menu).Should().BeTrue();
         }
 

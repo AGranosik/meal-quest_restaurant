@@ -4,26 +4,28 @@ using domain.Common.BaseTypes;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
 using domain.Menus.Aggregates.DomainEvents;
+using core.SimpleTypes;
+using domain.Common.ValueTypes.Strings;
 
 namespace domain.Menus.Aggregates.Entities
 {
-    // Test containers
     public sealed class Menu : Entity<MenuId>
     {
-        // remove Id from constructors or it should be able to assign nulls? Before db creation
-        public static Result<Menu> Create(List<Group> groups)
+        public static Result<Menu> Create(List<Group> groups, Name name)
         {
             var validatioNResult = CreationValidation(groups);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
-            var menu = new Menu(groups);
+            var menu = new Menu(groups, name);
             return Result.Ok(menu);
         }
+        public Name Name { get; }
         public List<Group> Groups { get; }
-        private Menu(List<Group> groups) : base()
+        private Menu(List<Group> groups, Name name) : base()
         {
             Groups = groups;
+            Name = name;
             _domainEvents.Add(new MenuCreatedEvent(this));
         }
 

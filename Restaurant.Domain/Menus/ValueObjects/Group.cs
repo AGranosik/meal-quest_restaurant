@@ -1,11 +1,12 @@
-﻿using core.Exceptions;
-using core.Extensions;
+﻿using core.Extensions;
 using domain.Common.BaseTypes;
 using domain.Common.ValueTypes.Strings;
 using FluentResults;
 
 namespace domain.Menus.ValueObjects
 {
+    // using constructors
+    // mapping from simple types??
     public class Group : ValueObject<Group>
     {
         public static Result<Group> Create(List<Meal> meals, Name groupName)
@@ -19,7 +20,6 @@ namespace domain.Menus.ValueObjects
 
         private Group(List<Meal> meals, Name groupName)
         {
-            CreationValidation(meals, groupName);
             Meals = meals;
             GroupName = groupName;
         }
