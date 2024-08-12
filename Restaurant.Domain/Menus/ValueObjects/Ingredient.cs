@@ -11,7 +11,7 @@ namespace domain.Menus.ValueObjects
             return Result.Ok(new Ingredient(name));
         }
 
-        private Ingredient(NotEmptyString name)
+        protected Ingredient(NotEmptyString name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }

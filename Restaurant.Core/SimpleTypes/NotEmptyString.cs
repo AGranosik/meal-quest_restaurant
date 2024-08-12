@@ -4,7 +4,6 @@ namespace core.SimpleTypes
 {
     public class NotEmptyString
     {
-        private readonly string _value;
         public NotEmptyString(string value)
         {
             if(string.IsNullOrEmpty(value))
@@ -13,7 +12,7 @@ namespace core.SimpleTypes
             if(string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("value cannot be null or white spacec");
 
-            _value = value;
+            Value = value;
         }
 
         public static bool operator ==(NotEmptyString left, NotEmptyString rigtt)
@@ -27,7 +26,7 @@ namespace core.SimpleTypes
         public static bool operator !=(NotEmptyString left, NotEmptyString rigtt)
             => !(left == rigtt);
 
-        public string Value => _value;
+        public string Value { get; }
 
         public static implicit operator NotEmptyString(string value) => new(value);
 

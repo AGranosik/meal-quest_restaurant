@@ -4,7 +4,6 @@ using domain.Common.BaseTypes;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
 using domain.Menus.Aggregates.DomainEvents;
-using core.SimpleTypes;
 using domain.Common.ValueTypes.Strings;
 
 namespace domain.Menus.Aggregates.Entities
@@ -20,9 +19,10 @@ namespace domain.Menus.Aggregates.Entities
             var menu = new Menu(groups, name);
             return Result.Ok(menu);
         }
+        private Menu() { }
         public Name Name { get; }
         public List<Group> Groups { get; }
-        private Menu(List<Group> groups, Name name) : base()
+        private Menu(List<Group> groups, Name name)
         {
             Groups = groups;
             Name = name;

@@ -11,7 +11,7 @@ namespace domain.Menus.ValueObjects
     {
         public List<Ingredient> Ingredients { get; }
         public Price Price { get; }
-        public Name Name { get; set; }
+        public Name Name { get; }
 
         // decide base on static classes or results
         public Meal(List<Ingredient> ingredients, Price price, Name name)
@@ -21,6 +21,8 @@ namespace domain.Menus.ValueObjects
             Price = price;
             Name = name;
         }
+
+        protected Meal() { }
 
         public override bool Equals(object? obj)
         {

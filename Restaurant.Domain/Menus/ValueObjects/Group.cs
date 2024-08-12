@@ -17,7 +17,7 @@ namespace domain.Menus.ValueObjects
 
             return Result.Ok(new Group(meals, groupName));
         }
-
+        private Group() { }
         private Group(List<Meal> meals, Name groupName)
         {
             Meals = meals;
