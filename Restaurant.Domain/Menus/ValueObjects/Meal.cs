@@ -13,6 +13,7 @@ namespace domain.Menus.ValueObjects
         public Price Price { get; }
         public Name Name { get; set; }
 
+        // decide base on static classes or results
         public Meal(List<Ingredient> ingredients, Price price, Name name)
         {
             CreationValidation(ingredients, price, name);

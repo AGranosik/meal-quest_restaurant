@@ -1,4 +1,8 @@
 ﻿using application.Menus.Commands.Interfaces;
+using domain.Common.ValueTypes.Numeric;
+using domain.Common.ValueTypes.Strings;
+using domain.Menus.Aggregates.Entities;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
@@ -15,8 +19,12 @@ namespace application.Menus.Commands
             if (validationResult.IsFailed)
                 return validationResult;
 
+            var domainResult = CreateDomainModel(command);
+            if (domainResult.IsFailed)
+                return domainResult.ToResult();
 
-            throw new NotImplementedException();
+            await _menuRepository.CreateMenuAsync(domainResult.Value, cancellationToken);
+            return Result.Ok(domainResult.Value.Id!);
         }
 
         private static Result Validation(CreateMenuCommand command)
@@ -39,16 +47,39 @@ namespace application.Menus.Commands
             return Result.Ok();
         }
 
-        //private static Result<Menu> CreateDomainModel(CreateMenuCommand command)
-        //{
-        //    var ingriedients = command.Groups?.Select(
-        //        g => Group.Create(
-        //            g?.Meals.Select(m => new Meal(m?.Ingredients.Select(i => Ingredient.Create(i.Name)))
-        //        ));
-        //    var meal = new Meal();
-        //    var groups = Group.Create();
-        //    var menu = Menu.Create();
-        //}
+        private static Result<Menu> CreateDomainModel(CreateMenuCommand command)
+        {
+            var groups = new List<Group>(command.Groups.Count);
+
+            foreach (var commandGroup in command.Groups)
+            {
+                var meals = new List<Meal>(commandGroup.Meals.Count);
+
+                foreach(var commandMeal in commandGroup.Meals)
+                {
+                    var ingriedients = new List<Ingredient>(commandMeal.Ingredients.Count);
+
+                    foreach(var commandIngredient in commandMeal.Ingredients)
+                    {
+                        var domainIngredient = Ingredient.Create(commandIngredient.Name!);
+                        if (domainIngredient.IsFailed)
+                            return domainIngredient.ToResult();
+                        ingriedients.Add(domainIngredient.Value);
+                    }
+                    meals.Add(new Meal(ingriedients, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
+                }
+                var group = Group.Create(meals, new Name(commandGroup.GroupName!));
+                if(group.IsFailed)
+                    return group.ToResult();
+
+                groups.Add(group.Value);
+            }
+            var menu = Menu.Create(groups, new Name(command.Name!));
+            if (menu.IsFailed)
+                return menu.ToResult();
+
+            return menu.Value;
+        }
     }
 
     public record CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups) : IRequest<Result<MenuId>>;
