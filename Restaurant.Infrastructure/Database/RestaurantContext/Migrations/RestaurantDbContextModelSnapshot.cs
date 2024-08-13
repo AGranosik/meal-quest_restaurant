@@ -18,126 +18,10 @@ namespace infrastructure.Database.RestaurantContext.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("restuarant")
-                .HasAnnotation("ProductVersion", "8.0.6")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("GroupMeal", b =>
-                {
-                    b.Property<int>("GroupID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MealsMealID")
-                        .HasColumnType("integer");
-
-                    b.HasKey("GroupID", "MealsMealID");
-
-                    b.HasIndex("MealsMealID");
-
-                    b.ToTable("GroupMeal", "menu");
-                });
-
-            modelBuilder.Entity("GroupMenu", b =>
-                {
-                    b.Property<int>("GroupsGroupID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MenuId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("GroupsGroupID", "MenuId");
-
-                    b.HasIndex("MenuId");
-
-                    b.ToTable("GroupMenu", "menu");
-                });
-
-            modelBuilder.Entity("IngredientMeal", b =>
-                {
-                    b.Property<int>("IngredientsIngredientID")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MealID")
-                        .HasColumnType("integer");
-
-                    b.HasKey("IngredientsIngredientID", "MealID");
-
-                    b.HasIndex("MealID");
-
-                    b.ToTable("IngredientMeal", "menu");
-                });
-
-            modelBuilder.Entity("domain.Menus.Aggregates.Entities.Menu", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Menus", "menu");
-                });
-
-            modelBuilder.Entity("domain.Menus.ValueObjects.Group", b =>
-                {
-                    b.Property<int>("GroupID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroupID"));
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("GroupID");
-
-                    b.ToTable("Groups", "menu");
-                });
-
-            modelBuilder.Entity("domain.Menus.ValueObjects.Ingredient", b =>
-                {
-                    b.Property<int>("IngredientID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IngredientID"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("IngredientID");
-
-                    b.ToTable("Ingredients", "menu");
-                });
-
-            modelBuilder.Entity("domain.Menus.ValueObjects.Meal", b =>
-                {
-                    b.Property<int>("MealID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MealID"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.HasKey("MealID");
-
-                    b.ToTable("Meals", "menu");
-                });
 
             modelBuilder.Entity("domain.Restaurants.Aggregates.Entities.Owner", b =>
                 {
@@ -250,51 +134,6 @@ namespace infrastructure.Database.RestaurantContext.Migrations
                     b.HasIndex("OpeningHoursID");
 
                     b.ToTable("WorkingDays", "restaurant");
-                });
-
-            modelBuilder.Entity("GroupMeal", b =>
-                {
-                    b.HasOne("domain.Menus.ValueObjects.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("domain.Menus.ValueObjects.Meal", null)
-                        .WithMany()
-                        .HasForeignKey("MealsMealID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GroupMenu", b =>
-                {
-                    b.HasOne("domain.Menus.ValueObjects.Group", null)
-                        .WithMany()
-                        .HasForeignKey("GroupsGroupID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("domain.Menus.Aggregates.Entities.Menu", null)
-                        .WithMany()
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("IngredientMeal", b =>
-                {
-                    b.HasOne("domain.Menus.ValueObjects.Ingredient", null)
-                        .WithMany()
-                        .HasForeignKey("IngredientsIngredientID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("domain.Menus.ValueObjects.Meal", null)
-                        .WithMany()
-                        .HasForeignKey("MealID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("domain.Restaurants.Aggregates.Entities.Owner", b =>

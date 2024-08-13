@@ -1,6 +1,6 @@
 ﻿using domain.Restaurants.Aggregates;
+using infrastructure.Database.RestaurantContext.Models.Configurations;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace infrastructure.Database.RestaurantContext
 {
@@ -12,7 +12,14 @@ namespace infrastructure.Database.RestaurantContext
         {
             //move to const.
             modelBuilder.HasDefaultSchema("restuarant");
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder
+                .ApplyConfiguration(new AddressConfiguration())
+                .ApplyConfiguration(new OpeningHoursConfiguration())
+                .ApplyConfiguration(new OwnerConfiguration())
+                .ApplyConfiguration(new RestaurantConfiguration())
+                .ApplyConfiguration(new WorkingDayConfiguration());
+
             base.OnModelCreating(modelBuilder);
         }
     }
