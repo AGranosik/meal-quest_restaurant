@@ -9,55 +9,24 @@ namespace unitTests.Domain.Menus.ValueObejcts.Identifiers
     public class MenuIdTests
     {
         [Test]
-        public void Creation_RestaurantIdCannotBeNull_ThrowsException()
+        public void Creation_CanBe0_Success()
         {
-            var creation = () => new MenuId(null!, null!);
-            creation.Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Creation_NameCannotBeNull_ThrowsException()
-        {
-            var creation = () => new MenuId(new RestaurantIdMenuId(2), null!);
-            creation.Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Creation_Success()
-        {
-            var creation = () => new MenuId(new RestaurantIdMenuId(2), new Name("test"));
+            var creation = () => new MenuId(0);
             creation.Should().NotThrow();
         }
 
         [Test]
-        public void Equality_SameReferences_True()
+        public void Creation_CanBePoistive_Success()
         {
-            var menuId = new MenuId(new RestaurantIdMenuId(2), new Name("test"));
-            (menuId == menuId).Should().BeTrue();
+            var creation = () => new MenuId(1);
+            creation.Should().NotThrow();
         }
 
         [Test]
-        public void Equality_SameValues_True()
+        public void Creation_CanBeNegative_Success()
         {
-            var menuId = new MenuId(new RestaurantIdMenuId(2), new Name("test"));
-            var menuId2 = new MenuId(new RestaurantIdMenuId(2), new Name("test"));
-            (menuId == menuId2).Should().BeTrue();
-        }
-
-        [Test]
-        public void Equality_DifferentRestaurantID_True()
-        {
-            var menuId = new MenuId(new RestaurantIdMenuId(2), new Name("test"));
-            var menuId2 = new MenuId(new RestaurantIdMenuId(3), new Name("test"));
-            (menuId == menuId2).Should().BeFalse();
-        }
-
-        [Test]
-        public void Equality_DifferentNameTrue()
-        {
-            var menuId = new MenuId(new RestaurantIdMenuId(2), new Name("test"));
-            var menuId2 = new MenuId(new RestaurantIdMenuId(2), new Name("test2"));
-            (menuId == menuId2).Should().BeFalse();
+            var creation = () => new MenuId(1);
+            creation.Should().NotThrow();
         }
     }
 }

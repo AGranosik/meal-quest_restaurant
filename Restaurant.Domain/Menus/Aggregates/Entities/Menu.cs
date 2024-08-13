@@ -10,9 +10,9 @@ namespace domain.Menus.Aggregates.Entities
 {
     public sealed class Menu : Entity<MenuId>
     {
-        public static Result<Menu> Create(List<Group> groups, Name name)
+        public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurantId)
         {
-            var validatioNResult = CreationValidation(groups);
+            var validatioNResult = CreationValidation(groups, restaurantId);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
@@ -29,13 +29,16 @@ namespace domain.Menus.Aggregates.Entities
             _domainEvents.Add(new MenuCreatedEvent(this));
         }
 
-        private static Result CreationValidation(List<Group> groups)
+        private static Result CreationValidation(List<Group> groups, RestaurantIdMenuId restaurantId)
         {
             if (groups is null || groups.Count == 0)
                 return Result.Fail("Groups are missing.");
 
             if (!groups.HasUniqueValues())
                 return Result.Fail("Groups has to be unique.");
+
+            if (restaurantId is null)
+                return Result.Fail("Restaurant id cannot be null.");
 
             return Result.Ok();
         }

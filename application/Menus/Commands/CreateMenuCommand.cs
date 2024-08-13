@@ -74,7 +74,7 @@ namespace application.Menus.Commands
 
                 groups.Add(group.Value);
             }
-            var menu = Menu.Create(groups, new Name(command.Name!));
+            var menu = Menu.Create(groups, new Name(command.Name!), new RestaurantIdMenuId(command.RestaurantId));
             if (menu.IsFailed)
                 return menu.ToResult();
 
@@ -82,7 +82,7 @@ namespace application.Menus.Commands
         }
     }
 
-    public record CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups) : IRequest<Result<MenuId>>;
+    public record CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups, int RestaurantId) : IRequest<Result<MenuId>>;
     public record CreateGroupCommand(string? GroupName, List<CreateMealCommand> Meals);
     public record CreateMealCommand(string? Name, decimal Price, List<CreateIngredientCommand> Ingredients);
     public record CreateIngredientCommand(string? Name);

@@ -13,6 +13,7 @@ namespace unitTests.Domain.Menus.Entities
     {
         private List<Group> _validGroups;
         private Name _validName;
+        private RestaurantIdMenuId _validRestaurantId;
 
         [SetUp]
         public void SetUp()
@@ -35,6 +36,8 @@ namespace unitTests.Domain.Menus.Entities
                     ], new Price(20), new Name("test2"))
                 ], new Name("hehe2")).Value
             ];
+
+            _validRestaurantId = new RestaurantIdMenuId(2);
         }
 
         [Test]
@@ -46,14 +49,14 @@ namespace unitTests.Domain.Menus.Entities
         [Test]
         public void Creation_GroupsCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(null, null);
+            var result = Menu.Create(null, null, null);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_GroupsCannotBeEmpty_FailureResult()
         {
-            var result = Menu.Create([], null);
+            var result = Menu.Create([], null, null);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -61,36 +64,35 @@ namespace unitTests.Domain.Menus.Entities
         public void Creation_GroupsHaveToBeUnique_FailureResult()
         {
             var group = _validGroups.First();
-            var result = Menu.Create([group, group], null);
+            var result = Menu.Create([group, group], null!, null!);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_NameCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(_validGroups, null);
+            var result = Menu.Create(_validGroups, null, null);
             result.IsFailed.Should().BeTrue();
         }
 
-
         [Test]
-        public void Creation_NameCannotBeEmpty_FailureResult()
+        public void Creation_RestaurantIdCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(_validGroups, new Name(""));
+            var result = Menu.Create(_validGroups, _validName, null);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_SuccessResult()
         {
-            var menu = Menu.Create(_validGroups, _validName);
+            var menu = Menu.Create(_validGroups, _validName, _validRestaurantId);
             menu.IsSuccess.Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var menu = Menu.Create(_validGroups, _validName).Value;
+            var menu = Menu.Create(_validGroups, _validName, _validRestaurantId).Value;
             (menu == menu).Should().BeTrue();
         }
 

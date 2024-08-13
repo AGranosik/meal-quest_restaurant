@@ -36,7 +36,7 @@ namespace unitTests.Application.Menus
         public async Task Creation_GroupsCannotBeNull_Fail()
         {
             var handler = new CreateMenuCommandHandler(_repositoryMock.Object);
-            var result = await handler.Handle(new CreateMenuCommand(null, null), CancellationToken.None);
+            var result = await handler.Handle(new CreateMenuCommand(null, null, default), CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -47,7 +47,9 @@ namespace unitTests.Application.Menus
             var result = await handler.Handle(new CreateMenuCommand(null,
             [
                 new CreateGroupCommand(null, null)
-            ]), CancellationToken.None);
+            ],
+            default),
+            CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -60,7 +62,7 @@ namespace unitTests.Application.Menus
                 new CreateGroupCommand(null, [
                    new(null, 0, null)
                 ])
-            ]), CancellationToken.None);
+            ], default), CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
     }

@@ -13,11 +13,11 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
         {
             builder.ToTable("Menus", "menu");
 
-            builder.Property(m => m.Id)
-                .HasConversion(m => new {
-                    MenuId = m.RestaurantId.Value,
-                    Name = m.Name.Value.Value
-                }, db => new MenuId(new RestaurantIdMenuId(db.MenuId), new Name(db.Name)));
+            //builder.Property(m => m.Id)
+            //    .HasConversion(m => new {
+            //        MenuId = m.RestaurantId.Value,
+            //        Name = m.Name.Value.Value
+            //    }, db => new MenuId(new RestaurantIdMenuId(db.MenuId), new Name(db.Name)));
 
             builder.Property(m => m.Name)
                 .HasConversion(name => name.Value.Value, db => new Name(db));
