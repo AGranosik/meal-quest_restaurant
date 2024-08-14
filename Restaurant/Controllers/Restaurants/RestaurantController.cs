@@ -4,7 +4,6 @@ using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Swashbuckle.AspNetCore.Annotations;
 using webapi.Controllers.Restaurants.Requests;
 

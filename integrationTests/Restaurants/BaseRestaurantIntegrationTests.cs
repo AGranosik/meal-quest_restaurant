@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using infrastructure.Database.RestaurantContext;
+using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
 
 namespace integrationTests.Restaurants
 {
-    public class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests
+    public class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
     {
         public BaseRestaurantIntegrationTests()
         {

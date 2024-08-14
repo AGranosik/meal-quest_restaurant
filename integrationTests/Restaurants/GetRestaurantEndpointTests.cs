@@ -94,6 +94,7 @@ namespace integrationTests.Restaurants
             CompareRestaurants(result, ownersRestaurants);
         }
 
+        //move it to faker
         private async Task<List<Restaurant>> AddRestaurants(int numberOfRestaurants, int restaurantsPerOwner)
         {
             var restaurants = new List<Restaurant>(numberOfRestaurants);

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using infrastructure.Database.MenuContext;
+using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
 
 namespace integrationTests.Menus
 {
-    public class BaseMenuIntegrationTests : BaseContainerIntegrationTests
+    public class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbContext>
     {
         protected override async Task OneTimeSetUp()
         {
@@ -16,16 +17,15 @@ namespace integrationTests.Menus
                 DbAdapter = DbAdapter.Postgres,
                 TablesToInclude =
                 [
-                    new Table("restaurant", "WorkingDays"),
-                    new Table("restaurant", "Restaurants"),
-                    new Table("restaurant", "OpeningHours"),
-                    new Table("restaurant", "Addresses"),
-                    new Table("restaurant", "Owners"),
+                    new Table("menu", "Groups"),
+                    new Table("menu", "Ingredients"),
+                    new Table("menu", "Meals"),
+                    new Table("menu", "Menus")
                 ],
                 SchemasToInclude =
                 [
                     "public",
-                    "restaurant"
+                    "menu"
                 ]
             });
         }

@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
-using infrastructure.Database.RestaurantContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
@@ -9,13 +8,14 @@ using Testcontainers.PostgreSql;
 
 namespace integrationTests
 {
-    public class BaseContainerIntegrationTests
+    public class BaseContainerIntegrationTests<TDbContext>
+        where TDbContext : DbContext
     {
         protected IContainer _postgresContainer;
         private ApiWebApplicationFactory _factory;
 
         protected HttpClient _client;
-        protected RestaurantDbContext _dbContext;
+        protected TDbContext _dbContext;
         protected IServiceScope _scope;
         protected Respawner _respawner;
         protected DbConnection _connection;
@@ -76,7 +76,7 @@ namespace integrationTests
 
         private void SetUpDbContext()
         {
-            _dbContext = _scope.ServiceProvider.GetRequiredService<RestaurantDbContext>();
+            _dbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
         }
 
     }

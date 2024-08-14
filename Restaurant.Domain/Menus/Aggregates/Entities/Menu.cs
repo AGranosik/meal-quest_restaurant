@@ -10,22 +10,24 @@ namespace domain.Menus.Aggregates.Entities
 {
     public sealed class Menu : Entity<MenuId>
     {
-        public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurantId)
+        public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
         {
-            var validatioNResult = CreationValidation(groups, restaurantId);
+            var validatioNResult = CreationValidation(groups, restaurant);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
-            var menu = new Menu(groups, name);
+            var menu = new Menu(groups, name, restaurant);
             return Result.Ok(menu);
         }
         private Menu() { }
         public Name Name { get; }
         public List<Group> Groups { get; }
-        private Menu(List<Group> groups, Name name)
+        public RestaurantIdMenuId Restaurant { get; }
+        private Menu(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
         {
             Groups = groups;
             Name = name;
+            Restaurant = restaurant;
             _domainEvents.Add(new MenuCreatedEvent(this));
         }
 

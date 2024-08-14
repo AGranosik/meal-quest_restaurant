@@ -10,9 +10,11 @@ namespace infrastructure.Database.MenuContext.Repositories
     {
         private readonly MenuDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
+        public async Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _context.Menus.Add(menu);
+            await _context.SaveChangesAsync(cancellationToken);
+            return menu.Id!;
         }
     }
 }
