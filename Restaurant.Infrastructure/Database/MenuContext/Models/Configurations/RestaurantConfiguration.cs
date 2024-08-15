@@ -12,10 +12,13 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
             builder.ToTable("Restaurants", "menu");
 
             builder.HasMany<Menu>()
-                .WithOne();
+                .WithOne()
+                .HasForeignKey("RestaurantID")
+                .HasConstraintName("FK_RestaurantId");
 
             builder.HasKey(r => r.Value)
                 .HasName("RestaurantID");
+
         }
     }
 }

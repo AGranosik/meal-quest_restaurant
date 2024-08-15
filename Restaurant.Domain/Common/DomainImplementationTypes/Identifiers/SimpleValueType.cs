@@ -2,14 +2,9 @@
 
 namespace domain.Common.DomainImplementationTypes.Identifiers
 {
-    public abstract class SimpleValueType<TValue, TKey> : ValueObject<TKey>
+    public abstract class SimpleValueType<TValue, TKey>(TValue value) : ValueObject<TKey>
     {
-        protected SimpleValueType(TValue value)
-        {
-            Value = value;
-        }
-
-        public TValue Value { get; set; }
+        public TValue Value { get; } = value;
 
         public override bool Equals(object? obj)
         {

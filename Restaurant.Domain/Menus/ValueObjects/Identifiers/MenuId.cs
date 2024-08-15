@@ -3,7 +3,7 @@
 namespace domain.Menus.ValueObjects.Identifiers
 {
 
-    public class MenuId(int id) : SimpleValueType<int, MenuId>(id)
+    public class MenuId(int value) : SimpleValueType<int, MenuId>(value)
     {
     }
 }

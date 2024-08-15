@@ -2,9 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using domain.Menus.ValueObjects.Identifiers;
-using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
-using FluentResults;
 using integrationTests.Menus.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Menus.Requests;
@@ -26,6 +24,7 @@ namespace integrationTests.Menus
             anyMenus.Should().BeFalse();
         }
 
+        // change PK and FK contraints names
         [Test]
         public async Task CreateMenu_Valid_Created()
         {
@@ -35,11 +34,10 @@ namespace integrationTests.Menus
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var resultString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Result<MenuId>>(resultString);
+            var result = JsonSerializer.Deserialize<MenuId>(resultString);
 
             result.Should().NotBeNull();
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(1);
+            result!.Value.Should().Be(1);
 
 
         }

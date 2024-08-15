@@ -18,10 +18,7 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
 
             builder.HasKey(m => m.Id);
 
-            builder.HasOne(m => m.Restaurant)
-                .WithMany()
-                .HasForeignKey(r => r.Restaurant.Value)
-                .HasConstraintName("RestaurantID");
+            builder.Ignore(m => m.Restaurant);
 
             builder.Property(m => m.Name)
                 .HasConversion(name => name.Value.Value, db => new Name(db));
