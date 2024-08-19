@@ -1,4 +1,5 @@
 ﻿using application.Menus.Commands.Interfaces;
+using core.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates.DomainEvents;
 using MediatR;
@@ -11,10 +12,13 @@ namespace application.EventHandlers.Restaurants
 
         //store events?? -> mongo?
         // fallback policy
-        // microsoft resilence
         // save event before sent 
         // udpate status after sent
-        public Task Handle(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
-            => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Restaurant.Id!.Value), cancellationToken);
+        public async Task Handle(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
+        {
+            // check if there is goona be more than 1 action that polly retires the first as well
+            await FallbackRetryPoicies.AsyncRetry
+                .ExecuteAsync(() => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Restaurant.Id!.Value), cancellationToken));
+        }
     }
 }

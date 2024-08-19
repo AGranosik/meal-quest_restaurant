@@ -1,0 +1,15 @@
+﻿using Polly.Retry;
+using Polly;
+
+namespace core.FallbackPolicies
+{
+    public static class FallbackRetryPoicies
+    {
+        public const int NUMBER_OF_RETRIES = 3;
+        public static AsyncRetryPolicy AsyncRetry
+            => Policy.Handle<Exception>()
+                .WaitAndRetryAsync(NUMBER_OF_RETRIES, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                );
+    }
+}
