@@ -13,6 +13,7 @@ namespace application.Menus.Commands
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
 
+        // event handler on menu creation
         public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
         {
             var validationResult = Validation(command);

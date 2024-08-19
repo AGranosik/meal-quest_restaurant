@@ -1,7 +1,9 @@
 ﻿using application.Restaurants.Commands;
 using application.Restaurants.Commands.Interfaces;
 using domain.Restaurants.Aggregates;
+using domain.Restaurants.Aggregates.DomainEvents;
 using FluentAssertions;
+using MediatR;
 using Moq;
 
 namespace unitTests.Application.Restaurants
@@ -10,17 +12,27 @@ namespace unitTests.Application.Restaurants
     internal class CreateRestaurantCommandHandlerTests
     {
         private Mock<IRestaurantRepository> _repositoryMock;
+        private Mock<IMediator> _mediatorMock;
 
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IRestaurantRepository>();
+            _mediatorMock = new Mock<IMediator>();
         }
 
         [Test]
         public void Creation_RepoCannotBeNull_ThrowsException()
         {
-            var creation = () => new CreateRestaurantCommandHandler(null!);
+            var creation = () => new CreateRestaurantCommandHandler(null!, null!);
+            creation.Should().Throw<ArgumentNullException>();
+        }
+
+
+        [Test]
+        public void Creation_MeidatorCannotBeNull_ThrowsException()
+        {
+            var creation = () => new CreateRestaurantCommandHandler(_repositoryMock.Object, null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
@@ -161,7 +173,29 @@ namespace unitTests.Application.Restaurants
             result.IsSuccess.Should().BeTrue();
         }
 
+        [Test]
+        public async Task Coomand_NotificationHandlerCalled_Success()
+        {
+            var openingHours = new OpeningHoursCommand(
+            [
+                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+            ]);
+            var address = new CreateAddressCommand("street", "City", 0, 0);
+            var owner = new CreateOwnerCommand("name", "surname", address);
+            var handler = CreateHandler();
+            var command = new CreateRestaurantCommand(owner, openingHours);
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            _mediatorMock.Verify(m => m.Publish(It.Is<object>(o => o is RestaurantCreatedEvent), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
         private CreateRestaurantCommandHandler CreateHandler()
-            => new(_repositoryMock.Object);
+            => new(_repositoryMock.Object, _mediatorMock.Object);
     }
 }

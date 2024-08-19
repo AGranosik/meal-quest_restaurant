@@ -26,11 +26,14 @@ namespace integrationTests.Restaurants
                     new Table("restaurant", "OpeningHours"),
                     new Table("restaurant", "Addresses"),
                     new Table("restaurant", "Owners"),
+                    new Table("restaurant", "Restaurants"),
+                    new Table("menu", "Restaurants"),
                 ],
                 SchemasToInclude =
                 [
                     "public",
-                    "restaurant"
+                    "restaurant",
+                    "menu"
                 ]
             });
         }

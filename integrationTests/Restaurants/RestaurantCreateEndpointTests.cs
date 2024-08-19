@@ -1,10 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
-using FluentResults;
-using infrastructure.Database.RestaurantContext;
+using infrastructure.Database.MenuContext;
 using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Restaurants.Requests;
@@ -35,16 +33,32 @@ namespace integrationTests.Restaurants
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var resultString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<Result<RestaurantId>>(resultString);
+            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
 
             result.Should().NotBeNull();
-            result!.IsSuccess.Should().BeTrue();
-            result.Value.Should().NotBe(0);
+            result!.Value.Should().BeGreaterThan(0);
 
             var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
             anyRestaurants.Should().BeTrue();
         }
 
+        [Test]
+        public async Task CreateRestaurant_CreatedInMenuContext_Success()
+        {
+            var menuDbContext = await GetDifferentDbContext<MenuDbContext>();
+            var request = RestaurantDataFaker.ValidRequest();
 
+            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var resultString = await response.Content.ReadAsStringAsync();
+            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
+
+
+            var restaurantDb = await menuDbContext.Restaurants
+                .Where(r => r.Value == result!.Value)
+                .ToListAsync();
+
+            restaurantDb.Count.Should().Be(1);
+        }
     }
 }

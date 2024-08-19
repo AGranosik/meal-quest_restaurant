@@ -1,4 +1,5 @@
-﻿using application.Restaurants.Commands.Interfaces;
+﻿using application.Common.Extensions;
+using application.Restaurants.Commands.Interfaces;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;
@@ -10,9 +11,10 @@ using MediatR;
 namespace application.Restaurants.Commands
 {
 
-    public class CreateRestaurantCommandHandler(IRestaurantRepository repo) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
+    public class CreateRestaurantCommandHandler(IRestaurantRepository repo, IMediator mediator) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
     {
         private readonly IRestaurantRepository _repo = repo ?? throw new ArgumentNullException(nameof(IRestaurantRepository));
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(IMediator));
 
         public async Task<Result<RestaurantId>> Handle(CreateRestaurantCommand request, CancellationToken cancellationToken)
         {
@@ -24,6 +26,9 @@ namespace application.Restaurants.Commands
             if (domainResult.IsFailed) return domainResult.ToResult();
 
             await _repo.CreateAsync(domainResult.Value, cancellationToken);
+
+            //fallback policy
+            await _mediator.PublishEventsAsync<Restaurant, RestaurantId>(domainResult.Value, cancellationToken);
             return Result.Ok(domainResult.Value.Id!);
         }
 

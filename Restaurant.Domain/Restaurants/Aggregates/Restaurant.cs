@@ -1,4 +1,5 @@
 ﻿using domain.Common.BaseTypes;
+using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -21,6 +22,7 @@ namespace domain.Restaurants.Aggregates
             if (creationResult.IsFailed)
                 return creationResult;
 
+            
             return Result.Ok(new Restaurant(owner, openingHours));
         }
 
@@ -37,6 +39,7 @@ namespace domain.Restaurants.Aggregates
         {
             Owner = owner;
             OpeningHours = openingHours;
+            _domainEvents.Add(new RestaurantCreatedEvent(this));
         }
 
         private static Result CreationValidation(Owner owner, OpeningHours openingHours)

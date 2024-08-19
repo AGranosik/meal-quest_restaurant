@@ -79,5 +79,13 @@ namespace integrationTests
             _dbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
         }
 
+        protected async Task<DiffDbContext> GetDifferentDbContext<DiffDbContext>()
+            where DiffDbContext : DbContext
+        {
+            var dbContext = _scope.ServiceProvider.GetRequiredService<DiffDbContext>();
+            await dbContext.Database.MigrateAsync();
+            return dbContext;
+        }
+
     }
 }

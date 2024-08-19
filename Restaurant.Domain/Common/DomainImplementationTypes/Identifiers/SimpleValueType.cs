@@ -1,4 +1,5 @@
-﻿using domain.Common.BaseTypes;
+﻿using System.Text.Json.Serialization;
+using domain.Common.BaseTypes;
 
 namespace domain.Common.DomainImplementationTypes.Identifiers
 {

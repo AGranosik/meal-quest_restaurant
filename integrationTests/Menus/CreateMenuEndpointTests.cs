@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Text.Json;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentAssertions;
 using integrationTests.Menus.DataMocks;
@@ -34,12 +33,10 @@ namespace integrationTests.Menus
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var resultString = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<MenuId>(resultString);
+            var result = ApiResponseDeserializator.Deserialize<MenuId>(resultString);
 
             result.Should().NotBeNull();
             result!.Value.Should().Be(1);
-
-
         }
 
         private async Task<List<RestaurantIdMenuId>> CreateRestaurantsAsync(int numberOfRestaurants)
