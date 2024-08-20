@@ -5,7 +5,7 @@ namespace core.FallbackPolicies
 {
     public static class FallbackRetryPoicies
     {
-        public const int NUMBER_OF_RETRIES = 3;
+        public const int NUMBER_OF_RETRIES = 2;
         public static AsyncRetryPolicy AsyncRetry
             => Policy.Handle<Exception>()
                 .WaitAndRetryAsync(NUMBER_OF_RETRIES, retryAttempt =>

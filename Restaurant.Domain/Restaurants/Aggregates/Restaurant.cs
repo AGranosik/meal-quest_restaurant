@@ -39,7 +39,7 @@ namespace domain.Restaurants.Aggregates
         {
             Owner = owner;
             OpeningHours = openingHours;
-            _domainEvents.Add(new RestaurantCreatedEvent(this));
+            _domainEvents.Add(new RestaurantCreatedEvent(Id!));
         }
 
         private static Result CreationValidation(Owner owner, OpeningHours openingHours)
