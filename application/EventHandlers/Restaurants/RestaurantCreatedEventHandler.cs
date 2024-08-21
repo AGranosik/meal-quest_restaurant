@@ -1,12 +1,10 @@
-﻿using System.Runtime.CompilerServices;
-using application.EventHandlers.Interfaces;
+﻿using application.EventHandlers.Interfaces;
 using application.Menus.Commands.Interfaces;
 using core.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates.DomainEvents;
 using MediatR;
 using Polly;
-using Polly.Fallback;
 
 namespace application.EventHandlers.Restaurants
 {
@@ -17,32 +15,34 @@ namespace application.EventHandlers.Restaurants
 
         public async Task Handle(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
         {
-            var eventStorageResult = await FallbackRetryPoicies.AsyncRetry
-                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreEventAsync(notification, cancellationToken));
+            Validation(notification);
 
-            if(eventStorageResult.Outcome == OutcomeType.Failure)//logs in the future or throw exception
-                return;
-
-            var eventInfoId = eventStorageResult.Result;
-
-            AsyncFallbackPolicy fallbackPolicy = Policy.Handle<Exception>()
-                .FallbackAsync(async CallConvSuppressGCTransition =>
-                {
-                    await _eventInfoStorage.MarkAsNotSentAsync(eventInfoId, cancellationToken);
-                });
-
-            var wrappedPolicy = Policy.WrapAsync(FallbackRetryPoicies.AsyncRetry, fallbackPolicy);
-            var policyResult = await wrappedPolicy.ExecuteAndCaptureAsync(() =>
+            var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(() =>
                 _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Id.Value), cancellationToken));
 
             if(policyResult.Outcome == OutcomeType.Successful)
-                await _eventInfoStorage.MarkAsSentAsync(eventInfoId, cancellationToken);
+                await StoreEventAsync(notification, cancellationToken);
+            else
+            {
+                //log
+            }
         }
 
-        private void Validation(RestaurantCreatedEvent notification)
+        private static void Validation(RestaurantCreatedEvent notification)
         {
             ArgumentNullException.ThrowIfNull(notification);
             ArgumentNullException.ThrowIfNull(notification.Id);
+        }
+
+        private async Task StoreEventAsync(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
+        {
+            var eventStorageResult = await FallbackRetryPoicies.AsyncRetry
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreEventAsync(notification, cancellationToken));
+
+            if (eventStorageResult.Outcome == OutcomeType.Failure)
+            {
+                // log
+            }//logs in the future or throw exception
         }
     }
 }

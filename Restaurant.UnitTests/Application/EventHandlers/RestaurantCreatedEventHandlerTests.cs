@@ -2,6 +2,7 @@
 using application.EventHandlers.Restaurants;
 using application.Menus.Commands.Interfaces;
 using core.FallbackPolicies;
+using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
@@ -64,24 +65,39 @@ namespace unitTests.Application.EventHandlers
             await action.Should().NotThrowAsync();
 
             _eventInfStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once());
-            _eventInfStorageMock.Verify(e => e.MarkAsSentAsync(It.Is<int>(i => i == id), It.IsAny<CancellationToken>()), Times.Once());
-            _eventInfStorageMock.Verify(e => e.MarkAsNotSentAsync(It.Is<int>(i => i == id), It.IsAny<CancellationToken>()), Times.Never());
         }
 
         [Test]
-        public async Task RestaurantCreatedEvent_StoreEventFailure_ThrowsException()
+        public async Task RestaurantCreatedEvent_RepoThrowsException_NoException()
         {
-            var id = 1;
-            _eventInfStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<CancellationToken>()))
-               .ThrowsAsync(new Exception());
+            _menuRepositoryMock
+                .Setup(m => m.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
 
             var handler = CreateEventHandler();
             var action = () => handler.Handle(new RestaurantCreatedEvent(new RestaurantId(1)), CancellationToken.None);
             await action.Should().NotThrowAsync();
 
+            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()), Times.Exactly(1 + FallbackRetryPoicies.NUMBER_OF_RETRIES));
+            _eventInfStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Never());
+        }
+
+        [Test]
+        public async Task RestaurantCreatedEvent_StoreEvent_ThrowsException()
+        {
+            var id = 1;
+            _eventInfStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<CancellationToken>()))
+               .ThrowsAsync(new Exception());
+
+            _menuRepositoryMock
+                .Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()));
+
+            var handler = CreateEventHandler();
+            var action = () => handler.Handle(new RestaurantCreatedEvent(new RestaurantId(1)), CancellationToken.None);
+            await action.Should().NotThrowAsync();
+
+            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()), Times.Once());
             _eventInfStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPoicies.NUMBER_OF_RETRIES + 1));
-            _eventInfStorageMock.Verify(e => e.MarkAsSentAsync(It.Is<int>(i => i == id), It.IsAny<CancellationToken>()), Times.Never());
-            _eventInfStorageMock.Verify(e => e.MarkAsNotSentAsync(It.Is<int>(i => i == id), It.IsAny<CancellationToken>()), Times.Never());
         }
 
         private RestaurantCreatedEventHandler CreateEventHandler()
