@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Database\Common\" />
-    <Folder Include="EventStorage\" />
   </ItemGroup>
 
 </Project>

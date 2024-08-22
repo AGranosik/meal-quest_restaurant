@@ -2,5 +2,5 @@
 
 namespace domain.Common.DomainImplementationTypes
 {
-    public abstract record DomainEvent();
+    public abstract record DomainEvent(int StreamId);
 }

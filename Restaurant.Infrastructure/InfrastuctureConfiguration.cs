@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using infrastructure.Database;
+using infrastructure.EventStorage;
 
 namespace infrastructure
 {
@@ -8,7 +9,10 @@ namespace infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.ConfigureDatabase(configuration);
+            services
+                .ConfigureDatabase(configuration)
+                .ConfigureEventStorage(configuration);
+
             return services;
         }
     }
