@@ -9,8 +9,8 @@ using infrastructure.EventStorage;
 
 namespace infrastructure.EventStorage.Migrations
 {
-    [DbContext(typeof(EventdbContext))]
-    partial class EventdbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(EventDbContext))]
+    partial class EventDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

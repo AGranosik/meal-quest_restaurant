@@ -1,14 +1,15 @@
-﻿using domain.Restaurants.Aggregates.DomainEvents;
+﻿using domain.Common.DomainImplementationTypes;
 using infrastructure.EventStorage.DatabaseModels;
 using infrastructure.EventStorage.DatabaseModels.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.EventStorage
 {
-    public class EventdbContext(DbContextOptions<EventdbContext> options) : DbContext(options)
+    public class EventDbContext(DbContextOptions<EventDbContext> options) : DbContext(options)
     {
-        public DbSet<DomainEventModel<RestaurantEvent>> RestaurantEvents { get; set; }
-
+        public DbSet<DomainEventModel<TDomainEvent>> GetDbSet<TDomainEvent>()
+            where TDomainEvent : DomainEvent
+                => Set<DomainEventModel<TDomainEvent>>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("events");

@@ -18,6 +18,6 @@ namespace infrastructure.EventStorage
         }
 
         private static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
-            => services.AddDbContext<EventdbContext>(opt => opt.UseNpgsql(configuration.GetConnectionString("postgres")));
+            => services.AddDbContext<EventDbContext>(opt => opt.UseNpgsql(configuration.GetConnectionString("postgres")));
     }
 }

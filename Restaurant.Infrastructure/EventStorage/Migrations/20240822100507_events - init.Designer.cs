@@ -10,8 +10,8 @@ using infrastructure.EventStorage;
 
 namespace infrastructure.EventStorage.Migrations
 {
-    [DbContext(typeof(EventdbContext))]
-    [Migration("20240822072051_events - init")]
+    [DbContext(typeof(EventDbContext))]
+    [Migration("20240822100507_events - init")]
     partial class eventsinit
     {
         /// <inheritdoc />
