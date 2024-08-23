@@ -27,7 +27,6 @@ namespace application.Restaurants.Commands
 
             await _repo.CreateAsync(domainResult.Value, cancellationToken);
 
-            //fallback policy
             await _mediator.PublishEventsAsync<Restaurant, RestaurantId>(domainResult.Value, cancellationToken);
             return Result.Ok(domainResult.Value.Id!);
         }

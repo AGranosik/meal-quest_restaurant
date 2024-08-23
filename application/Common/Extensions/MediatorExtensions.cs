@@ -11,7 +11,9 @@ namespace application.Common.Extensions
         {
             var events = entity.GetEvents();
             foreach (var @event in events)
+            {
                 await mediator.Publish(@event, cancellationToken);
+            }
         }
     }
 }

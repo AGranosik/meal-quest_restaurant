@@ -3,5 +3,5 @@ using MediatR;
 
 namespace domain.Restaurants.Aggregates.DomainEvents
 {
-    public sealed record RestaurantCreatedEvent(RestaurantId Id) : RestaurantEvent(Id.Value), INotification;
+    public sealed record RestaurantCreatedEvent(RestaurantId? RestaurantId) : RestaurantEvent(RestaurantId), INotification;
 }

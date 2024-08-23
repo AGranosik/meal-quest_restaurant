@@ -46,14 +46,6 @@ namespace unitTests.Application.EventHandlers
         }
 
         [Test]
-        public async Task RestaurantCreatedEvent_RestaurantMenuIdCannotBeNull_Success()
-        {
-            var handler = CreateEventHandler();
-            var action = () => handler.Handle(new RestaurantCreatedEvent(null!), CancellationToken.None);
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
-        [Test]
         public async Task RestaurantCreatedEvent_Success()
         {
             var id = 1;

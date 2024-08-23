@@ -1,5 +1,6 @@
 ﻿using application.EventHandlers.Interfaces;
 using domain.Common.DomainImplementationTypes;
+using infrastructure.EventStorage.DatabaseModels;
 
 namespace infrastructure.EventStorage
 {
@@ -8,9 +9,12 @@ namespace infrastructure.EventStorage
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public Task StoreEventAsync(TDomainEvent @event, CancellationToken cancellationToken)
+        public async Task StoreEventAsync(TDomainEvent @event, CancellationToken cancellationToken)
         {
-            return null;
+            var dbSet = _context.GetDbSet<TDomainEvent>();
+
+            dbSet.Add(new DomainEventModel<TDomainEvent>(@event.StreamId!.Value, @event));
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

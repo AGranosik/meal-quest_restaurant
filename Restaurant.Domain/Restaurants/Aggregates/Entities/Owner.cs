@@ -1,4 +1,5 @@
 ﻿using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -41,6 +42,11 @@ namespace domain.Restaurants.Aggregates.Entities
                 return Result.Fail("Address cannot be null.");
 
             return Result.Ok();
+        }
+
+        public override List<DomainEvent> GetEvents()
+        {
+            throw new NotImplementedException();
         }
     }
 }

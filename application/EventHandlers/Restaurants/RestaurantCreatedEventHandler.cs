@@ -18,7 +18,7 @@ namespace application.EventHandlers.Restaurants
             Validation(notification);
 
             var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(() =>
-                _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Id.Value), cancellationToken));
+                _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Id!.Value), cancellationToken));
 
             if(policyResult.Outcome == OutcomeType.Successful)
                 await StoreEventAsync(notification, cancellationToken);
@@ -31,7 +31,7 @@ namespace application.EventHandlers.Restaurants
         private static void Validation(RestaurantCreatedEvent notification)
         {
             ArgumentNullException.ThrowIfNull(notification);
-            ArgumentNullException.ThrowIfNull(notification.Id);
+            ArgumentNullException.ThrowIfNull(notification.StreamId);
         }
 
         private async Task StoreEventAsync(RestaurantCreatedEvent notification, CancellationToken cancellationToken)

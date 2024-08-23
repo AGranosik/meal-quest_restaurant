@@ -14,7 +14,7 @@ namespace infrastructure.Database.RestaurantContext.Repositories
             .Where(r => r.Owner.Id! == new OwnerId(ownerId))
             .Select(r =>
                 new RestaurantDto(
-                    r.Id!.Value,
+                    r.Id!.Value!,
                     new OwnerDto(r.Owner.Name.Value.Value, r.Owner.Surname.Value.Value, 
                         new AddressDto(r.Owner.Address.Street.Value.Value, r.Owner.Address.City.Value.Value, r.Owner.Address.Coordinates.X, r.Owner.Address.Coordinates.Y)),
                     new OpeningHorusDto(r.OpeningHours.WorkingDays.Select(wd => new WorkingDayDto(wd.Day, wd.From, wd.To)).ToList())))

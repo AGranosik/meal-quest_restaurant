@@ -5,6 +5,7 @@ using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
 using domain.Menus.Aggregates.DomainEvents;
 using domain.Common.ValueTypes.Strings;
+using domain.Common.DomainImplementationTypes;
 
 namespace domain.Menus.Aggregates.Entities
 {
@@ -28,6 +29,7 @@ namespace domain.Menus.Aggregates.Entities
             Groups = groups;
             Name = name;
             Restaurant = restaurant;
+            Id = new MenuId(0);
             _domainEvents.Add(new MenuCreatedEvent(this));
         }
 
@@ -43,6 +45,16 @@ namespace domain.Menus.Aggregates.Entities
                 return Result.Fail("Restaurant id cannot be null.");
 
             return Result.Ok();
+        }
+
+        public override List<DomainEvent> GetEvents()
+        {
+            foreach(var @event in _domainEvents)
+            {
+                @event.SetId(Id!.Value);
+            }
+
+            return _domainEvents;
         }
     }
 }

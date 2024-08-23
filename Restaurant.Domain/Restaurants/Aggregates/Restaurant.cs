@@ -1,4 +1,5 @@
 ﻿using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
@@ -53,6 +54,17 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
+        public override List<DomainEvent> GetEvents()
+        {
+            if (Id is null)
+                return _domainEvents;
 
+            foreach(var @event in _domainEvents)
+            {
+                @event.SetId(Id!.Value);
+            }
+
+            return _domainEvents;
+        }
     }
 }

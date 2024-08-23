@@ -176,6 +176,7 @@ namespace unitTests.Application.Restaurants
         [Test]
         public async Task Coomand_NotificationHandlerCalled_Success()
         {
+            //check if events are stored (restaurant text class inject contexts)
             var openingHours = new OpeningHoursCommand(
             [
                 new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
