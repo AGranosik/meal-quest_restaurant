@@ -7,7 +7,7 @@ using infrastructure.EventStorage;
 
 #nullable disable
 
-namespace infrastructure.Migrations
+namespace infrastructure.EventStorage.Migrations
 {
     [DbContext(typeof(EventDbContext))]
     partial class EventDbContextModelSnapshot : ModelSnapshot
@@ -36,6 +36,9 @@ namespace infrastructure.Migrations
 
                     b.Property<int>("StreamId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
 
                     b.HasKey("EventId");
 

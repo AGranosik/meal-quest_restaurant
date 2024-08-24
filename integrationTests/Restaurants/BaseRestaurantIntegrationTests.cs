@@ -1,4 +1,6 @@
-﻿using infrastructure.Database.RestaurantContext;
+﻿using infrastructure.Database.MenuContext;
+using infrastructure.Database.RestaurantContext;
+using infrastructure.EventStorage;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
@@ -7,6 +9,8 @@ namespace integrationTests.Restaurants
 {
     public class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
     {
+        protected MenuDbContext _menuDbContext;
+        protected EventDbContext _eventDobContext;
         public BaseRestaurantIntegrationTests()
         {
             
@@ -28,14 +32,19 @@ namespace integrationTests.Restaurants
                     new Table("restaurant", "Owners"),
                     new Table("restaurant", "Restaurants"),
                     new Table("menu", "Restaurants"),
+                    new Table("event", "RestaurantEvents"),
                 ],
                 SchemasToInclude =
                 [
                     "public",
                     "restaurant",
-                    "menu"
+                    "menu",
+                    "events"
                 ]
             });
+
+            _menuDbContext = await GetDifferentDbContext<MenuDbContext>();
+            _eventDobContext = await GetDifferentDbContext<EventDbContext>();
         }
 
         public override async Task OneTimeTearDown()

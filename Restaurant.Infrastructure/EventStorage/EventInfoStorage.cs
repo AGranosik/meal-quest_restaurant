@@ -9,11 +9,11 @@ namespace infrastructure.EventStorage
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task StoreEventAsync(TDomainEvent @event, CancellationToken cancellationToken)
+        public async Task StoreEventAsync(TDomainEvent @event, bool success, CancellationToken cancellationToken)
         {
             var dbSet = _context.GetDbSet<TDomainEvent>();
 
-            dbSet.Add(new DomainEventModel<TDomainEvent>(@event.StreamId!.Value, @event));
+            dbSet.Add(new DomainEventModel<TDomainEvent>(@event.StreamId!.Value, @event, success));
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

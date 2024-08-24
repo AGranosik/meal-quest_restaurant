@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using infrastructure.Database.MenuContext;
@@ -45,7 +46,6 @@ namespace integrationTests.Restaurants
         [Test]
         public async Task CreateRestaurant_CreatedInMenuContext_Success()
         {
-            var menuDbContext = await GetDifferentDbContext<MenuDbContext>();
             var request = RestaurantDataFaker.ValidRequest();
 
             var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
@@ -54,11 +54,31 @@ namespace integrationTests.Restaurants
             var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
 
 
-            var restaurantDb = await menuDbContext.Restaurants
+            var menuDb = await _menuDbContext.Restaurants
                 .Where(r => r.Value == result!.Value)
                 .ToListAsync();
 
-            restaurantDb.Count.Should().Be(1);
+            menuDb.Count.Should().Be(1);
         }
+
+        [Test]
+        public async Task CreateRestaurant_Valid_StoredInEventStore()
+        {
+            var request = RestaurantDataFaker.ValidRequest();
+
+            //mvoe to method to extract response from request
+            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var resultString = await response.Content.ReadAsStringAsync();
+            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
+
+
+            var events = await _eventDobContext.GetDbSet<RestaurantEvent>()
+                .Where(e => e.StreamId == result!.Value)
+                .ToListAsync();
+
+            events.Count.Should().Be(1);
+        }
+
     }
 }

@@ -3,10 +3,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace infrastructure.Migrations
+namespace infrastructure.EventStorage.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class restaurantevents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,6 +22,7 @@ namespace infrastructure.Migrations
                     EventId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StreamId = table.Column<int>(type: "integer", nullable: false),
+                    Success = table.Column<bool>(type: "boolean", nullable: false),
                     Data = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>

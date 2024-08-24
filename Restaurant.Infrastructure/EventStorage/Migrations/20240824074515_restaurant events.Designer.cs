@@ -8,11 +8,11 @@ using infrastructure.EventStorage;
 
 #nullable disable
 
-namespace infrastructure.Migrations
+namespace infrastructure.EventStorage.Migrations
 {
     [DbContext(typeof(EventDbContext))]
-    [Migration("20240823144935_test")]
-    partial class test
+    [Migration("20240824074515_restaurant events")]
+    partial class restaurantevents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,9 @@ namespace infrastructure.Migrations
 
                     b.Property<int>("StreamId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("Success")
+                        .HasColumnType("boolean");
 
                     b.HasKey("EventId");
 
