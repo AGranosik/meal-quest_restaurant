@@ -29,8 +29,8 @@ namespace domain.Menus.Aggregates.Entities
             Groups = groups;
             Name = name;
             Restaurant = restaurant;
-            Id = new MenuId(0);
-            _domainEvents.Add(new MenuCreatedEvent(this));
+            // test event flow
+            _domainEvents.Add(new MenuCreatedEvent(Id));
         }
 
         private static Result CreationValidation(List<Group> groups, RestaurantIdMenuId restaurantId)
