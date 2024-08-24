@@ -9,6 +9,7 @@ namespace infrastructure.EventStorage
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
+        // add reason of fialure;
         public async Task StoreEventAsync(TDomainEvent @event, bool success, CancellationToken cancellationToken)
         {
             var dbSet = _context.GetDbSet<TDomainEvent>();

@@ -38,6 +38,13 @@ namespace unitTests.Application.EventHandlers
         }
 
         [Test]
+        public void Creation_Success()
+        {
+            var creation = () => new RestaurantCreatedEventHandler(_menuRepositoryMock.Object, _eventInfoStorageMock.Object);
+            creation.Should().NotThrow();
+        }
+
+        [Test]
         public async Task RestaurantCreatedEvent_EventIsNull_ThrowsException()
         {
             var handler = CreateEventHandler();

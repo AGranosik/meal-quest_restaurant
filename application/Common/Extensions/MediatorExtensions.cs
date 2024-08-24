@@ -5,6 +5,7 @@ namespace application.Common.Extensions
 {
     public static class MediatorExtensions
     {
+        // maybe define pipelines?
         public static async Task PublishEventsAsync<TEntity, TKey>(this IMediator mediator, TEntity entity, CancellationToken cancellationToken)
             where TEntity : Entity<TKey>
             where TKey : ValueObject<TKey>

@@ -1,8 +1,10 @@
 ﻿using domain.Common.DomainImplementationTypes;
-using domain.Menus.Aggregates.Entities;
+using domain.Common.ValueTypes.Strings;
 using domain.Menus.ValueObjects.Identifiers;
+using MediatR;
 
 namespace domain.Menus.Aggregates.DomainEvents
 {
-    public sealed record MenuCreatedEvent(MenuId? MenuId) : MenuEvent(MenuId);
+    //validation of params should be there, refecator that when moving fro mrecord to classes
+    public sealed record MenuCreatedEvent(MenuId? MenuId, Name Name, RestaurantIdMenuId Restaurant) : MenuEvent(MenuId), INotification;
 }

@@ -1,5 +1,6 @@
 ﻿using application.Restaurants.Commands.Interfaces;
 using domain.Restaurants.Aggregates;
+using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 
@@ -12,6 +13,11 @@ namespace infrastructure.Database.RestaurantContext.Repositories
         public RestaurantReposiotry(RestaurantDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public Task AddMenuAsync(Menu menu, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Result<RestaurantId?>> CreateAsync(Restaurant restaurant, CancellationToken cancellationToken)

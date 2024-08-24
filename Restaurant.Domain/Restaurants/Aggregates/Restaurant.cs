@@ -11,8 +11,8 @@ namespace domain.Restaurants.Aggregates
     // add restaurant name
     public class Restaurant: Aggregate<RestaurantId>
     {
-        protected List<MenuRestaurantId> _menus = new();
-        public IReadOnlyCollection<MenuRestaurantId> Menus => _menus.AsReadOnly();
+        protected List<Menu> _menus = new();
+        public IReadOnlyCollection<Menu> Menus => _menus.AsReadOnly();
 
         protected Restaurant() : base() { }
         public Owner Owner { get; protected set; }
@@ -27,12 +27,12 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok(new Restaurant(owner, openingHours));
         }
 
-        public Result AddMenu(MenuRestaurantId menuId)
+        public Result AddMenu(Menu menu)
         {
-            if (_menus.Contains(menuId))
+            if (_menus.Contains(menu))
                 return Result.Fail("Menu already at restaurant.");
 
-            _menus.Add(menuId);
+            _menus.Add(menu);
             return Result.Ok();
         }
 
@@ -54,6 +54,7 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
+        //Tests
         public override List<DomainEvent> GetEvents()
         {
             if (Id is null)

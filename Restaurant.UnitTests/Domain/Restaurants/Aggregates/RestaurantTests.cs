@@ -58,47 +58,47 @@ namespace unitTests.Domain.Restaurants.Aggregates
         [Test]
         public void AddMenu_None_Success()
         {
-            var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
+            var menuResult = Menu.Create(new MenuId(1), new Name("test"));
             var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
 
-            var addResult = restaurant.AddMenu(menu);
+            var addResult = restaurant.AddMenu(menuResult.Value);
             addResult.IsSuccess.Should().BeTrue();
 
             restaurant.Menus.Count.Should().Be(1);
             var storedMenu = restaurant.Menus.First();
 
-            (storedMenu == menu).Should().BeTrue();
+            (storedMenu == menuResult.Value).Should().BeTrue();
         }
 
         [Test]
         public void AddMenu_OneAlreadyThere_Success()
         {
-            var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
-            var menu2 = new MenuRestaurantId(new RestaurantId(3), new Name("test2"));
+            var menuResult = Menu.Create(new MenuId(1), new Name("test"));
+            var menuResult2 = Menu.Create(new MenuId(2), new Name("test2"));
             var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
-            restaurant.AddMenu(menu);
+            restaurant.AddMenu(menuResult.Value);
 
-            var addResult = restaurant.AddMenu(menu2);
+            var addResult = restaurant.AddMenu(menuResult2.Value);
             addResult.IsSuccess.Should().BeTrue();
 
             restaurant.Menus.Count.Should().Be(2);
-            restaurant.Menus.Any(m => m == menu2)
+            restaurant.Menus.Any(m => m == menuResult2.Value)
                 .Should().BeTrue();
         }
 
         [Test]
         public void AddMenu_CannotAddDuplicates_Failure()
         {
-            var menu = new MenuRestaurantId(new RestaurantId(3), new Name("test"));
-            var menu2 = new MenuRestaurantId(new RestaurantId(3), new Name("test2"));
+            var menuResult = Menu.Create(new MenuId(1), new Name("test"));
+            var menuResult2 = Menu.Create(new MenuId(2), new Name("test2"));
             var creationResult = Restaurant.Create(_validOwner, _validOpeningHours);
             var restaurant = creationResult.Value;
-            restaurant.AddMenu(menu);
-            restaurant.AddMenu(menu2);
+            restaurant.AddMenu(menuResult.Value);
+            restaurant.AddMenu(menuResult2.Value);
 
-            var addResult = restaurant.AddMenu(menu2);
+            var addResult = restaurant.AddMenu(menuResult2.Value);
             addResult.IsFailed.Should().BeTrue();
         }
     }

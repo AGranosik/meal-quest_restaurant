@@ -30,7 +30,7 @@ namespace domain.Menus.Aggregates.Entities
             Name = name;
             Restaurant = restaurant;
             // test event flow
-            _domainEvents.Add(new MenuCreatedEvent(Id));
+            _domainEvents.Add(new MenuCreatedEvent(Id, name, restaurant));
         }
 
         private static Result CreationValidation(List<Group> groups, RestaurantIdMenuId restaurantId)
