@@ -7,6 +7,7 @@ using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
+using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using Moq;
 
@@ -66,7 +67,7 @@ namespace unitTests.Application.EventHandlers
         public async Task Handle_NameIsNull_ThrowsException()
         {
             var handler = CreateHandler();
-            var action = () => handler.Handle(new MenuCreatedEvent(new MenuId(1), null, null), CancellationToken.None);
+            var action = () => handler.Handle(new MenuCreatedEvent(new domain.Menus.ValueObjects.Identifiers.MenuId(1), null, null), CancellationToken.None);
             await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
@@ -74,7 +75,7 @@ namespace unitTests.Application.EventHandlers
         public async Task Handle_RestaurantMenuId_ThrowsException()
         {
             var handler = CreateHandler();
-            var action = () => handler.Handle(new MenuCreatedEvent(new MenuId(1), new Name("test"), null), CancellationToken.None);
+            var action = () => handler.Handle(new MenuCreatedEvent(new domain.Menus.ValueObjects.Identifiers.MenuId(1), new Name("test"), null), CancellationToken.None);
             await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
@@ -90,21 +91,21 @@ namespace unitTests.Application.EventHandlers
             await action.Should().NotThrowAsync();
 
             _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Once());
-            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<CancellationToken>()));
+            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()));
         }
 
         [Test]
         public async Task Handle_RepoThrowsException_NoException()
         {
             _restaurantRepositoryMock
-                .Setup(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<CancellationToken>()))
+                .Setup(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception());
 
             var handler = CreateHandler();
             var action = () => handler.Handle(CreateEvent(), CancellationToken.None);
             await action.Should().NotThrowAsync();
 
-            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<CancellationToken>()), Times.Exactly(1 + FallbackRetryPoicies.NUMBER_OF_RETRIES));
+            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()), Times.Exactly(1 + FallbackRetryPoicies.NUMBER_OF_RETRIES));
             _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.Is<bool>(s => s == false), It.IsAny<CancellationToken>()), Times.Once());
         }
 
@@ -118,14 +119,14 @@ namespace unitTests.Application.EventHandlers
             var action = () => handler.Handle(CreateEvent(), CancellationToken.None);
             await action.Should().NotThrowAsync();
 
-            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<CancellationToken>()), Times.Once());
+            _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()), Times.Once());
             _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.Is<bool>(s => s == true), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPoicies.NUMBER_OF_RETRIES + 1));
         }
 
         private MenuCreatedEventHandler CreateHandler()
             => new(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object);
 
-        private MenuCreatedEvent CreateEvent()
-            => new(new MenuId(1), new Name("test"), new RestaurantIdMenuId(2));
+        private static MenuCreatedEvent CreateEvent()
+            => new(new domain.Menus.ValueObjects.Identifiers.MenuId(1), new Name("test"), new RestaurantIdMenuId(2));
     }
 }

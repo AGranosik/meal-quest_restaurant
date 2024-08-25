@@ -8,7 +8,8 @@ namespace domain.Restaurants.ValueObjects
     {
         private const int WEEK_DAYS = 7;
 
-        public List<WorkingDay> WorkingDays { get; }
+        private List<WorkingDay> _workingDays = new();
+        public IReadOnlyCollection<WorkingDay> WorkingDays => _workingDays;
 
         protected OpeningHours() { }
 
@@ -23,7 +24,7 @@ namespace domain.Restaurants.ValueObjects
 
         protected OpeningHours(List<WorkingDay> workingDays)
         {
-            WorkingDays = workingDays;
+            _workingDays = workingDays;
         }
 
 

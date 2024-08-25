@@ -18,6 +18,7 @@ namespace infrastructure.Database.RestaurantContext
                 .ApplyConfiguration(new OpeningHoursConfiguration())
                 .ApplyConfiguration(new OwnerConfiguration())
                 .ApplyConfiguration(new RestaurantConfiguration())
+                .ApplyConfiguration(new MenuConfiguration())
                 .ApplyConfiguration(new WorkingDayConfiguration());
 
             base.OnModelCreating(modelBuilder);

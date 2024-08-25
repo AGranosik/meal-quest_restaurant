@@ -1,4 +1,5 @@
-﻿using application.Menus.Commands.Interfaces;
+﻿using application.Common.Extensions;
+using application.Menus.Commands.Interfaces;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates.Entities;
@@ -9,9 +10,10 @@ using MediatR;
 
 namespace application.Menus.Commands
 {
-    public class CreateMenuCommandHandler(IMenuRepository menuRepository) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
+    public class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         // event handler on menu creation
         public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
@@ -25,6 +27,7 @@ namespace application.Menus.Commands
                 return domainResult.ToResult();
 
             await _menuRepository.CreateMenuAsync(domainResult.Value, cancellationToken);
+            await _mediator.PublishEventsAsync<Menu, MenuId>(domainResult.Value, cancellationToken);
             return Result.Ok(domainResult.Value.Id!);
         }
 

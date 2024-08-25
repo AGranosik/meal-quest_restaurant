@@ -1,7 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using application.Menus.Commands;
+﻿using application.Menus.Commands;
 using application.Menus.Commands.Interfaces;
 using FluentAssertions;
+using MediatR;
 using Moq;
 
 namespace unitTests.Application.Menus
@@ -10,24 +10,33 @@ namespace unitTests.Application.Menus
     internal class CreateMenuCommandTests
     {
         private Mock<IMenuRepository> _repositoryMock;
+        private Mock<IMediator> _mediatorMock;
 
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IMenuRepository>();
+            _mediatorMock = new Mock<IMediator>();
         }
 
         [Test]
         public void Creation_RepoCannotBeNull_ThrowsException()
         {
-            var creation = () => new CreateMenuCommandHandler(null);
+            var creation = () => new CreateMenuCommandHandler(null, null);
+            creation.Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Creation_MediatorCannotBeNull_ThrowsException()
+        {
+            var creation = () => new CreateMenuCommandHandler(_repositoryMock.Object, null);
             creation.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public async Task Creation_CommandCannotBeNull_Fail()
         {
-            var handler = new CreateMenuCommandHandler(_repositoryMock.Object);
+            var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object);
             var result = await handler.Handle(null, CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
@@ -35,7 +44,7 @@ namespace unitTests.Application.Menus
         [Test]
         public async Task Creation_GroupsCannotBeNull_Fail()
         {
-            var handler = new CreateMenuCommandHandler(_repositoryMock.Object);
+            var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object);
             var result = await handler.Handle(new CreateMenuCommand(null, null, default), CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
@@ -43,7 +52,7 @@ namespace unitTests.Application.Menus
         [Test]
         public async Task Creation_MealsCannotBeNull_Fail()
         {
-            var handler = new CreateMenuCommandHandler(_repositoryMock.Object);
+            var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object);
             var result = await handler.Handle(new CreateMenuCommand(null,
             [
                 new CreateGroupCommand(null, null)
@@ -56,7 +65,7 @@ namespace unitTests.Application.Menus
         [Test]
         public async Task Creation_IngredientsCannotBeNull_Fail()
         {
-            var handler = new CreateMenuCommandHandler(_repositoryMock.Object);
+            var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object);
             var result = await handler.Handle(new CreateMenuCommand(null,
             [
                 new CreateGroupCommand(null, [

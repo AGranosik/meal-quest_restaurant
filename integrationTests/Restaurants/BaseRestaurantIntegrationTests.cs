@@ -10,7 +10,7 @@ namespace integrationTests.Restaurants
     public class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
     {
         protected MenuDbContext _menuDbContext;
-        protected EventDbContext _eventDobContext;
+        protected EventDbContext _eventDbContext;
         public BaseRestaurantIntegrationTests()
         {
             
@@ -39,12 +39,12 @@ namespace integrationTests.Restaurants
                     "public",
                     "restaurant",
                     "menu",
-                    "events"
+                    "event"
                 ]
             });
 
             _menuDbContext = await GetDifferentDbContext<MenuDbContext>();
-            _eventDobContext = await GetDifferentDbContext<EventDbContext>();
+            _eventDbContext = await GetDifferentDbContext<EventDbContext>();
         }
 
         public override async Task OneTimeTearDown()

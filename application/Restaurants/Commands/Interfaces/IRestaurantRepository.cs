@@ -9,6 +9,6 @@ namespace application.Restaurants.Commands.Interfaces
     {
         Task<Result<RestaurantId?>> CreateAsync(Restaurant restaurant, CancellationToken cancellationToken);
         // restaurant id as parameter
-        Task AddMenuAsync(Menu menu, CancellationToken cancellationToken);
+        Task AddMenuAsync(Menu menu, RestaurantId restaurantId, CancellationToken cancellationToken);
     }
 }

@@ -3,6 +3,7 @@ using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext.Repositories
 {
@@ -15,9 +16,16 @@ namespace infrastructure.Database.RestaurantContext.Repositories
             _dbContext = dbContext;
         }
 
-        public Task AddMenuAsync(Menu menu, CancellationToken cancellationToken)
+        public async Task AddMenuAsync(Menu menu, RestaurantId restaurantId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id! == restaurantId);
+            var result = restaurant.AddMenu(menu);
+
+            // return result and handle it in event handlers
+            if(result.IsFailed)
+                throw new ArgumentException(result.Errors.ToString());
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Result<RestaurantId?>> CreateAsync(Restaurant restaurant, CancellationToken cancellationToken)

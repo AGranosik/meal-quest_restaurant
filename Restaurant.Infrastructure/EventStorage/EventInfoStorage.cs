@@ -13,7 +13,7 @@ namespace infrastructure.EventStorage
         public async Task StoreEventAsync(TDomainEvent @event, bool success, CancellationToken cancellationToken)
         {
             var dbSet = _context.GetDbSet<TDomainEvent>();
-
+            var model = new DomainEventModel<TDomainEvent>(@event.StreamId!.Value, @event, success);
             dbSet.Add(new DomainEventModel<TDomainEvent>(@event.StreamId!.Value, @event, success));
             await _context.SaveChangesAsync(cancellationToken);
         }

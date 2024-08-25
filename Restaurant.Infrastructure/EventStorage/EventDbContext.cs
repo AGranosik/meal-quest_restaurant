@@ -15,7 +15,8 @@ namespace infrastructure.EventStorage
             modelBuilder.HasDefaultSchema("events");
 
             modelBuilder
-                .ApplyConfiguration(new RestaurantEventConfiguration());
+                .ApplyConfiguration(new RestaurantEventConfiguration())
+                .ApplyConfiguration(new MenuEventConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

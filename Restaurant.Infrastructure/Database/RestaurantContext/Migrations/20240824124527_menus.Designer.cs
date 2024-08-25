@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using infrastructure.Database.RestaurantContext;
@@ -11,9 +12,11 @@ using infrastructure.Database.RestaurantContext;
 namespace infrastructure.Database.RestaurantContext.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240824124527_menus")]
+    partial class menus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,7 +197,7 @@ namespace infrastructure.Database.RestaurantContext.Migrations
 
             modelBuilder.Entity("domain.Restaurants.ValueObjects.Address", b =>
                 {
-                    b.OwnsOne("domain.Restaurants.ValueObjects.Address.Coordinates#domain.Restaurants.ValueObjects.Coordinates", "Coordinates", b1 =>
+                    b.OwnsOne("domain.Restaurants.ValueObjects.Coordinates", "Coordinates", b1 =>
                         {
                             b1.Property<int>("AddressID")
                                 .HasColumnType("integer");

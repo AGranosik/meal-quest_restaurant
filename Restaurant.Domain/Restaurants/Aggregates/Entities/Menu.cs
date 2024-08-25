@@ -6,10 +6,8 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates.Entities
 {
-    //tests
     public class Menu : Entity<MenuId>
     {
-        public MenuId MenuId { get; }
         public Name Name { get; }
 
         public static Result<Menu> Create(MenuId menuId, Name name)
@@ -21,9 +19,11 @@ namespace domain.Restaurants.Aggregates.Entities
             return Result.Ok(new Menu(menuId, name));
         }
 
+        protected Menu() { }
+
         private Menu(MenuId menuId, Name name)
         {
-            MenuId = menuId;
+            Id = menuId;
             Name = name;
         }
         public override bool Equals(object? obj)
@@ -33,7 +33,7 @@ namespace domain.Restaurants.Aggregates.Entities
 
             Menu other = obj as Menu;
             if (other == null) return false;
-            return MenuId == other.MenuId;
+            return Id == other.Id;
         }
 
         private static Result Validation(MenuId menuId, Name name)
