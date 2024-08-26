@@ -1,8 +1,15 @@
-﻿using domain.Restaurants.ValueObjects.Identifiers;
+﻿using System.Text.Json;
+using domain.Restaurants.ValueObjects.Identifiers;
 using MediatR;
 
 namespace domain.Restaurants.Aggregates.DomainEvents
 {
     //find a way no nto store uneccessary data with events... // base on class no records
-    public sealed record RestaurantCreatedEvent(RestaurantId? RestaurantId) : RestaurantEvent(RestaurantId), INotification;
+    public sealed record RestaurantCreatedEvent(RestaurantId? RestaurantId) : RestaurantEvent(RestaurantId), INotification
+    {
+        public override string GetAssemblyName()
+            => GetType().AssemblyQualifiedName;
+        public override string Serialize()
+            => JsonSerializer.Serialize(this);
+    }
 }

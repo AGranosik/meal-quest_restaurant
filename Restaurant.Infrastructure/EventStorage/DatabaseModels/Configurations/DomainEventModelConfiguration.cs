@@ -1,8 +1,6 @@
-﻿using System.Text.Json;
-using domain.Common.DomainImplementationTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace infrastructure.EventStorage.DatabaseModels.Configurations
 {
@@ -22,14 +20,16 @@ namespace infrastructure.EventStorage.DatabaseModels.Configurations
             builder.Property(e => e.StreamId)
                 .IsRequired();
 
-            var converter = new ValueConverter<TEvent, string>(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
-                v => JsonSerializer.Deserialize<TEvent>(v, (JsonSerializerOptions)null));
-
-            builder.Property(e => e.Data)
-                .HasConversion(converter)
+            builder.Property(e => e.AssemblyName)
                 .IsRequired()
-                .HasColumnType("jsonb");
+                .HasMaxLength(300);
+
+            builder.Property(e => e.Success);
+
+            builder.Property(e => e.SerializedData)
+                .IsRequired();
+
+            builder.Ignore(e => e.Data);
         }
     }
 }

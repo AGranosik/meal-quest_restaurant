@@ -1,21 +1,32 @@
-﻿using domain.Common.DomainImplementationTypes;
+﻿using System.Text.Json;
+using domain.Common.DomainImplementationTypes;
 
 namespace infrastructure.EventStorage.DatabaseModels
 {
     public class DomainEventModel<T>
         where T : DomainEvent
     {
+        private T _data = null;
         public DomainEventModel(int streamId, T data, bool success)
         {
+            _data = data;
             StreamId = streamId;
-            Data = data;
             Success = success;
+            AssemblyName = data.GetAssemblyName();
+            SerializedData = data.Serialize();
         }
         private DomainEventModel() { }
 
         public int EventId { get; }
         public int StreamId { get; }
-        public bool Success { get; set; }
-        public T Data { get; }
+        public bool Success { get; }
+        public string? AssemblyName { get; }
+
+        // move to 
+        public T Data => _data ?? (T)JsonSerializer.Deserialize(SerializedData, Type.GetType(AssemblyName), new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+        public string SerializedData { get; set; }
     }
 }
