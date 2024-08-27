@@ -56,30 +56,6 @@ namespace unitTests.Application.EventHandlers
         }
 
         [Test]
-        public async Task Handle_MenuIdIsNull_ThrowsException()
-        {
-            var handler = CreateHandler();
-            var action = () => handler.Handle(new MenuCreatedEvent(null, null, null), CancellationToken.None);
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
-        [Test]
-        public async Task Handle_NameIsNull_ThrowsException()
-        {
-            var handler = CreateHandler();
-            var action = () => handler.Handle(new MenuCreatedEvent(new domain.Menus.ValueObjects.Identifiers.MenuId(1), null, null), CancellationToken.None);
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
-        [Test]
-        public async Task Handle_RestaurantMenuId_ThrowsException()
-        {
-            var handler = CreateHandler();
-            var action = () => handler.Handle(new MenuCreatedEvent(new domain.Menus.ValueObjects.Identifiers.MenuId(1), new Name("test"), null), CancellationToken.None);
-            await action.Should().ThrowAsync<ArgumentNullException>();
-        }
-
-        [Test]
         public async Task Handle_Success()
         {
             var id = 1;

@@ -4,7 +4,7 @@ namespace domain.Menus.ValueObjects.Identifiers
 {
     public class RestaurantIdMenuId : SimpleValueType<int, RestaurantIdMenuId>
     {
-        public RestaurantIdMenuId(int id) : base(id)
+        public RestaurantIdMenuId(int value) : base(value)
         {
             
         }

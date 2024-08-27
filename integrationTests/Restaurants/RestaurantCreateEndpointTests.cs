@@ -106,6 +106,8 @@ namespace integrationTests.Restaurants
                 .ToListAsync();
 
             events.Count.Should().Be(1);
+
+            events[0].Data.Should().BeAssignableTo<RestaurantCreatedEvent>();
         }
         private static bool CompareRestaurant(CreateRestaurantRequest request, Restaurant db)
         {

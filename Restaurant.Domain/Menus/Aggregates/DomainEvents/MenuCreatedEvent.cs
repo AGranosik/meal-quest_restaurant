@@ -1,16 +1,33 @@
 ﻿using System.Text.Json;
-using domain.Common.DomainImplementationTypes;
+using System.Text.Json.Serialization;
 using domain.Common.ValueTypes.Strings;
 using domain.Menus.ValueObjects.Identifiers;
 using MediatR;
 
 namespace domain.Menus.Aggregates.DomainEvents
 {
-    //validation of params should be there, refecator that when moving fro mrecord to classes
-    public sealed record MenuCreatedEvent(MenuId? MenuId, Name Name, RestaurantIdMenuId Restaurant) : MenuEvent(MenuId), INotification
+    public sealed class MenuCreatedEvent : MenuEvent, INotification
     {
+        public MenuCreatedEvent(MenuId? menuId, Name name, RestaurantIdMenuId restaurant) : base(menuId?.Value)
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(restaurant);
+
+            Name = name.Value.Value;
+            RestaurantId = restaurant.Value;
+        }
+
+        [JsonConstructor]
+        private MenuCreatedEvent(int? streamId, string name, int restaurantId) : base(streamId)
+        {
+            Name = name;
+            RestaurantId = restaurantId;
+        }
+        public string Name { get; }
+        public int RestaurantId { get; }
+
         public override string GetAssemblyName()
-            => this.GetType().AssemblyQualifiedName;
+            => GetType().AssemblyQualifiedName;
 
         public override string Serialize()
             => JsonSerializer.Serialize(this);

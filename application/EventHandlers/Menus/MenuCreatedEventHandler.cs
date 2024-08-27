@@ -1,6 +1,7 @@
 ﻿using application.EventHandlers.Interfaces;
 using application.Restaurants.Commands.Interfaces;
 using core.FallbackPolicies;
+using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -17,7 +18,7 @@ namespace application.EventHandlers.Menus
         public async Task Handle(MenuCreatedEvent notification, CancellationToken cancellationToken)
         {
             Validation(notification);
-            var menu = Menu.Create(new MenuId(notification.StreamId!.Value), notification.Name);
+            var menu = Menu.Create(new MenuId(notification.StreamId!.Value), new Name(notification.Name));
 
             //test that case
             if (menu.IsFailed)
@@ -27,7 +28,7 @@ namespace application.EventHandlers.Menus
             }
 
             var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(() =>
-                _restaurantRepository.AddMenuAsync(menu.Value, new RestaurantId(notification.Restaurant.Value), cancellationToken)
+                _restaurantRepository.AddMenuAsync(menu.Value, new RestaurantId(notification.RestaurantId), cancellationToken)
             );
 
             await StoreEventAsync(notification, policyResult.Outcome == OutcomeType.Successful, cancellationToken);

@@ -1,8 +1,8 @@
-﻿using System.Text.Json;
-using domain.Common.DomainImplementationTypes;
-using domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Common.DomainImplementationTypes;
 
 namespace domain.Restaurants.Aggregates.DomainEvents
 {
-    public abstract record RestaurantEvent(RestaurantId? RestaurantId) : DomainEvent(RestaurantId?.Value);
+    public abstract class RestaurantEvent(int? streamId) : DomainEvent(streamId)
+    {
+    }
 }

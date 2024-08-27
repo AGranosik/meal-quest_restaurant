@@ -4,5 +4,7 @@ using domain.Menus.ValueObjects.Identifiers;
 
 namespace domain.Menus.Aggregates.DomainEvents
 {
-    public abstract record MenuEvent(MenuId? MenuId) : DomainEvent(MenuId?.Value);
+    public abstract class MenuEvent(int? StreamId) : DomainEvent(StreamId)
+    {
+    }
 }

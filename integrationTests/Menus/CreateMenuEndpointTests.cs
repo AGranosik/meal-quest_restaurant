@@ -91,6 +91,7 @@ namespace integrationTests.Menus
             var @event = events.First();
 
             @event.Success.Should().BeTrue();
+
             @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
         }
 
