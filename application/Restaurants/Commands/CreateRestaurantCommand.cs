@@ -10,8 +10,7 @@ using MediatR;
 
 namespace application.Restaurants.Commands
 {
-
-    public class CreateRestaurantCommandHandler(IRestaurantRepository repo, IMediator mediator) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
+    public sealed class CreateRestaurantCommandHandler(IRestaurantRepository repo, IMediator mediator) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
     {
         private readonly IRestaurantRepository _repo = repo ?? throw new ArgumentNullException(nameof(IRestaurantRepository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(IMediator));

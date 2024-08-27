@@ -37,9 +37,6 @@ namespace application.EventHandlers.Menus
         private static void Validation(MenuCreatedEvent notification)
         {
             ArgumentNullException.ThrowIfNull(notification);
-            //ArgumentNullException.ThrowIfNull(notification.MenuId);
-            //ArgumentNullException.ThrowIfNull(notification.Name);
-            //ArgumentNullException.ThrowIfNull(notification.Restaurant);
         }
 
         private async Task StoreEventAsync(MenuCreatedEvent notification, bool success, CancellationToken cancellationToken)

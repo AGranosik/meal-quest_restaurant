@@ -10,7 +10,7 @@ using MediatR;
 
 namespace application.Menus.Commands
 {
-    public class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
+    public sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
