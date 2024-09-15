@@ -30,5 +30,12 @@ namespace webapi.Controllers.Restaurants
             {
                 OwnerId = ownerId,
             }, cancellationToken));
+
+        [HttpGet("test")]
+        public async Task<IActionResult> Test(CancellationToken cancellationToken)
+        {
+            Thread.Sleep(2000);
+            return Ok();
+        }
     }
 }
