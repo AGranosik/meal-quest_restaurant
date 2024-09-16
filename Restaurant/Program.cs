@@ -1,9 +1,6 @@
 using application;
 using infrastructure;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
+using infrastructure.OpenTelemetry;
 using webapi.Controllers.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,26 +12,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
-builder.Services
-    .AddOpenTelemetry()
-    .ConfigureResource(b => b.AddService(serviceName: "restaurant-menu-service"))
-    .WithTracing(builder =>
-    {
-        builder.AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation();
-    })
-    .WithMetrics(builder =>
-    {
-        builder.AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddPrometheusExporter();
-    });
-
-builder.Logging.ClearProviders();
-builder.Logging.AddOpenTelemetry(opt =>
-{
-    //opt.addc
-});
+builder.AddOpenTelemetry(builder.Configuration);
 
 var app = builder.Build();
 

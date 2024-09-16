@@ -30,6 +30,14 @@ services:
       - "3000:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - 4317:4317
+      - 4318:4318
+      - 16686:16686
+
 
 volumes:
   grafana-storage:
