@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace integrationTests
 {
@@ -24,8 +26,24 @@ namespace integrationTests
 
             builder.ConfigureTestServices(services =>
             {
+                RemoveUnnecessaryServicesForTests(services);
                 services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("postgres")));
             });
+        }
+
+        private void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+        {
+            //trace
+            var descriptor = services.FirstOrDefault(
+                    d => d.ServiceType == typeof(OpenTelemetry.Trace.TracerProvider));
+
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+
+            //logs
+            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
         }
     }
 }

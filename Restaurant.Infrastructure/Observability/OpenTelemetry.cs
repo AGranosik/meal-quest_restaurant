@@ -13,8 +13,6 @@ namespace infrastructure.Observability
 {
     public static class OpenTelemetry
     {
-        // check if console exporter is needed
-        // add db queries to traces
         public static WebApplicationBuilder AddOpenTelemetry(this WebApplicationBuilder builder, IConfiguration configuration)
         {
             var otlpEndpoint = configuration.GetSection("OTEL_EXPORTER_OTLP_ENDPOINT").Value;
