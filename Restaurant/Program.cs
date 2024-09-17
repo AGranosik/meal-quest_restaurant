@@ -1,6 +1,6 @@
 using application;
 using infrastructure;
-using infrastructure.OpenTelemetry;
+using infrastructure.Observability;
 using webapi.Controllers.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +13,7 @@ builder.Services
     .AddApplication();
 
 builder.AddOpenTelemetry(builder.Configuration);
+
 
 var app = builder.Build();
 
@@ -27,6 +28,7 @@ app.UseHttpsRedirection();
 
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
+//app.UseSerilogRequestLogging();
 app.UseAuthorization();
 
 app.MapControllers();

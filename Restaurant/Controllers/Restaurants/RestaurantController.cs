@@ -4,13 +4,16 @@ using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
 using webapi.Controllers.Restaurants.Requests;
 
 namespace webapi.Controllers.Restaurants
 {
-    public class RestaurantController(IMediator mediator) : ApiController(mediator)
+    public class RestaurantController(IMediator mediator, ILogger<RestaurantController> logger) : ApiController(mediator)
     {
+        private readonly ILogger<RestaurantController> _logger = logger;
+
         [HttpPost]
         [SwaggerOperation(Summary = "Create Resutarant.")]
         [SwaggerResponse(200, "", typeof(Result<RestaurantId>))]
@@ -34,7 +37,9 @@ namespace webapi.Controllers.Restaurants
         [HttpGet("test")]
         public async Task<IActionResult> Test(CancellationToken cancellationToken)
         {
-            Thread.Sleep(2000);
+            _logger.LogError("Test");
+            //Log.Information("Test2");
+            //Thread.Sleep(2000);
             return Ok();
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using infrastructure.Database;
 using infrastructure.EventStorage;
+using infrastructure.Observability;
 
 namespace infrastructure
 {
@@ -11,7 +12,8 @@ namespace infrastructure
         {
             services
                 .ConfigureDatabase(configuration)
-                .ConfigureEventStorage(configuration);
+                .ConfigureEventStorage(configuration)
+                .ConfigureLogging(configuration);
 
             return services;
         }
