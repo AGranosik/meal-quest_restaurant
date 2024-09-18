@@ -7,13 +7,15 @@ using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace application.Restaurants.Commands
 {
-    public sealed class CreateRestaurantCommandHandler(IRestaurantRepository repo, IMediator mediator) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
+    public sealed class CreateRestaurantCommandHandler(IRestaurantRepository repo, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
     {
         private readonly IRestaurantRepository _repo = repo ?? throw new ArgumentNullException(nameof(IRestaurantRepository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(IMediator));
+        private readonly ILogger<CreateRestaurantCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task<Result<RestaurantId>> Handle(CreateRestaurantCommand request, CancellationToken cancellationToken)
         {
@@ -27,7 +29,7 @@ namespace application.Restaurants.Commands
             await _repo.CreateAsync(domainResult.Value, cancellationToken);
 
             //pipelines??
-            await _mediator.PublishEventsAsync<Restaurant, RestaurantId>(domainResult.Value, cancellationToken);
+            await _mediator.PublishEventsAsync<Restaurant, RestaurantId>(domainResult.Value, logger, cancellationToken);
             return Result.Ok(domainResult.Value.Id!);
         }
 

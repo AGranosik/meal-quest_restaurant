@@ -10,8 +10,10 @@ using webapi.Controllers.Restaurants.Requests;
 
 namespace webapi.Controllers.Restaurants
 {
-    public class RestaurantController(IMediator mediator) : ApiController(mediator)
+    public class RestaurantController(IMediator mediator, ILogger<RestaurantController> logger) : ApiController(mediator)
     {
+
+        private readonly ILogger<RestaurantController> _logger = logger;
 
         [HttpPost]
         [SwaggerOperation(Summary = "Create Resutarant.")]
@@ -32,5 +34,12 @@ namespace webapi.Controllers.Restaurants
             {
                 OwnerId = ownerId,
             }, cancellationToken));
+
+        [HttpGet("Test")]
+        public async Task<IActionResult> Test(CancellationToken cancellationToken)
+        {
+            _logger.LogError(new ArgumentException(), "Error");
+            return Ok();
+        }
     }
 }

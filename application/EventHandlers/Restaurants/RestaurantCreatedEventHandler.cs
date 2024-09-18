@@ -4,15 +4,18 @@ using core.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates.DomainEvents;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
     // mb definie all as pipes
-    public sealed class RestaurantCreatedEventHandler(IMenuRepository menuRepository, IEventInfoStorage<RestaurantEvent> eventInfoStorage) : INotificationHandler<RestaurantCreatedEvent>
+    // add logging
+    public sealed class RestaurantCreatedEventHandler(IMenuRepository menuRepository, IEventInfoStorage<RestaurantEvent> eventInfoStorage, ILogger<RestaurantCreatedEventHandler> logger) : INotificationHandler<RestaurantCreatedEvent>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
         private readonly IEventInfoStorage<RestaurantEvent> _eventInfoStorage = eventInfoStorage ?? throw new ArgumentNullException();
+        private readonly ILogger<RestaurantCreatedEventHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task Handle(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
         {
@@ -37,8 +40,9 @@ namespace application.EventHandlers.Restaurants
 
             if (eventStorageResult.Outcome == OutcomeType.Failure)
             {
-                //throw specific exception (eventual incosistency exception??)
-            }//logs in the future or throw exception
+                // log and try catch it in grafana and send notification
+                //_logger.LogError("Issue with ")
+            }
         }
     }
 }

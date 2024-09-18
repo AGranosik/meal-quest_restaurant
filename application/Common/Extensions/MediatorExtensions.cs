@@ -1,19 +1,30 @@
 ﻿using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace application.Common.Extensions
 {
     public static class MediatorExtensions
     {
         // maybe define pipelines?
-        public static async Task PublishEventsAsync<TEntity, TKey>(this IMediator mediator, TEntity entity, CancellationToken cancellationToken)
+        public static async Task PublishEventsAsync<TEntity, TKey>(this IMediator mediator, TEntity entity, ILogger logger, CancellationToken cancellationToken)
             where TEntity : Entity<TKey>
             where TKey : ValueObject<TKey>
         {
-            var events = entity.GetEvents();
-            foreach (var @event in events)
+            DomainEvent? @event = null;
+            try 
             {
-                await mediator.Publish(@event, cancellationToken);
+                var events = entity.GetEvents();
+                for(int i = 0; i < events.Count; i++)
+                {
+                    @event = events[i];
+                    await mediator.Publish(@event, cancellationToken);
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "Error publishing messages for {Aggregate} with Id: {StreamId}", nameof(entity), @event!.StreamId);
             }
         }
     }

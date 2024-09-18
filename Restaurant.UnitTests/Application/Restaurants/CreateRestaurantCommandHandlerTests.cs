@@ -1,9 +1,11 @@
 ﻿using application.Restaurants.Commands;
 using application.Restaurants.Commands.Interfaces;
+using Castle.Core.Logging;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.DomainEvents;
 using FluentAssertions;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace unitTests.Application.Restaurants
@@ -13,18 +15,20 @@ namespace unitTests.Application.Restaurants
     {
         private Mock<IRestaurantRepository> _repositoryMock;
         private Mock<IMediator> _mediatorMock;
+        private Mock<ILogger<CreateRestaurantCommandHandler>> _loggerMock;
 
         [SetUp]
         public void SetUp()
         {
             _repositoryMock = new Mock<IRestaurantRepository>();
             _mediatorMock = new Mock<IMediator>();
+            _loggerMock = new Mock<ILogger<CreateRestaurantCommandHandler>>();
         }
 
         [Test]
         public void Creation_RepoCannotBeNull_ThrowsException()
         {
-            var creation = () => new CreateRestaurantCommandHandler(null!, null!);
+            var creation = () => new CreateRestaurantCommandHandler(null!, null!, null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
@@ -32,7 +36,14 @@ namespace unitTests.Application.Restaurants
         [Test]
         public void Creation_MeidatorCannotBeNull_ThrowsException()
         {
-            var creation = () => new CreateRestaurantCommandHandler(_repositoryMock.Object, null!);
+            var creation = () => new CreateRestaurantCommandHandler(_repositoryMock.Object, _mediatorMock.Object, null!);
+            creation.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Creation_LoggerCannotBeNull_ThrowsException()
+        {
+            var creation = () => new CreateRestaurantCommandHandler(_repositoryMock.Object, null!, null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
@@ -47,7 +58,7 @@ namespace unitTests.Application.Restaurants
         public async Task Command_CannotBeNull_Fail()
         {
             var handler = CreateHandler();
-            var result = await handler.Handle(null, CancellationToken.None);
+            var result = await handler.Handle(null!, CancellationToken.None);
             result.IsFailed.Should().BeTrue();
         }
 
@@ -197,6 +208,6 @@ namespace unitTests.Application.Restaurants
         }
 
         private CreateRestaurantCommandHandler CreateHandler()
-            => new(_repositoryMock.Object, _mediatorMock.Object);
+            => new(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
     }
 }

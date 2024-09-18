@@ -7,13 +7,16 @@ using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands
 {
-    public sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
+    // loggs before handler and after success
+    public sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        private readonly ILogger<CreateMenuCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         // event handler on menu creation
         public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
@@ -27,7 +30,7 @@ namespace application.Menus.Commands
                 return domainResult.ToResult();
 
             await _menuRepository.CreateMenuAsync(domainResult.Value, cancellationToken);
-            await _mediator.PublishEventsAsync<Menu, MenuId>(domainResult.Value, cancellationToken);
+            await _mediator.PublishEventsAsync<Menu, MenuId>(domainResult.Value, _logger, cancellationToken);
             return Result.Ok(domainResult.Value.Id!);
         }
 

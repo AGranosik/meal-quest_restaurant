@@ -92,7 +92,7 @@ namespace unitTests.Application.EventHandlers
                 .Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()));
 
             var handler = CreateEventHandler();
-            var action = () => handler.Handle(new RestaurantCreatedEvent(new RestaurantId(1)), CancellationToken.None);
+            var action = () => handler.Handle(new RestaurantCreatedEvent(new RestaurantId(id)), CancellationToken.None);
             await action.Should().NotThrowAsync();
 
             _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()), Times.Once());
