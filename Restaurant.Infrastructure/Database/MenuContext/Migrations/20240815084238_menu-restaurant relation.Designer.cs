@@ -13,7 +13,7 @@ namespace infrastructure.Database.MenuContext.Migrations
 {
     [DbContext(typeof(MenuDbContext))]
     [Migration("20240815084238_menu-restaurant relation")]
-    partial class menurestaurantrelation
+    partial class Menurestaurantrelation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

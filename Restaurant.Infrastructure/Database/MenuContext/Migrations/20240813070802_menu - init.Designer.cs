@@ -12,7 +12,7 @@ namespace infrastructure.Database.MenuContext.Migrations
 {
     [DbContext(typeof(MenuDbContext))]
     [Migration("20240813070802_menu - init")]
-    partial class menuinit
+    partial class Menuinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

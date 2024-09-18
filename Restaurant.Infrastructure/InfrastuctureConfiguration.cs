@@ -8,6 +8,7 @@ namespace infrastructure
 {
     public static class InfrastuctureConfiguration
     {
+        public const string SERVICE_NAME = "restaurant-menu-service";
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services

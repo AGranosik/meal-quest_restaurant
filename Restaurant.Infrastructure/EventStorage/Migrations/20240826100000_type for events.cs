@@ -5,7 +5,7 @@
 namespace infrastructure.EventStorage.Migrations
 {
     /// <inheritdoc />
-    public partial class typeforevents : Migration
+    public partial class Typeforevents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

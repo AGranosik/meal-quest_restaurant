@@ -19,7 +19,7 @@ namespace integrationTests.Menus
         [Test]
         public async Task CreateMenu_RequestIsNull_BadRequest()
         {
-            var response = await _client.PostAsJsonAsync<CreateMenuRequest>(_endpoint, null, CancellationToken.None);
+            var response = await _client.PostAsJsonAsync<CreateMenuRequest?>(_endpoint, null, CancellationToken.None);
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var anyMenus = await _dbContext.Menus.AnyAsync();
@@ -60,15 +60,15 @@ namespace integrationTests.Menus
                 .Include(r => r.OpeningHours)
                     .ThenInclude(oh => oh.WorkingDays)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(r => r.Id == restaurantId);
+                .FirstOrDefaultAsync(r => r.Id! == restaurantId);
 
             dbRestaurant.Should().NotBeNull();
 
-            dbRestaurant.Menus.Count.Should().Be(1);
+            dbRestaurant!.Menus.Count.Should().Be(1);
             var restaurantDbMenu = dbRestaurant.Menus.First();
 
-            (restaurantDbMenu.Id.Value == result.Value).Should().BeTrue();
-            (restaurantDbMenu.Name.Value == request.Name).Should().BeTrue();
+            (restaurantDbMenu.Id!.Value == result!.Value).Should().BeTrue();
+            (restaurantDbMenu.Name.Value == request.Name!).Should().BeTrue();
         }
 
 

@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace infrastructure.EventStorage.Migrations
 {
     /// <inheritdoc />
-    public partial class restaurantevents : Migration
+    public partial class Restaurantevents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

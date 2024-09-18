@@ -23,7 +23,6 @@ namespace infrastructure.Observability
 
             services.AddSerilog(l => l.Enrich.FromLogContext()
                 .Enrich.With(new TraceEnricher())
-                //.Enrich.WithMachineName()
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
                 .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment!))
                 //.WriteTo.
@@ -32,10 +31,10 @@ namespace infrastructure.Observability
 
         private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment)
         {
-            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]!))
             {
                 AutoRegisterTemplate = true,
-                IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+                IndexFormat = $"{InfrastuctureConfiguration.SERVICE_NAME}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
             };
         }
     }

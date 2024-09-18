@@ -17,8 +17,8 @@ namespace integrationTests
         protected HttpClient _client;
         protected TDbContext _dbContext;
         protected IServiceScope _scope;
-        protected Respawner _respawner;
-        protected DbConnection _connection;
+        protected Respawner? _respawner;
+        protected DbConnection? _connection;
 
         public BaseContainerIntegrationTests()
         {
@@ -52,7 +52,7 @@ namespace integrationTests
             SetUpDbContext();
             var connection = _dbContext.Database.GetDbConnection();
             await connection.OpenAsync();
-            await _respawner.ResetAsync(connection);
+            await _respawner!.ResetAsync(connection);
         }
 
         [TearDown]

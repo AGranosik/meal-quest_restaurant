@@ -12,7 +12,7 @@ namespace infrastructure.EventStorage.Migrations
 {
     [DbContext(typeof(EventDbContext))]
     [Migration("20240824114856_menu events")]
-    partial class menuevents
+    partial class Menuevents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

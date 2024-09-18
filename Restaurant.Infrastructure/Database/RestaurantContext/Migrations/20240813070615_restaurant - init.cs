@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace infrastructure.Database.RestaurantContext.Migrations
 {
     /// <inheritdoc />
-    public partial class restaurantinit : Migration
+    public partial class Restaurantinit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

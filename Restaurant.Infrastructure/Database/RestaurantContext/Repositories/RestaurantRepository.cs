@@ -13,12 +13,15 @@ namespace infrastructure.Database.RestaurantContext.Repositories
 
         public RestaurantReposiotry(RestaurantDbContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public async Task AddMenuAsync(Menu menu, RestaurantId restaurantId, CancellationToken cancellationToken)
         {
-            var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id! == restaurantId);
+            var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id! == restaurantId, cancellationToken);
+            if (restaurant is null)
+                throw new ArgumentException("Restaurant doesnt exist.");
+
             var result = restaurant.AddMenu(menu);
 
             // return result and handle it in event handlers

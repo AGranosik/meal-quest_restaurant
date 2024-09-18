@@ -12,7 +12,7 @@ namespace integrationTests
 {
     class ApiWebApplicationFactory : WebApplicationFactory<Program>
     {
-        public IConfiguration Configuration { get; private set; }
+        public IConfiguration? Configuration { get; private set; }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureAppConfiguration(config =>
@@ -27,11 +27,11 @@ namespace integrationTests
             builder.ConfigureTestServices(services =>
             {
                 RemoveUnnecessaryServicesForTests(services);
-                services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("postgres")));
+                services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration!.GetConnectionString("postgres")));
             });
         }
 
-        private void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+        private static void RemoveUnnecessaryServicesForTests(IServiceCollection services)
         {
             //trace
             var descriptor = services.FirstOrDefault(

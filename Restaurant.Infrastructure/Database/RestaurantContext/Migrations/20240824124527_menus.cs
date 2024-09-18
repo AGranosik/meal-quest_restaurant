@@ -5,7 +5,7 @@
 namespace infrastructure.Database.RestaurantContext.Migrations
 {
     /// <inheritdoc />
-    public partial class menus : Migration
+    public partial class Menus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

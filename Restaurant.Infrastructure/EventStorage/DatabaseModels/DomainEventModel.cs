@@ -6,7 +6,7 @@ namespace infrastructure.EventStorage.DatabaseModels
     public class DomainEventModel<T>
         where T : DomainEvent
     {
-        private T _data = null;
+        private T? _data;
         public DomainEventModel(int streamId, T data, bool success)
         {
             _data = data;
@@ -21,12 +21,11 @@ namespace infrastructure.EventStorage.DatabaseModels
         public int StreamId { get; }
         public bool Success { get; }
         public string? AssemblyName { get; }
+        public string? SerializedData { get; set; }
 
-        // move to 
-        public T Data => _data ?? (T)JsonSerializer.Deserialize(SerializedData, Type.GetType(AssemblyName), new JsonSerializerOptions
+        public T? Data => _data ?? (T?)JsonSerializer.Deserialize(SerializedData!, Type.GetType(AssemblyName!)!, new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
-        public string SerializedData { get; set; }
     }
 }

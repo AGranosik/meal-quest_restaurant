@@ -12,7 +12,7 @@ namespace infrastructure.EventStorage.Migrations
 {
     [DbContext(typeof(EventDbContext))]
     [Migration("20240826100000_type for events")]
-    partial class typeforevents
+    partial class Typeforevents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

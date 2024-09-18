@@ -19,7 +19,7 @@ namespace infrastructure.Observability
 
             builder.Services
                 .AddOpenTelemetry()
-                .ConfigureResource(b => b.AddService(serviceName: "restaurant-menu-service"))
+                .ConfigureResource(b => b.AddService(serviceName: InfrastuctureConfiguration.SERVICE_NAME))
                 .WithTracing(builder =>
                 {
                     builder.AddAspNetCoreInstrumentation()
@@ -27,7 +27,7 @@ namespace infrastructure.Observability
                     .AddEntityFrameworkCoreInstrumentation()
                     .AddNpgsql();
 
-                    builder.AddOtlpExporter(o => o.Endpoint = new Uri(otlpEndpoint));
+                    builder.AddOtlpExporter(o => o.Endpoint = new Uri(otlpEndpoint!));
                 })
                 .WithMetrics(builder =>
                 {

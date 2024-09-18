@@ -12,7 +12,7 @@ namespace infrastructure.EventStorage.Migrations
 {
     [DbContext(typeof(EventDbContext))]
     [Migration("20240824074515_restaurant events")]
-    partial class restaurantevents
+    partial class Restaurantevents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

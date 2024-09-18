@@ -19,7 +19,7 @@ namespace integrationTests.Restaurants
         [Test]
         public async Task CreateRestaurant_RequestIsNull_Repsonse()
         {
-            var response = await _client.PostAsJsonAsync<CreateRestaurantRequest>(_endpoint, null, CancellationToken.None);
+            var response = await _client.PostAsJsonAsync<CreateRestaurantRequest?>(_endpoint, null, CancellationToken.None);
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
@@ -67,7 +67,7 @@ namespace integrationTests.Restaurants
                 .AsNoTracking()
                 .FirstOrDefaultAsync(r => r.Id! == result);
 
-            CompareRestaurant(request, dbRestaurant)
+            CompareRestaurant(request, dbRestaurant!)
                 .Should().BeTrue();
         }
 
@@ -113,7 +113,7 @@ namespace integrationTests.Restaurants
         {
             
             if (db.Owner.Name.Value != request.Owner!.Name!
-                || db!.Owner!.Surname.Value != request.Owner!.Surname) return false;
+                || db!.Owner!.Surname.Value != request.Owner.Surname!) return false;
 
             var dbAddress = db.Owner.Address;
             var requestAddress = request.Owner.Address;
@@ -123,8 +123,8 @@ namespace integrationTests.Restaurants
                 || dbAddress.Coordinates.Y != requestAddress.YCoordinate)
                 return false;
 
-            if (!db.OpeningHours.WorkingDays.Any(dtoWd => request.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
-                || db.OpeningHours.WorkingDays.Count != request.OpeningHours.WorkingDays.Count)
+            if (!db.OpeningHours.WorkingDays.Any(dtoWd => request.OpeningHours!.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
+                || db.OpeningHours.WorkingDays.Count != request.OpeningHours!.WorkingDays.Count)
                 return false;
 
 

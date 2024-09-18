@@ -13,7 +13,7 @@ namespace infrastructure.Database.RestaurantContext.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
     [Migration("20240813070615_restaurant - init")]
-    partial class restaurantinit
+    partial class Restaurantinit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -132,7 +132,7 @@ namespace integrationTests.Restaurants
         {
             foreach(var dto in dtos)
             {
-                var domain = domains.FirstOrDefault(d => d.Id.Value == dto.Id);
+                var domain = domains.FirstOrDefault(d => d.Id!.Value == dto.Id);
                 if (domain is null)
                     return false;
 
