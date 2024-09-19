@@ -13,7 +13,7 @@ namespace domain.Restaurants.Aggregates.DomainEvents
         private RestaurantCreatedEvent(int? streamId) : base(streamId) { }
 
         public override string GetAssemblyName()
-            => GetType().AssemblyQualifiedName;
+            => GetType().AssemblyQualifiedName!;
         public override string Serialize()
             => JsonSerializer.Serialize(this);
     }

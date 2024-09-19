@@ -11,6 +11,7 @@ namespace application.EventHandlers.Restaurants
 {
     // mb definie all as pipes
     // add logging
+    // more generic?
     public sealed class RestaurantCreatedEventHandler(IMenuRepository menuRepository, IEventInfoStorage<RestaurantEvent> eventInfoStorage, ILogger<RestaurantCreatedEventHandler> logger) : INotificationHandler<RestaurantCreatedEvent>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
@@ -24,7 +25,12 @@ namespace application.EventHandlers.Restaurants
             var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(() =>
                 _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.StreamId!.Value), cancellationToken));
 
-            await StoreEventAsync(notification, policyResult.Outcome == OutcomeType.Successful, cancellationToken);
+            var isSuccess = policyResult.Outcome == OutcomeType.Successful;
+            if(!isSuccess)
+            {
+                _logger.LogError("Consistency issue with {EventName} with {Id}", typeof(RestaurantCreatedEvent).Name, notification.StreamId);
+            }
+            await StoreEventAsync(notification, isSuccess, cancellationToken);
         }
 
         private static void Validation(RestaurantCreatedEvent notification)
@@ -32,7 +38,6 @@ namespace application.EventHandlers.Restaurants
             ArgumentNullException.ThrowIfNull(notification);
             ArgumentNullException.ThrowIfNull(notification.StreamId);
         }
-
         private async Task StoreEventAsync(RestaurantCreatedEvent notification, bool success, CancellationToken cancellationToken)
         {
             var eventStorageResult = await FallbackRetryPoicies.AsyncRetry
@@ -40,9 +45,9 @@ namespace application.EventHandlers.Restaurants
 
             if (eventStorageResult.Outcome == OutcomeType.Failure)
             {
-                // log and try catch it in grafana and send notification
-                //_logger.LogError("Issue with ")
+                _logger.LogError("Event storage issue with {EventName} with {Id}. {Data}", typeof(RestaurantCreatedEvent).Name, notification.StreamId, notification.Serialize());
             }
         }
+
     }
 }

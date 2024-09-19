@@ -4,7 +4,6 @@ using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
 using webapi.Controllers.Restaurants.Requests;
 
@@ -38,7 +37,7 @@ namespace webapi.Controllers.Restaurants
         [HttpGet("Test")]
         public async Task<IActionResult> Test(CancellationToken cancellationToken)
         {
-            _logger.LogError(new ArgumentException(), "Error");
+            throw new Exception();
             return Ok();
         }
     }

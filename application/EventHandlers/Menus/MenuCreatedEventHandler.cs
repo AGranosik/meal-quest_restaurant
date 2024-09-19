@@ -6,14 +6,16 @@ using domain.Menus.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace application.EventHandlers.Menus
 {
-    public sealed class MenuCreatedEventHandler(IRestaurantRepository restaurantRepository, IEventInfoStorage<MenuEvent> eventInfoStorage) : INotificationHandler<MenuCreatedEvent>
+    public sealed class MenuCreatedEventHandler(IRestaurantRepository restaurantRepository, IEventInfoStorage<MenuEvent> eventInfoStorage, ILogger<MenuCreatedEventHandler> logger) : INotificationHandler<MenuCreatedEvent>
     {
         private readonly IRestaurantRepository _restaurantRepository = restaurantRepository ?? throw new ArgumentNullException(nameof(restaurantRepository));
         private readonly IEventInfoStorage<MenuEvent> _eventInfoStorage = eventInfoStorage ?? throw new ArgumentNullException(nameof(eventInfoStorage));
+        private readonly ILogger<MenuCreatedEventHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         public async Task Handle(MenuCreatedEvent notification, CancellationToken cancellationToken)
         {
@@ -31,6 +33,11 @@ namespace application.EventHandlers.Menus
                 _restaurantRepository.AddMenuAsync(menu.Value, new RestaurantId(notification.RestaurantId), cancellationToken)
             );
 
+            var isSuccess = policyResult.Outcome == OutcomeType.Successful;
+            if (!isSuccess)
+            {
+                _logger.LogError("Consistency issue with {EventName} with {Id}", typeof(MenuCreatedEvent).Name, notification.StreamId);
+            }
             await StoreEventAsync(notification, policyResult.Outcome == OutcomeType.Successful, cancellationToken);
         }
 
@@ -46,8 +53,8 @@ namespace application.EventHandlers.Menus
 
             if (eventStorageResult.Outcome == OutcomeType.Failure)
             {
-                //throw specific exception (eventual incosistency exception??)
-            }//logs in the future or throw exception
+                _logger.LogError("Event storage issue with {EventName} with {Id}. {Data}", typeof(MenuCreatedEvent).Name, notification.StreamId, notification.Serialize());
+            }
         }
     }
 }

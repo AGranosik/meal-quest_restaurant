@@ -5,10 +5,10 @@ using core.FallbackPolicies;
 using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
-using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace unitTests.Application.EventHandlers
@@ -18,32 +18,41 @@ namespace unitTests.Application.EventHandlers
     {
         private Mock<IRestaurantRepository> _restaurantRepositoryMock;
         private Mock<IEventInfoStorage<MenuEvent>> _eventInfoStorageMock;
+        private Mock<ILogger<MenuCreatedEventHandler>> _loggerMock;
 
         [SetUp]
         public void SetUp()
         {
             _restaurantRepositoryMock = new Mock<IRestaurantRepository>();
             _eventInfoStorageMock = new Mock<IEventInfoStorage<MenuEvent>>();
+            _loggerMock = new Mock<ILogger<MenuCreatedEventHandler>>();
         }
 
         [Test]
         public void Creation_RepositoryCannotBeNull_ThrowsException()
         {
-            var creation = () => new MenuCreatedEventHandler(null, null);
+            var creation = () => new MenuCreatedEventHandler(null!, null!, null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Creation_EventStorageCannotBeNull_ThrowsException()
         {
-            var creation = () => new MenuCreatedEventHandler(_restaurantRepositoryMock.Object, null);
+            var creation = () => new MenuCreatedEventHandler(_restaurantRepositoryMock.Object, null!, null!);
+            creation.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Creation_LoggerCannotBeNull_ThrowsException()
+        {
+            var creation = () => new MenuCreatedEventHandler(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object, null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Creation_Success()
         {
-            var creation = () => new MenuCreatedEventHandler(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object);
+            var creation = () => new MenuCreatedEventHandler(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object, _loggerMock.Object);
             creation.Should().NotThrow();
         }
 
@@ -86,7 +95,7 @@ namespace unitTests.Application.EventHandlers
         }
 
         [Test]
-        public async Task Handle_StoreEventThrows_NotException()
+        public async Task Handle_StoreEventThrows_NoException()
         {
             _eventInfoStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception());
@@ -100,7 +109,7 @@ namespace unitTests.Application.EventHandlers
         }
 
         private MenuCreatedEventHandler CreateHandler()
-            => new(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object);
+            => new(_restaurantRepositoryMock.Object, _eventInfoStorageMock.Object, _loggerMock.Object);
 
         private static MenuCreatedEvent CreateEvent()
             => new(new domain.Menus.ValueObjects.Identifiers.MenuId(1), new Name("test"), new RestaurantIdMenuId(2));
