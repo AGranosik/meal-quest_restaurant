@@ -9,8 +9,6 @@ using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
-    // mb definie all as pipes
-    // add logging
     // more generic?
     public sealed class RestaurantCreatedEventHandler(IMenuRepository menuRepository, IEventInfoStorage<RestaurantEvent> eventInfoStorage, ILogger<RestaurantCreatedEventHandler> logger) : INotificationHandler<RestaurantCreatedEvent>
     {

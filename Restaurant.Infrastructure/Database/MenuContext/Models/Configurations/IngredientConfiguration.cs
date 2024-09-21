@@ -10,7 +10,7 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
         public void Configure(EntityTypeBuilder<Ingredient> builder)
         {
             var idName = "IngredientID";
-            builder.ToTable("Ingredients", "menu");
+            builder.ToTable(MenuDatabaseConstants.INGREDIENTS, MenuDatabaseConstants.SCHEMA);
             builder.Property<int>(idName)
                 .ValueGeneratedOnAdd();
 

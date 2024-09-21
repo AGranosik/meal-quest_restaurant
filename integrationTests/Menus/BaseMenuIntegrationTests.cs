@@ -1,5 +1,7 @@
 ﻿using infrastructure.Database.MenuContext;
+using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext;
+using infrastructure.Database.RestaurantContext.Models.Configurations;
 using infrastructure.EventStorage;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
@@ -17,29 +19,16 @@ namespace integrationTests.Menus
             await base.OneTimeSetUp();
             _connection = _dbContext.Database.GetDbConnection();
             await _connection.OpenAsync();
+            var tables = _restaurantTables.Concat(_MenuTables);
             _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
             {
                 DbAdapter = DbAdapter.Postgres,
-                TablesToInclude =
-                [
-                    new Table("menu", "Groups"),
-                    new Table("menu", "Ingredients"),
-                    new Table("menu", "Meals"),
-                    new Table("menu", "Menus"),
-                    new Table("menu", "Restaurants"),
-                    // move to some configuration class
-                    new Table("restaurant", "WorkingDays"),
-                    new Table("restaurant", "OpeningHours"),
-                    new Table("restaurant", "Addresses"),
-                    new Table("restaurant", "Owners"),
-                    new Table("restaurant", "Restaurants"),
-                ],
+                TablesToInclude = tables.ToArray(),
                 SchemasToInclude =
                 [
                     "public",
-                    "menu",
-                    "restaurant",
-                    "event"
+                    RestaurantDatabaseConstants.SCHEMA,
+                    MenuDatabaseConstants.SCHEMA
                 ]
             });
 

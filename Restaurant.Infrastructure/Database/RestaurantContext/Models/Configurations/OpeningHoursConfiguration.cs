@@ -9,7 +9,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
         public void Configure(EntityTypeBuilder<OpeningHours> builder)
         {
             var idName = "OpeningHoursID";
-            builder.ToTable("OpeningHours", "restaurant");
+            builder.ToTable(RestaurantDatabaseConstants.OPENINGHOURS, RestaurantDatabaseConstants.SCHEMA);
             builder.Property<int>(idName)
                 .ValueGeneratedOnAdd();
 

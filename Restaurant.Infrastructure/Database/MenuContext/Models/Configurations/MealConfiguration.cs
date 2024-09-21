@@ -11,7 +11,7 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
         public void Configure(EntityTypeBuilder<Meal> builder)
         {
             var idName = "MealID";
-            builder.ToTable("Meals", "menu");
+            builder.ToTable(MenuDatabaseConstants.MEALS, MenuDatabaseConstants.SCHEMA);
             builder.Property<int>(idName)
                 .ValueGeneratedOnAdd();
 

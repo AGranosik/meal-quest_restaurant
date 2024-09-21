@@ -10,7 +10,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
         {
             var Id = "WorkingDayID";
 
-            builder.ToTable("WorkingDays", "restaurant");
+            builder.ToTable(RestaurantDatabaseConstants.WORKINGDAYS, RestaurantDatabaseConstants.SCHEMA);
 
             builder.Property<int>(Id)
                 .ValueGeneratedOnAdd();

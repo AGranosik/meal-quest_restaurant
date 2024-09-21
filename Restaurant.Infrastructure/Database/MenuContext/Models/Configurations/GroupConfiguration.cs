@@ -10,7 +10,7 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
         public void Configure(EntityTypeBuilder<Group> builder)
         {
             var idName = "GroupID";
-            builder.ToTable("Groups", "menu");
+            builder.ToTable(MenuDatabaseConstants.GROUPS, MenuDatabaseConstants.SCHEMA);
             builder.Property<int>(idName)
                 .ValueGeneratedOnAdd();
 

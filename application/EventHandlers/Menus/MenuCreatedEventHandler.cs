@@ -22,7 +22,6 @@ namespace application.EventHandlers.Menus
             Validation(notification);
             var menu = Menu.Create(new MenuId(notification.StreamId!.Value), new Name(notification.Name));
 
-            //test that case
             if (menu.IsFailed)
             {
                 await StoreEventAsync(notification, false, cancellationToken);

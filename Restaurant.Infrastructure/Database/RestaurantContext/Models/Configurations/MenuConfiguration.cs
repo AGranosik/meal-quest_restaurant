@@ -10,7 +10,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Menu> builder)
         {
-            builder.ToTable("Menus", "restaurant");
+            builder.ToTable(RestaurantDatabaseConstants.MENUS, RestaurantDatabaseConstants.SCHEMA);
 
             builder.Property(m => m.Id)
                 .HasConversion(id => id!.Value, db => new MenuId(db));

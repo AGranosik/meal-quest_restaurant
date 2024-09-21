@@ -11,14 +11,13 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands
 {
-    // loggs before handler and after success
+    // remove uneccessary logs for metrics
     public sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         private readonly ILogger<CreateMenuCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        // event handler on menu creation
         public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
         {
             var validationResult = Validation(command);

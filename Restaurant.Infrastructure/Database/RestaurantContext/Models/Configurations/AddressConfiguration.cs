@@ -8,7 +8,7 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<Address> builder)
         {
-            builder.ToTable("Addresses", "restaurant");
+            builder.ToTable(RestaurantDatabaseConstants.ADDRESSES, RestaurantDatabaseConstants.SCHEMA);
             builder.Property<int>("AddressID")
                 .ValueGeneratedOnAdd();
 

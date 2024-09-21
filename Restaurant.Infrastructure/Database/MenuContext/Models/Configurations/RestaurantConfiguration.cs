@@ -9,7 +9,7 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<RestaurantIdMenuId> builder)
         {
-            builder.ToTable("Restaurants", "menu");
+            builder.ToTable(MenuDatabaseConstants.RESTAURANTS, MenuDatabaseConstants.SCHEMA);
 
             builder.HasMany<Menu>()
                 .WithOne()

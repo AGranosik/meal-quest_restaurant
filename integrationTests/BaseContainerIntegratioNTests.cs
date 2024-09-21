@@ -1,9 +1,12 @@
 ﻿using System.Data.Common;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using infrastructure.Database.MenuContext.Models.Configurations;
+using infrastructure.Database.RestaurantContext.Models.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
+using Respawn.Graph;
 using Testcontainers.PostgreSql;
 
 namespace integrationTests
@@ -19,6 +22,24 @@ namespace integrationTests
         protected IServiceScope _scope;
         protected Respawner? _respawner;
         protected DbConnection? _connection;
+
+        protected Table[] _restaurantTables =
+        [
+            new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.WORKINGDAYS),
+            new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.OPENINGHOURS),
+            new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.ADDRESSES),
+            new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.OWNERS),
+            new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.RESTAURANTS)
+        ];
+
+        protected Table[] _MenuTables =
+        [
+            new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.GROUPS),
+            new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.INGREDIENTS),
+            new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.MEALS),
+            new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.MENUS),
+            new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)
+        ];
 
         public BaseContainerIntegrationTests()
         {
