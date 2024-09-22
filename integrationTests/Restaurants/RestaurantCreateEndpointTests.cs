@@ -5,6 +5,7 @@ using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
+using integrationTests.Common;
 using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Restaurants.Requests;
@@ -31,11 +32,7 @@ namespace integrationTests.Restaurants
         {
             var request = RestaurantDataFaker.ValidRequest();
 
-            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
+            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
             result.Should().NotBeNull();
             result!.Value.Should().BeGreaterThan(0);
@@ -44,17 +41,12 @@ namespace integrationTests.Restaurants
             anyRestaurants.Should().BeTrue();
         }
 
-        // similar test for menu
         [Test]
         public async Task CreateRestaurant_Valid_AllMappedProperly()
         {
             var request = RestaurantDataFaker.ValidRequest();
 
-            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
+            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
             result.Should().NotBeNull();
             result!.Value.Should().BeGreaterThan(0);
@@ -76,11 +68,7 @@ namespace integrationTests.Restaurants
         {
             var request = RestaurantDataFaker.ValidRequest();
 
-            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
-
+            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
             var menuDb = await _menuDbContext.Restaurants
                 .Where(r => r.Value == result!.Value)
@@ -94,12 +82,7 @@ namespace integrationTests.Restaurants
         {
             var request = RestaurantDataFaker.ValidRequest();
 
-            //mvoe to method to extract response from request
-            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<RestaurantId>(resultString);
-
+            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
             var events = await _eventDbContext.GetDbSet<RestaurantEvent>()
                 .Where(e => e.StreamId == result!.Value)

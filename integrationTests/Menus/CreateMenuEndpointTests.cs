@@ -4,10 +4,12 @@ using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
+using integrationTests.Common;
 using integrationTests.Menus.DataMocks;
 using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Menus.Requests;
+using webapi.Controllers.Restaurants.Requests;
 
 namespace integrationTests.Menus
 {
@@ -26,17 +28,12 @@ namespace integrationTests.Menus
             anyMenus.Should().BeFalse();
         }
 
-        // change PK and FK contraints names
         [Test]
         public async Task CreateMenu_Valid_Created()
         {
             var restaurants = await CreateRestaurantsAsync(1);
             var restaurantId = restaurants.First().Value;
-            var response = await _client.PostAsJsonAsync(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId).First(), CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<domain.Menus.ValueObjects.Identifiers.MenuId>(resultString);
+            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId).First(), CancellationToken.None);
 
             result.Should().NotBeNull();
             result!.Value.Should().BeGreaterThan(0);
@@ -48,11 +45,7 @@ namespace integrationTests.Menus
             var restaurantId = await CreateRestaurantForSystem();
 
             var request = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value).First();
-            var response = await _client.PostAsJsonAsync(_endpoint, request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<domain.Menus.ValueObjects.Identifiers.MenuId>(resultString);
+            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, request, CancellationToken.None);
 
             var dbRestaurant = await _restaurantDbContext.Restaurants
                 .Include(r => r.Menus)
@@ -76,12 +69,7 @@ namespace integrationTests.Menus
         public async Task CreateMenu_Valid_EventStoredInEventStore()
         {
             var restaurantId = await CreateRestaurantForSystem();
-
-            var response = await _client.PostAsJsonAsync(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value).First(), CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var resultString = await response.Content.ReadAsStringAsync();
-            var result = ApiResponseDeserializator.Deserialize<domain.Menus.ValueObjects.Identifiers.MenuId>(resultString);
+            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value).First(), CancellationToken.None);
 
             var events = await _eventDbContext.GetDbSet<MenuEvent>()
                 .Where(e => e.StreamId == result!.Value)
