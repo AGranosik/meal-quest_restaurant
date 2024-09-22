@@ -17,8 +17,13 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
             builder.Property(g => g.GroupName)
                 .HasConversion(name => name.Value.Value, db => new Name(db));
 
-            builder.HasMany<Meal>("Meals")
-                .WithMany();
+            builder.HasMany(g => g.Meals)
+                .WithMany()
+                .UsingEntity<Dictionary<string, object>>(
+                    MenuDatabaseConstants.GROUPMEALS,
+                    e => e.HasOne<Meal>().WithMany().HasForeignKey("MealID"),
+                    e => e.HasOne<Group>().WithMany().HasForeignKey("GroupID")
+                    );
         }
     }
 }

@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace infrastructure.Database.MenuContext.Migrations
 {
     /// <inheritdoc />
-    public partial class Menuinit : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,40 +58,39 @@ namespace infrastructure.Database.MenuContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Menus",
+                name: "Restaurants",
                 schema: "menu",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Value = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.PrimaryKey("RestaurantID", x => x.Value);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GroupMeal",
+                name: "GroupMeals",
                 schema: "menu",
                 columns: table => new
                 {
                     GroupID = table.Column<int>(type: "integer", nullable: false),
-                    MealsMealID = table.Column<int>(type: "integer", nullable: false)
+                    MealID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupMeal", x => new { x.GroupID, x.MealsMealID });
+                    table.PrimaryKey("PK_GroupMeals", x => new { x.GroupID, x.MealID });
                     table.ForeignKey(
-                        name: "FK_GroupMeal_Groups_GroupID",
+                        name: "FK_GroupMeals_Groups_GroupID",
                         column: x => x.GroupID,
                         principalSchema: "menu",
                         principalTable: "Groups",
                         principalColumn: "GroupID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GroupMeal_Meals_MealsMealID",
-                        column: x => x.MealsMealID,
+                        name: "FK_GroupMeals_Meals_MealID",
+                        column: x => x.MealID,
                         principalSchema: "menu",
                         principalTable: "Meals",
                         principalColumn: "MealID",
@@ -99,30 +98,51 @@ namespace infrastructure.Database.MenuContext.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IngredientMeal",
+                name: "MealIngredients",
                 schema: "menu",
                 columns: table => new
                 {
-                    IngredientsIngredientID = table.Column<int>(type: "integer", nullable: false),
+                    GroupID = table.Column<int>(type: "integer", nullable: false),
                     MealID = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IngredientMeal", x => new { x.IngredientsIngredientID, x.MealID });
+                    table.PrimaryKey("PK_MealIngredients", x => new { x.GroupID, x.MealID });
                     table.ForeignKey(
-                        name: "FK_IngredientMeal_Ingredients_IngredientsIngredientID",
-                        column: x => x.IngredientsIngredientID,
+                        name: "FK_MealIngredients_Ingredients_MealID",
+                        column: x => x.MealID,
                         principalSchema: "menu",
                         principalTable: "Ingredients",
                         principalColumn: "IngredientID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_IngredientMeal_Meals_MealID",
-                        column: x => x.MealID,
+                        name: "FK_MealIngredients_Meals_GroupID",
+                        column: x => x.GroupID,
                         principalSchema: "menu",
                         principalTable: "Meals",
                         principalColumn: "MealID",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Menus",
+                schema: "menu",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    RestaurantID = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RestaurantId",
+                        column: x => x.RestaurantID,
+                        principalSchema: "menu",
+                        principalTable: "Restaurants",
+                        principalColumn: "Value");
                 });
 
             migrationBuilder.CreateTable(
@@ -153,10 +173,10 @@ namespace infrastructure.Database.MenuContext.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GroupMeal_MealsMealID",
+                name: "IX_GroupMeals_MealID",
                 schema: "menu",
-                table: "GroupMeal",
-                column: "MealsMealID");
+                table: "GroupMeals",
+                column: "MealID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupMenu_MenuId",
@@ -165,17 +185,23 @@ namespace infrastructure.Database.MenuContext.Migrations
                 column: "MenuId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredientMeal_MealID",
+                name: "IX_MealIngredients_MealID",
                 schema: "menu",
-                table: "IngredientMeal",
+                table: "MealIngredients",
                 column: "MealID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_RestaurantID",
+                schema: "menu",
+                table: "Menus",
+                column: "RestaurantID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "GroupMeal",
+                name: "GroupMeals",
                 schema: "menu");
 
             migrationBuilder.DropTable(
@@ -183,7 +209,7 @@ namespace infrastructure.Database.MenuContext.Migrations
                 schema: "menu");
 
             migrationBuilder.DropTable(
-                name: "IngredientMeal",
+                name: "MealIngredients",
                 schema: "menu");
 
             migrationBuilder.DropTable(
@@ -200,6 +226,10 @@ namespace infrastructure.Database.MenuContext.Migrations
 
             migrationBuilder.DropTable(
                 name: "Meals",
+                schema: "menu");
+
+            migrationBuilder.DropTable(
+                name: "Restaurants",
                 schema: "menu");
         }
     }

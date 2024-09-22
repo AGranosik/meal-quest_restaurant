@@ -23,19 +23,19 @@ namespace infrastructure.Database.MenuContext.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("GroupMeal", b =>
+            modelBuilder.Entity("GroupMeals", b =>
                 {
                     b.Property<int>("GroupID")
                         .HasColumnType("integer");
 
-                    b.Property<int>("MealsMealID")
+                    b.Property<int>("MealID")
                         .HasColumnType("integer");
 
-                    b.HasKey("GroupID", "MealsMealID");
+                    b.HasKey("GroupID", "MealID");
 
-                    b.HasIndex("MealsMealID");
+                    b.HasIndex("MealID");
 
-                    b.ToTable("GroupMeal", "menu");
+                    b.ToTable("GroupMeals", "menu");
                 });
 
             modelBuilder.Entity("GroupMenu", b =>
@@ -53,19 +53,19 @@ namespace infrastructure.Database.MenuContext.Migrations
                     b.ToTable("GroupMenu", "menu");
                 });
 
-            modelBuilder.Entity("IngredientMeal", b =>
+            modelBuilder.Entity("MealIngredients", b =>
                 {
-                    b.Property<int>("IngredientsIngredientID")
+                    b.Property<int>("GroupID")
                         .HasColumnType("integer");
 
                     b.Property<int>("MealID")
                         .HasColumnType("integer");
 
-                    b.HasKey("IngredientsIngredientID", "MealID");
+                    b.HasKey("GroupID", "MealID");
 
                     b.HasIndex("MealID");
 
-                    b.ToTable("IngredientMeal", "menu");
+                    b.ToTable("MealIngredients", "menu");
                 });
 
             modelBuilder.Entity("domain.Menus.Aggregates.Entities.Menu", b =>
@@ -158,7 +158,7 @@ namespace infrastructure.Database.MenuContext.Migrations
                     b.ToTable("Meals", "menu");
                 });
 
-            modelBuilder.Entity("GroupMeal", b =>
+            modelBuilder.Entity("GroupMeals", b =>
                 {
                     b.HasOne("domain.Menus.ValueObjects.Group", null)
                         .WithMany()
@@ -168,7 +168,7 @@ namespace infrastructure.Database.MenuContext.Migrations
 
                     b.HasOne("domain.Menus.ValueObjects.Meal", null)
                         .WithMany()
-                        .HasForeignKey("MealsMealID")
+                        .HasForeignKey("MealID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -188,15 +188,15 @@ namespace infrastructure.Database.MenuContext.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("IngredientMeal", b =>
+            modelBuilder.Entity("MealIngredients", b =>
                 {
-                    b.HasOne("domain.Menus.ValueObjects.Ingredient", null)
+                    b.HasOne("domain.Menus.ValueObjects.Meal", null)
                         .WithMany()
-                        .HasForeignKey("IngredientsIngredientID")
+                        .HasForeignKey("GroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("domain.Menus.ValueObjects.Meal", null)
+                    b.HasOne("domain.Menus.ValueObjects.Ingredient", null)
                         .WithMany()
                         .HasForeignKey("MealID")
                         .OnDelete(DeleteBehavior.Cascade)
