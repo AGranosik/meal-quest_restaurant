@@ -5,8 +5,6 @@ using FluentResults;
 
 namespace domain.Menus.ValueObjects
 {
-    // using constructors
-    // mapping from simple types??
     public class Group : ValueObject<Group>
     {
         public static Result<Group> Create(List<Meal> meals, Name groupName)

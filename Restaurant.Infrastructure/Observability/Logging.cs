@@ -25,7 +25,6 @@ namespace infrastructure.Observability
                 .Enrich.With(new TraceEnricher())
                 .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Error)
                 .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment!))
-                //.WriteTo.
                 .Enrich.WithProperty("Environment", environment));
         }
 

@@ -37,7 +37,6 @@ namespace infrastructure.Observability
                 });
 
             builder.Logging.AddOpenTelemetry(otlp => {
-                //otlp.AddConsoleExporter();
                 otlp.IncludeFormattedMessage = true;
                 otlp.IncludeScopes = true;
                 otlp.ParseStateValues = true;

@@ -16,6 +16,7 @@ namespace unitTests.Application.Restaurants
         private Mock<IRestaurantRepository> _repositoryMock;
         private Mock<IMediator> _mediatorMock;
         private Mock<ILogger<CreateRestaurantCommandHandler>> _loggerMock;
+        private const string _validName = "test";
 
         [SetUp]
         public void SetUp()
@@ -63,10 +64,20 @@ namespace unitTests.Application.Restaurants
         }
 
         [Test]
+        public async Task Command_NameCannotBeNull_Fail()
+        {
+            var handler = CreateHandler();
+            var command = new CreateRestaurantCommand(null, null, null);
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            result.IsFailed.Should().BeTrue();
+        }
+
+        [Test]
         public async Task Command_OwnerCannotBeNull_Fail()
         {
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(null, null);
+            var command = new CreateRestaurantCommand(_validName, null, null);
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -76,7 +87,7 @@ namespace unitTests.Application.Restaurants
         public async Task Command_OpeningHorusCannotBeNull_Fail()
         {
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(new CreateOwnerCommand(null, null, null), null);
+            var command = new CreateRestaurantCommand(_validName, new CreateOwnerCommand(null, null, null), null);
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -89,7 +100,7 @@ namespace unitTests.Application.Restaurants
         {
             var owner = new CreateOwnerCommand(ownerName, null, null);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, new OpeningHoursCommand(null!));
+            var command = new CreateRestaurantCommand(_validName, owner, new OpeningHoursCommand(null!));
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -103,7 +114,7 @@ namespace unitTests.Application.Restaurants
         {
             var owner = new CreateOwnerCommand("name", ownerSurname, null);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, new OpeningHoursCommand(null!));
+            var command = new CreateRestaurantCommand(_validName, owner, new OpeningHoursCommand(null!));
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -114,7 +125,7 @@ namespace unitTests.Application.Restaurants
         {
             var owner = new CreateOwnerCommand("name", "surname", null);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, new OpeningHoursCommand(null!));
+            var command = new CreateRestaurantCommand(_validName, owner, new OpeningHoursCommand(null!));
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -128,7 +139,7 @@ namespace unitTests.Application.Restaurants
             var address = new CreateAddressCommand(ownerSteet, null, 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, new OpeningHoursCommand(null!));
+            var command = new CreateRestaurantCommand(_validName, owner, new OpeningHoursCommand(null!));
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -142,7 +153,7 @@ namespace unitTests.Application.Restaurants
             var address = new CreateAddressCommand("street", ownerCity, 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, new OpeningHoursCommand(null!));
+            var command = new CreateRestaurantCommand(_validName, owner, new OpeningHoursCommand(null!));
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -155,7 +166,7 @@ namespace unitTests.Application.Restaurants
             var address = new CreateAddressCommand("street", "City", 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, openingHours);
+            var command = new CreateRestaurantCommand(_validName, owner, openingHours);
             var result = await handler.Handle(command, CancellationToken.None);
 
             result.IsFailed.Should().BeTrue();
@@ -177,7 +188,7 @@ namespace unitTests.Application.Restaurants
             var address = new CreateAddressCommand("street", "City", 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, openingHours);
+            var command = new CreateRestaurantCommand(_validName, owner, openingHours);
             var result = await handler.Handle(command, CancellationToken.None);
 
             _repositoryMock.Verify(m => m.CreateAsync(It.IsAny<Restaurant>(), It.IsAny<CancellationToken>()), Times.Once());
@@ -185,9 +196,8 @@ namespace unitTests.Application.Restaurants
         }
 
         [Test]
-        public async Task Coomand_NotificationHandlerCalled_Success()
+        public async Task Command_NotificationHandlerCalled_Success()
         {
-            //check if events are stored (restaurant text class inject contexts)
             var openingHours = new OpeningHoursCommand(
             [
                 new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
@@ -201,7 +211,7 @@ namespace unitTests.Application.Restaurants
             var address = new CreateAddressCommand("street", "City", 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
-            var command = new CreateRestaurantCommand(owner, openingHours);
+            var command = new CreateRestaurantCommand(_validName, owner, openingHours);
             var result = await handler.Handle(command, CancellationToken.None);
 
             _mediatorMock.Verify(m => m.Publish(It.Is<object>(o => o is RestaurantCreatedEvent), It.IsAny<CancellationToken>()), Times.Once());

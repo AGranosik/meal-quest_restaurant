@@ -1,5 +1,6 @@
 ﻿using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes;
+using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
@@ -8,23 +9,22 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates
 {
-    // add restaurant name
     public class Restaurant: Aggregate<RestaurantId>
     {
         protected List<Menu> _menus = new();
         public IReadOnlyCollection<Menu> Menus => _menus.AsReadOnly();
 
         protected Restaurant() : base() { }
+        public Name Name { get; protected set; }
         public Owner Owner { get; protected set; }
         public OpeningHours OpeningHours { get; protected set; }
-        public static Result<Restaurant> Create(Owner owner, OpeningHours openingHours)
+        public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours)
         {
-            var creationResult = CreationValidation(owner, openingHours);
+            var creationResult = CreationValidation(name, owner, openingHours);
             if (creationResult.IsFailed)
                 return creationResult;
 
-            
-            return Result.Ok(new Restaurant(owner, openingHours));
+            return Result.Ok(new Restaurant(name, owner, openingHours));
         }
 
         public Result AddMenu(Menu menu)
@@ -36,15 +36,19 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
-        protected Restaurant(Owner owner, OpeningHours openingHours)
+        protected Restaurant(Name name, Owner owner, OpeningHours openingHours)
         {
             Owner = owner;
             OpeningHours = openingHours;
+            Name = name;
             _domainEvents.Add(new RestaurantCreatedEvent(Id));
         }
 
-        private static Result CreationValidation(Owner owner, OpeningHours openingHours)
+        private static Result CreationValidation(Name name, Owner owner, OpeningHours openingHours)
         {
+            if (name is null)
+                return Result.Fail("Name cannot be null.");
+
             if (owner is null)
                 return Result.Fail("Owner cannot be null.");
 
@@ -54,7 +58,6 @@ namespace domain.Restaurants.Aggregates
             return Result.Ok();
         }
 
-        //Tests
         public override List<DomainEvent> GetEvents()
         {
             if (Id is null)

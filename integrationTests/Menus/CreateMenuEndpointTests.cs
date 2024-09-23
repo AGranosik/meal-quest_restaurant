@@ -83,7 +83,6 @@ namespace integrationTests.Menus
             @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
         }
 
-        //move it to some global cfg
         private async Task<RestaurantId> CreateRestaurantForSystem()
         {
             var request = RestaurantDataFaker.ValidRequest();

@@ -10,8 +10,6 @@ namespace unitTests.Domain.Restaurants.Aggregates.Entities
     [TestFixture]
     public class OwnerTests
     {
-        // move id test to another tests
-
         private readonly Address _validAddress = Address.Create(new Street("street"), new City("city"), new Coordinates(3, 3)).Value;
         private readonly Name _validName = new("name");
         private readonly Name _validSurname = new("surname");

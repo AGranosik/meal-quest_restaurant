@@ -6,14 +6,12 @@ using domain.Common.ValueTypes.Strings;
 
 namespace domain.Menus.ValueObjects
 {
-    // size or weight of meal
     public class Meal : ValueObject<Meal>
     {
         public List<Ingredient> Ingredients { get; }
         public Price Price { get; }
         public Name Name { get; }
 
-        // decide base on static classes or results
         public Meal(List<Ingredient> ingredients, Price price, Name name)
         {
             CreationValidation(ingredients, price, name);

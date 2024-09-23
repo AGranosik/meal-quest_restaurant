@@ -94,12 +94,12 @@ namespace integrationTests.Restaurants
             CompareRestaurants(result, ownersRestaurants);
         }
 
-        //move it to faker
         private async Task<List<Restaurant>> AddRestaurants(int numberOfRestaurants, int restaurantsPerOwner)
         {
             var restaurants = new List<Restaurant>(numberOfRestaurants);
 
             int iRestaurant = 0;
+            string restaurantName = "test";
             while (iRestaurant < numberOfRestaurants)
             {
                 int iOwner = 0;
@@ -117,7 +117,7 @@ namespace integrationTests.Restaurants
                         WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                     ]).Value;
 
-                    var restaurant = Restaurant.Create(owner, openingHours);
+                    var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours);
                     restaurants.Add(restaurant.Value);
                     iOwner++;
                     iRestaurant++;

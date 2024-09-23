@@ -27,10 +27,6 @@ namespace domain.Restaurants.ValueObjects
             _workingDays = workingDays;
         }
 
-
-
-        //get rid of exceptions
-        // work on results.
         private static Result Validation(List<WorkingDay> workingDays)
         {
             if (workingDays is null)

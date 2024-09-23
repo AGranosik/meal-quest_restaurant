@@ -18,7 +18,7 @@ namespace integrationTests.Restaurants.DataMocks
             ]);
             var address = new CreateAddressRequest("street", "City", 0, 0);
             var owner = new CreateOwnerRequest("name", "surname", address);
-            return new CreateRestaurantRequest(owner, openingHours);
+            return new CreateRestaurantRequest("restaurantName", owner, openingHours);
         }
             
     }

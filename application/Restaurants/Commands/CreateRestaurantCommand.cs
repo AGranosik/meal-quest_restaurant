@@ -74,6 +74,9 @@ namespace application.Restaurants.Commands
 
         private static Result<Restaurant> CreateDomainModel(CreateRestaurantCommand request)
         {
+            if (string.IsNullOrEmpty(request.Name))
+                return Result.Fail("Name cannot be null.");
+
             var requestOwner = request.Owner;
             var addressResult = Address.Create(
                 new Street(requestOwner!.Address!.Street!),
@@ -110,12 +113,12 @@ namespace application.Restaurants.Commands
 
             if (openingHours.IsFailed) return openingHours.ToResult();
 
-            return Restaurant.Create(owner.Value, openingHours.Value);
+            return Restaurant.Create(new Name(request.Name), owner.Value, openingHours.Value);
         }
     }
 
 
-    public record CreateRestaurantCommand(CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours) : IRequest<Result<RestaurantId>>;
+    public record CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours) : IRequest<Result<RestaurantId>>;
 
     public record CreateOwnerCommand(string? Name, string? Surname, CreateAddressCommand? Address);
 

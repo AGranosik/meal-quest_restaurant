@@ -1,4 +1,5 @@
-﻿using domain.Restaurants.Aggregates;
+﻿using domain.Common.ValueTypes.Strings;
+using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +15,9 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
             builder.Property(r => r.Id)
                 .HasConversion(restaurant => restaurant!.Value, db => new RestaurantId(db))
                 .ValueGeneratedOnAdd();
+
+            builder.Property(r => r.Name)
+                .HasConversion(r => r.Value.Value, db => new Name(db));
 
             builder.HasKey(r => r.Id);
 

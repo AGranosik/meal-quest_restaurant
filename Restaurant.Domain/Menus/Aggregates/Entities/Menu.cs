@@ -29,7 +29,6 @@ namespace domain.Menus.Aggregates.Entities
             Groups = groups;
             Name = name;
             Restaurant = restaurant;
-            // test event flow
             _domainEvents.Add(new MenuCreatedEvent(Id, name, restaurant));
         }
 

@@ -91,7 +91,7 @@ namespace unitTests.Application.EventHandlers
         }
 
         [Test]
-        public async Task RestaurantCreatedEvent_StoreEvent_NoThrowsFurther() // check if logged in feature or 
+        public async Task RestaurantCreatedEvent_StoreEvent_NoThrowsFurther()
         {
             var id = 1;
             _eventInfoStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<RestaurantCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))

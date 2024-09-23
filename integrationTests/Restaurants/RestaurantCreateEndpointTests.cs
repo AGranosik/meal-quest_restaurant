@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using application.Restaurants.Queries.GetRestaurantQueries.Dtos;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -94,7 +93,9 @@ namespace integrationTests.Restaurants
         }
         private static bool CompareRestaurant(CreateRestaurantRequest request, Restaurant db)
         {
-            
+            if (db.Name.Value != request.Name!)
+                return false;
+
             if (db.Owner.Name.Value != request.Owner!.Name!
                 || db!.Owner!.Surname.Value != request.Owner.Surname!) return false;
 
