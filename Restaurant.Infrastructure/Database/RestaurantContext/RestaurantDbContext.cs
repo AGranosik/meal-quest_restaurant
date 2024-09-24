@@ -10,8 +10,7 @@ namespace infrastructure.Database.RestaurantContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //move to const.
-            modelBuilder.HasDefaultSchema("restuarant");
+            modelBuilder.HasDefaultSchema(RestaurantDatabaseConstants.SCHEMA);
 
             modelBuilder
                 .ApplyConfiguration(new AddressConfiguration())

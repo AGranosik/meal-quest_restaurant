@@ -24,7 +24,7 @@ namespace infrastructure.Database.RestaurantContext.Repositories
 
             var result = restaurant.AddMenu(menu);
 
-            // return result and handle it in event handlers
+            // if not saved that means some serious issue which has to be chacked
             if(result.IsFailed)
                 throw new ArgumentException(result.Errors.ToString());
 
@@ -33,7 +33,6 @@ namespace infrastructure.Database.RestaurantContext.Repositories
 
         public async Task<Result<RestaurantId?>> CreateAsync(Restaurant restaurant, CancellationToken cancellationToken)
         {
-            //var dbModel = Restaurant.CastToDbModel(restaurant);
             _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync(cancellationToken);
             return Result.Ok(restaurant.Id);

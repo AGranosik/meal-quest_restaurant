@@ -25,7 +25,6 @@ namespace infrastructure.Database.RestaurantContext.Models.Configurations
 
             builder.HasOne(r => r.OpeningHours);
 
-            // pf and fk naming
             builder.HasMany(r => r.Menus)
                 .WithOne();
         }

@@ -9,7 +9,6 @@ using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
-    // more generic?
     public sealed class RestaurantCreatedEventHandler(IMenuRepository menuRepository, IEventInfoStorage<RestaurantEvent> eventInfoStorage, ILogger<RestaurantCreatedEventHandler> logger) : INotificationHandler<RestaurantCreatedEvent>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));

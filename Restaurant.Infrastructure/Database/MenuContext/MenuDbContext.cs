@@ -12,7 +12,7 @@ namespace infrastructure.Database.MenuContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("menu");
+            modelBuilder.HasDefaultSchema(MenuDatabaseConstants.SCHEMA);
 
             modelBuilder.ApplyConfiguration(new GroupConfiguration())
                 .ApplyConfiguration(new IngredientConfiguration())
