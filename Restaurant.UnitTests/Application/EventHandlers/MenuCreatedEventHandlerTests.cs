@@ -68,14 +68,14 @@ namespace unitTests.Application.EventHandlers
         public async Task Handle_Success()
         {
             var id = 1;
-            _eventInfoStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            _eventInfoStorageMock.Setup(e => e.StorePendingEvent(It.IsAny<MenuCreatedEvent>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(id));
 
             var handler = CreateHandler();
             var action = () => handler.Handle(CreateEvent(), CancellationToken.None);
             await action.Should().NotThrowAsync();
 
-            _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()), Times.Once());
+            _eventInfoStorageMock.Verify(e => e.StorePendingEvent(It.IsAny<MenuCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once());
             _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()));
         }
 
@@ -91,13 +91,13 @@ namespace unitTests.Application.EventHandlers
             await action.Should().NotThrowAsync();
 
             _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()), Times.Exactly(1 + FallbackRetryPoicies.NUMBER_OF_RETRIES));
-            _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.Is<bool>(s => s == false), It.IsAny<CancellationToken>()), Times.Once());
+            _eventInfoStorageMock.Verify(e => e.StorePendingEvent(It.IsAny<MenuCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
         public async Task Handle_StoreEventThrows_NoException()
         {
-            _eventInfoStorageMock.Setup(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            _eventInfoStorageMock.Setup(e => e.StorePendingEvent(It.IsAny<MenuCreatedEvent>(),  It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception());
 
             var handler = CreateHandler();
@@ -105,7 +105,7 @@ namespace unitTests.Application.EventHandlers
             await action.Should().NotThrowAsync();
 
             _restaurantRepositoryMock.Verify(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()), Times.Once());
-            _eventInfoStorageMock.Verify(e => e.StoreEventAsync(It.IsAny<MenuCreatedEvent>(), It.Is<bool>(s => s == true), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPoicies.NUMBER_OF_RETRIES + 1));
+            _eventInfoStorageMock.Verify(e => e.StorePendingEvent(It.IsAny<MenuCreatedEvent>(), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPoicies.NUMBER_OF_RETRIES + 1));
         }
 
         private MenuCreatedEventHandler CreateHandler()

@@ -48,7 +48,7 @@ namespace application.EventHandlers.Menus
         private async Task StoreEventAsync(MenuCreatedEvent notification, bool success, CancellationToken cancellationToken)
         {
             var eventStorageResult = await FallbackRetryPoicies.AsyncRetry
-                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreEventAsync(notification, success, cancellationToken));
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEvent(notification, cancellationToken));
 
             if (eventStorageResult.Outcome == OutcomeType.Failure)
             {

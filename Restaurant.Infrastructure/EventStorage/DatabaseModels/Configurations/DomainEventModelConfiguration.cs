@@ -24,7 +24,8 @@ namespace infrastructure.EventStorage.DatabaseModels.Configurations
                 .IsRequired()
                 .HasMaxLength(300);
 
-            builder.Property(e => e.Success);
+            builder.Property(e => e.Reason)
+                .HasMaxLength(1200);
 
             builder.Property(e => e.SerializedData)
                 .IsRequired();

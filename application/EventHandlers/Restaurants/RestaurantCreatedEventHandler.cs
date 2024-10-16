@@ -19,15 +19,17 @@ namespace application.EventHandlers.Restaurants
         {
             Validation(notification);
 
-            var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(() =>
-                _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.StreamId!.Value), cancellationToken));
+            await StoreAsPending(notification, cancellationToken);
+
+            var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(
+                () => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.StreamId!.Value), cancellationToken)
+            );
 
             var isSuccess = policyResult.Outcome == OutcomeType.Successful;
             if(!isSuccess)
             {
                 _logger.LogError("Consistency issue with {EventName} with {Id}", typeof(RestaurantCreatedEvent).Name, notification.StreamId);
             }
-            await StoreEventAsync(notification, isSuccess, cancellationToken);
         }
 
         private static void Validation(RestaurantCreatedEvent notification)
@@ -35,13 +37,19 @@ namespace application.EventHandlers.Restaurants
             ArgumentNullException.ThrowIfNull(notification);
             ArgumentNullException.ThrowIfNull(notification.StreamId);
         }
-        private async Task StoreEventAsync(RestaurantCreatedEvent notification, bool success, CancellationToken cancellationToken)
+
+        // store event first
+        // emit with event id
+        // make a pending status?? and change to it when events are queried
+        // on emition store event as success if sth fail change to failed? but when there will be a problem with storage later it wil lstay as a success
+        private async Task StoreAsPending(RestaurantCreatedEvent notification, CancellationToken cancellationToken)
         {
             var eventStorageResult = await FallbackRetryPoicies.AsyncRetry
-                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreEventAsync(notification, success, cancellationToken));
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEvent(notification, cancellationToken));
 
             if (eventStorageResult.Outcome == OutcomeType.Failure)
             {
+                // add info why
                 _logger.LogError("Event storage issue with {EventName} with {Id}. {Data}", typeof(RestaurantCreatedEvent).Name, notification.StreamId, notification.Serialize());
             }
         }

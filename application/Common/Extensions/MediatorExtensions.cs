@@ -5,10 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Common.Extensions
 {
+    // decalre as service where events should be 
     public static class MediatorExtensions
     {
-        // emit publisher??
-        // saqve event type - stream id - event numver (composite key) - data
         // save event with domain aggregate
         // publish -handle -store publication status
         // job for pickup for pickup events

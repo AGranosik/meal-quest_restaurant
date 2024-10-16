@@ -4,6 +4,7 @@ using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
+using infrastructure.EventStorage.DatabaseModels;
 using integrationTests.Common;
 using integrationTests.Menus.DataMocks;
 using integrationTests.Restaurants.DataMocks;
@@ -78,7 +79,7 @@ namespace integrationTests.Menus
             events.Count.Should().Be(1);
             var @event = events.First();
 
-            @event.Success.Should().BeTrue();
+            @event.PropgationStatus.Should().Be(EventProapgationStatus.Propagated);
 
             @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
         }

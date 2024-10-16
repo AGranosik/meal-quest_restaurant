@@ -9,6 +9,7 @@ using domain.Common.DomainImplementationTypes;
 
 namespace domain.Menus.Aggregates.Entities
 {
+    //get rid of results -> move to exceptions??
     public sealed class Menu : Entity<MenuId>
     {
         public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
