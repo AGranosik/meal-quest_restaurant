@@ -9,7 +9,7 @@ namespace infrastructure.EventStorage
     {
         public static IServiceCollection ConfigureEventStorage(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped(typeof(IEventInfoStorage<>), typeof(EventInfoStorage<>));
+            services.AddScoped(typeof(IEventInfoStorage<,>), typeof(EventInfoStorage<,>));
 
             services
                 .ConfigureDbContext(configuration);

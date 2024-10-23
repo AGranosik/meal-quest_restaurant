@@ -1,42 +1,27 @@
 ﻿using application.EventHandlers.Interfaces;
-using domain.Common.DomainImplementationTypes;
-using infrastructure.EventStorage.DatabaseModels;
-using Microsoft.EntityFrameworkCore;
-
+using domain.Common.BaseTypes;
 namespace infrastructure.EventStorage
 {
     // tests
-    internal class EventInfoStorage<TDomainEvent>(EventDbContext context) : IEventInfoStorage<TDomainEvent>
-        where TDomainEvent : DomainEvent
+    internal class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
+        where TKey : ValueObject<TKey>
+        where TAggregate : Aggregate<TKey>
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task StoreFilureAsnc(int EventId, CancellationToken cancellationToken)
+        public Task StoreFilureAsnc(int aggregateId, CancellationToken cancellationToken)
         {
-            var dbSet = _context.GetDbSet<TDomainEvent>();
-            await dbSet.Where(e => e.EventId == EventId)
-                .ExecuteUpdateAsync(
-                    db => db.SetProperty(e => e.PropgationStatus, EventProapgationStatus.Failed), cancellationToken
-                );
+            throw new NotImplementedException();
         }
 
-        public async Task<int> StorePendingEvent(TDomainEvent @event, CancellationToken cancellationToken)
+        public Task<int> StorePendingEvent(int @event, CancellationToken cancellationToken)
         {
-            var dbSet = _context.GetDbSet<TDomainEvent>();
-            var model = DomainEventModel<TDomainEvent>.Pending(@event.StreamId!.Value, @event);
-            dbSet.Add(model);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return model.EventId;
+            throw new NotImplementedException();
         }
 
-        public async Task StoreSuccessAsync(int EventId, CancellationToken cancellationToken)
+        public Task StoreSuccessAsync(int aggregateId, CancellationToken cancellationToken)
         {
-            var dbSet = _context.GetDbSet<TDomainEvent>();
-            await dbSet.Where(e => e.EventId == EventId)
-                .ExecuteUpdateAsync(
-                    db => db.SetProperty(e => e.PropgationStatus, EventProapgationStatus.Propagated), cancellationToken
-                );
+            throw new NotImplementedException();
         }
     }
 }

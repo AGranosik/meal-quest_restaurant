@@ -38,7 +38,6 @@ namespace webapi.Controllers.Restaurants
         public async Task<IActionResult> Test(CancellationToken cancellationToken)
         {
             throw new Exception();
-            return Ok();
         }
     }
 }
