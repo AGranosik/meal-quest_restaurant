@@ -5,6 +5,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
+using unitTests.DataFakers;
 
 namespace unitTests.Domain.Restaurants.Aggregates
 {
@@ -16,18 +17,9 @@ namespace unitTests.Domain.Restaurants.Aggregates
         private OpeningHours _validOpeningHours;
         public RestaurantTests()
         {
-            _validName = new Name("test");
-            _validOwner = Owner.Create(new Name("test"), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
-            _validOpeningHours = OpeningHours.Create(
-            [
-                WorkingDay.Create(DayOfWeek.Monday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-                WorkingDay.FreeDay(DayOfWeek.Tuesday).Value,
-                WorkingDay.Create(DayOfWeek.Wednesday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-                WorkingDay.Create(DayOfWeek.Thursday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-                WorkingDay.Create(DayOfWeek.Friday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-                WorkingDay.Create(DayOfWeek.Saturday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-                WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
-            ]).Value;
+            _validName = RestaurantDataFaker.ValidRestaurantName;
+            _validOwner = RestaurantDataFaker.ValidOwner;
+            _validOpeningHours = RestaurantDataFaker.ValidOpeningHours;
         }
 
         [Test]
