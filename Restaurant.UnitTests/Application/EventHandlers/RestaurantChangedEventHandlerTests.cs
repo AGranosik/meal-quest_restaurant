@@ -1,7 +1,12 @@
 ﻿using application.EventHandlers;
 using application.EventHandlers.Restaurants;
+using application.Menus.Commands.Interfaces;
+using core.FallbackPolicies;
+using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
+using FluentAssertions;
+using Moq;
 using unitTests.DataFakers;
 
 namespace unitTests.Application.EventHandlers
@@ -9,9 +14,44 @@ namespace unitTests.Application.EventHandlers
     [TestFixture]
     public class RestaurantChangedEventHandlerTests : AggregateChangedEventHandlerTests<Restaurant, RestaurantId>
     {
+        private Mock<IMenuRepository> _menuRepositoryMock;
+        public override void SetUp()
+        {
+            _menuRepositoryMock = new Mock<IMenuRepository>();
+            base.SetUp();
+        }
+
+        [Test]
+        public async Task Processing_Success()
+        {
+            _menuRepositoryMock.Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            var @event = CreateValidEvent();
+            var handler = CreateHandler();
+            var action = () => handler.Handle(@event, CancellationToken.None);
+
+            await action.Should().NotThrowAsync();
+            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
+        }
+
+
+        [Test]
+        public async Task Processing_RetryPolicyApplied_Called()
+        {
+            _menuRepositoryMock.Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
+
+            var @event = CreateValidEvent();
+            var handler = CreateHandler();
+            var action = () => handler.Handle(@event, CancellationToken.None);
+
+            await action.Should().NotThrowAsync();
+            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPoicies.NUMBER_OF_RETRIES + 1));
+        }
 
         protected override AggregateChangedEventHandler<Restaurant, RestaurantId> CreateHandler()
-            => new RestaurantChangedEventHandler(_eventInforStorage.Object);
+            => new RestaurantChangedEventHandler(_eventInforStorage.Object, _loggerMock.Object, _menuRepositoryMock.Object);
 
         protected override AggregateChangedEvent<Restaurant, RestaurantId> CreateValidEvent()
             => new(RestaurantDataFaker.ValidRestaurant());

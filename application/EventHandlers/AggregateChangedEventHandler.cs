@@ -1,7 +1,10 @@
 ﻿using application.EventHandlers.Interfaces;
+using core.FallbackPolicies;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using MediatR;
+using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace application.EventHandlers
 {
@@ -13,17 +16,25 @@ namespace application.EventHandlers
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>
     {
-        private readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
+        protected readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
+        protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> _logger;
 
-        public AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage)
+        public AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger)
         {
             _eventInfoStorage = eventInfoStorage;
+            _logger = logger;
         }
 
         public async Task Handle(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken)
         {
             Validation(notification);
-            await _eventInfoStorage.StorePendingEventAsync(notification.Aggregate.Id!, cancellationToken);
+            var policyResult = await FallbackRetryPoicies.AsyncRetry
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate.Id!, cancellationToken));
+
+            if (policyResult.Outcome == OutcomeType.Failure)
+                _logger.LogError("Problem with {aggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
+
+            await ProcessingEventAsync(notification, cancellationToken);
         }
 
         protected abstract Task ProcessingEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
