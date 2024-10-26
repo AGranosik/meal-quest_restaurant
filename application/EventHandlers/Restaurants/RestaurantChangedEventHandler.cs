@@ -6,6 +6,7 @@ using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
@@ -13,13 +14,18 @@ namespace application.EventHandlers.Restaurants
     {
         private readonly IMenuRepository _menuRepository = menuRepository;
 
-        // return status.
-        // it what if ther's gonna be more options and only one of them fail?
-        // each method should not throw erro on duplicates?
-        protected override async Task ProcessingEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
+        protected override async Task<bool> ProcessingEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
         {
-            var policyResult = await FallbackRetryPoicies.AsyncRetry.ExecuteAndCaptureAsync(
+            // TODO: change to microsfot risillient
+            var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
                 () => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Aggregate.Id!.Value), cancellationToken));
+
+            if (policyResult.Outcome == OutcomeType.Successful)
+                return true;
+
+            _logger.LogError(policyResult.FinalException, "Problem with handling menu repository save. {AggregateName}, Id: {Id}", nameof(Restaurant), notification.Aggregate.Id!.Value);
+
+            return false;
         }
     }
 }

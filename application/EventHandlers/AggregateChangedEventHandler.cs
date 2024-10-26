@@ -19,7 +19,7 @@ namespace application.EventHandlers
         protected readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
         protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> _logger;
 
-        public AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger)
+        protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger)
         {
             _eventInfoStorage = eventInfoStorage;
             _logger = logger;
@@ -28,23 +28,48 @@ namespace application.EventHandlers
         public async Task Handle(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken)
         {
             Validation(notification);
-            var policyResult = await FallbackRetryPoicies.AsyncRetry
+            var policyResult = await FallbackRetryPolicies.AsyncRetry
                 .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate.Id!, cancellationToken));
 
-            if (policyResult.Outcome == OutcomeType.Failure)
-                _logger.LogError("Problem with {aggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
+            var storedSuccessfully = policyResult.Outcome == OutcomeType.Successful;
 
-            await ProcessingEventAsync(notification, cancellationToken);
+            if (!storedSuccessfully)
+                _logger.LogError(policyResult.FinalException, "Problem with storage {AggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
+
+            var result = await ProcessingEventAsync(notification, cancellationToken);
+            if (result && storedSuccessfully)
+                await ProcessSuccessAsync(notification.Aggregate.Id!, policyResult.Result, cancellationToken);
+
+            if (!result && storedSuccessfully)
+                await ProcessFailureAsync(notification.Aggregate.Id!, policyResult.Result, cancellationToken);
         }
 
-        protected abstract Task ProcessingEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
+        private async Task ProcessFailureAsync(TKey notificationId, int eventId, CancellationToken cancellationToken)
+        {
+            var policyResult = await FallbackRetryPolicies.AsyncRetry
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreFailureAsync(eventId, cancellationToken));
 
-        private void Validation(AggregateChangedEvent<TAggregate, TKey> notification)
+            if (policyResult.Outcome == OutcomeType.Failure)
+                _logger.LogError(policyResult.FinalException, "Problem with failure storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
+        }
+
+        private async Task ProcessSuccessAsync(TKey notificationId, int eventId, CancellationToken cancellationToken)
+        {
+            var policyResult = await FallbackRetryPolicies.AsyncRetry
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreSuccessAsyncAsync(eventId, cancellationToken));
+
+            if (policyResult.Outcome == OutcomeType.Failure)
+                _logger.LogError(policyResult.FinalException, "Problem with success storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
+        }
+
+        protected abstract Task<bool> ProcessingEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
+
+        private static void Validation(AggregateChangedEvent<TAggregate, TKey> notification)
         {
             ArgumentNullException.ThrowIfNull(notification);
             ArgumentNullException.ThrowIfNull(notification.Aggregate);
             ArgumentNullException.ThrowIfNull(notification.Aggregate.Id);
-        } 
+        }
     }
 
 }
