@@ -7,10 +7,10 @@ using domain.Menus.Aggregates.DomainEvents;
 using domain.Common.ValueTypes.Strings;
 using domain.Common.DomainImplementationTypes;
 
-namespace domain.Menus.Aggregates.Entities
+namespace domain.Menus.Aggregates
 {
     //get rid of results -> move to exceptions??
-    public sealed class Menu : Entity<MenuId>
+    public sealed class Menu : Aggregate<MenuId>
     {
         public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
         {
@@ -49,7 +49,7 @@ namespace domain.Menus.Aggregates.Entities
 
         public override List<DomainEvent> GetEvents()
         {
-            foreach(var @event in _domainEvents)
+            foreach (var @event in _domainEvents)
             {
                 @event.SetId(Id!.Value);
             }

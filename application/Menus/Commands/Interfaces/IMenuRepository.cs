@@ -1,4 +1,4 @@
-﻿using domain.Menus.Aggregates.Entities;
+﻿using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
 

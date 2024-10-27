@@ -1,10 +1,11 @@
 ﻿using domain.Common.BaseTypes;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
-using domain.Menus.Aggregates.Entities;
+using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentAssertions;
+using unitTests.DataFakers;
 
 namespace unitTests.Domain.Menus.Entities
 {
@@ -18,26 +19,10 @@ namespace unitTests.Domain.Menus.Entities
         [SetUp]
         public void SetUp()
         {
-            _validName = new Name("test");
-            _validGroups =
-            [
-                Group.Create(
-                [
-                    new(
-                    [
-                        Ingredient.Create("test").Value
-                    ], new Price(20), new Name("test"))
-                ], new Name("hehe")).Value,
-                Group.Create(
-                [
-                    new(
-                    [
-                        Ingredient.Create("test2").Value
-                    ], new Price(20), new Name("test2"))
-                ], new Name("hehe2")).Value
-            ];
+            _validName = MenuDataFaker.ValidName;
+            _validGroups = MenuDataFaker.ValidGroups;
 
-            _validRestaurantId = new RestaurantIdMenuId(2);
+            _validRestaurantId = MenuDataFaker.ValidRestaurant;
         }
 
         [Test]
