@@ -8,10 +8,9 @@ namespace domain.Restaurants.ValueObjects
     {
         private const int WEEK_DAYS = 7;
 
-        private List<WorkingDay> _workingDays = new();
+        private readonly List<WorkingDay> _workingDays = [];
         public IReadOnlyCollection<WorkingDay> WorkingDays => _workingDays;
 
-        protected OpeningHours() { }
 
         public static Result<OpeningHours> Create(List<WorkingDay> workingDays)
         {
@@ -21,8 +20,9 @@ namespace domain.Restaurants.ValueObjects
 
             return Result.Ok(new OpeningHours(workingDays));
         }
+        protected OpeningHours() { }
 
-        protected OpeningHours(List<WorkingDay> workingDays)
+        private OpeningHours(List<WorkingDay> workingDays)
         {
             _workingDays = workingDays;
         }
@@ -47,7 +47,7 @@ namespace domain.Restaurants.ValueObjects
             if (ReferenceEquals(this, obj)) return true;
 
             OpeningHours? other = obj as OpeningHours;
-            return Enumerable.SequenceEqual(WorkingDays, other.WorkingDays);
+            return WorkingDays.SequenceEqual(other!.WorkingDays);
         }
     }
 }

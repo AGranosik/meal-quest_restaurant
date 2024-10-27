@@ -15,9 +15,8 @@ namespace domain.Common.DomainImplementationTypes.Identifiers
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            SimpleValueType<TValue, TKey> other = obj as SimpleValueType<TValue, TKey>;
-            if (other == null) return false;
-            return Value.Equals(other.Value);
+            if (obj is not SimpleValueType<TValue, TKey> other) return false;
+            return Value!.Equals(other.Value);
         }
     }
 }

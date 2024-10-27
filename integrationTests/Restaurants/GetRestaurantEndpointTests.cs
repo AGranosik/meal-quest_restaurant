@@ -52,7 +52,7 @@ namespace integrationTests.Restaurants
             result.Should().NotBeEmpty();
             result!.Count.Should().Be(1);
 
-            CompareRestaurant(result.First(), restaurants.First())
+            CompareRestaurant(result[0], restaurants[0])
                 .Should().BeTrue();
         }
 
@@ -71,7 +71,7 @@ namespace integrationTests.Restaurants
             result.Should().NotBeEmpty();
             result!.Count.Should().Be(1);
 
-            CompareRestaurant(result.First(), restaurantToGet)
+            CompareRestaurant(result[0], restaurantToGet)
                 .Should().BeTrue();
         }
 
@@ -89,9 +89,10 @@ namespace integrationTests.Restaurants
             var result = resultString.Deserialize<List<RestaurantDto>>();
 
             var ownersRestaurants = restaurants.Where(r => r.Owner.Id!.Value == ownerId).ToList();
-            ownersRestaurants.Count().Should().Be(result!.Count);
+            ownersRestaurants.Count.Should().Be(result!.Count);
 
-            CompareRestaurants(result, ownersRestaurants);
+            var comparisonResult = CompareRestaurants(result, ownersRestaurants);
+            comparisonResult.Should().BeTrue();
         }
 
         private async Task<List<Restaurant>> AddRestaurants(int numberOfRestaurants, int restaurantsPerOwner)
@@ -132,7 +133,7 @@ namespace integrationTests.Restaurants
         {
             foreach(var dto in dtos)
             {
-                var domain = domains.FirstOrDefault(d => d.Id!.Value == dto.Id);
+                var domain = domains.Find(d => d.Id!.Value == dto.Id);
                 if (domain is null)
                     return false;
 
@@ -155,20 +156,16 @@ namespace integrationTests.Restaurants
             var dtoAddress = dto.Owner.Address;
             var domainAddress = domain.Owner.Address;
 
-            if(dtoAddress.City != domainAddress.City.Value
-                || dtoAddress.XCoordinate != domainAddress.Coordinates.X
+            if(dtoAddress.City != domainAddress.City!.Value
+                || dtoAddress.XCoordinate != domainAddress.Coordinates!.X
                 || dtoAddress.YCoordinate != domainAddress.Coordinates.Y)
                 return false;
 
-            if(!dto.OpeningHours.WorkingDays.Any(dtoWd => domain.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
-                || dto.OpeningHours.WorkingDays.Count != domain.OpeningHours.WorkingDays.Count)
-                return false;
-
-
-            return true;
+            return dto.OpeningHours.WorkingDays.Exists(dtoWd => domain.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
+                && dto.OpeningHours.WorkingDays.Count == domain.OpeningHours.WorkingDays.Count;
         }
 
         private static int MaxId(List<Restaurant> restaurants)
-            => restaurants.Select(r => r.Owner.Id!.Value).Max();
+            => restaurants.Max(r => r.Owner.Id!.Value);
     }
 }

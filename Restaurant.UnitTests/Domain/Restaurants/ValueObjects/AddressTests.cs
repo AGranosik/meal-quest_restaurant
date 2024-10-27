@@ -9,21 +9,21 @@ namespace unitTests.Domain.Restaurants.ValueObjects
         [Test]
         public void Creation_StreetCannotBeNUll_FailedResult()
         {
-            var creationResult = Address.Create(null, null, null);
+            var creationResult = Address.Create(null!, null!, null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_CityCannotBeNull_FailedResult()
         {
-            var creationResult = Address.Create(new Street("street"), null, null);
+            var creationResult = Address.Create(new Street("street"), null!, null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_CoordinatesCannotBeNull_FailedResult()
         {
-            var creationResult = Address.Create(new Street("street"), new City("city"), null);
+            var creationResult = Address.Create(new Street("street"), new City("city"), null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 

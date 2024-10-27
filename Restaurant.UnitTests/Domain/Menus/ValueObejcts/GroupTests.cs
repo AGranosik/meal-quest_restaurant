@@ -53,7 +53,7 @@ namespace unitTests.Domain.Menus.ValueObejcts
                 _validMeals[1],
                 _validMeals[2],
                 _validMeals[0],
-            ], null);
+            ], null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 

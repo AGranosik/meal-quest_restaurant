@@ -9,7 +9,7 @@ namespace unitTests
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        public static T Deserialize<T>(string json)
+        public static T? Deserialize<T>(string json)
             => JsonSerializer.Deserialize<T>(json, _options);
     }
 }

@@ -49,7 +49,7 @@ namespace unitTests.Domain.Menus.ValueObejcts
                 Ingredient.Create("test").Value,
                 Ingredient.Create("test2").Value,
                 Ingredient.Create("test").Value,
-            ], null, null);
+            ], null!, null!);
             creation.Should().Throw<ArgumentException>();
         }
 

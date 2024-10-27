@@ -22,20 +22,19 @@ namespace domain.Restaurants.ValueObjects
             Coordinates = coordinates;
         }
 
-        protected Address() { }
+        private Address() { }
 
         public Street Street { get; }
         public City City { get; }
         public Coordinates Coordinates { get; }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            Address? other = obj as Address;
-            if (other == null) return false;
-            return Street == other.Street && City == other.City && Coordinates == other.Coordinates;
+            if (obj is not Address other) return false;
+            return Street! == other.Street! && City! == other.City! && Coordinates! == other.Coordinates!;
         }
 
         private static Result Validation(Street street, City city, Coordinates coordinates)

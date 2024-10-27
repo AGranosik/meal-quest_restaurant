@@ -16,7 +16,7 @@ namespace unitTests.Domain.Restaurants.ValueObjects
         [Test]
         public void CannotBeNull_ThrowsException()
         {
-            var action = () => new RestaurantName(null);
+            var action = () => new RestaurantName(null!);
             action.Should().Throw<ArgumentException>();
         }
 

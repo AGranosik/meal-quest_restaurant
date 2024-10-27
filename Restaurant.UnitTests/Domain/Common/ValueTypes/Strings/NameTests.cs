@@ -9,7 +9,7 @@ namespace unitTests.Domain.Common.ValueTypes.Strings
         [Test]
         public void Creation_CannotBeNull_ThrowsException()
         {
-            var creation = () => new Name(null);
+            var creation = () => new Name(null!);
             creation.Should().Throw<ArgumentException>();
         }
 

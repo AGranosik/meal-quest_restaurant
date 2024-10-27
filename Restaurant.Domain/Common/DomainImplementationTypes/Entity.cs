@@ -13,7 +13,7 @@ namespace domain.Common.BaseTypes
 
         public void SetId(TKey id)
         {
-            Id = id ?? throw new ArgumentNullException();
+            Id = id ?? throw new ArgumentNullException(nameof(id));
         }
 
         public abstract List<DomainEvent> GetEvents();

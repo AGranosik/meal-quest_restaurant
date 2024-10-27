@@ -18,10 +18,10 @@ namespace infrastructure.Database.MenuContext.Models.Configurations
             builder.HasKey(idName);
 
             builder.Property(m => m.Price)
-                .HasConversion(p => p.Value, db => new Price(db));
+                .HasConversion(p => p!.Value, db => new Price(db));
 
             builder.Property(m => m.Name)
-                .HasConversion(name => name.Value.Value, db => new Name(db));
+                .HasConversion(name => name!.Value.Value, db => new Name(db));
 
             builder.HasMany<Ingredient>("Ingredients")
                 .WithMany()

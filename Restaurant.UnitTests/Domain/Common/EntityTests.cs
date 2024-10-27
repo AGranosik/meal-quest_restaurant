@@ -19,7 +19,7 @@ namespace unitTests.Domain.Common
         public void AssignId_IdCannotBeNull_ThrowsException()
         {
             var entity = new EntityUnderTests();
-            var action = () => entity.SetId(null);
+            var action = () => entity.SetId(null!);
             action.Should().Throw<ArgumentNullException>();
         }
 

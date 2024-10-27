@@ -8,17 +8,17 @@ namespace unitTests.Domain.Restaurants.Aggregates.Entities
     [TestFixture]
     public class MenuTests
     {
-
+        [Test]
         public void Creation_MenuIdCannotBeNull()
         {
-            var creationResult = Menu.Create(null, null);
+            var creationResult = Menu.Create(null!, null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_NameCannotBeNull()
         {
-            var creationResult = Menu.Create(new MenuId(10), null);
+            var creationResult = Menu.Create(new MenuId(10), null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 

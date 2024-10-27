@@ -27,7 +27,7 @@ namespace domain.Menus.Aggregates.DomainEvents
         public int RestaurantId { get; }
 
         public override string GetAssemblyName()
-            => GetType().AssemblyQualifiedName;
+            => GetType().AssemblyQualifiedName!;
 
         public override string Serialize()
             => JsonSerializer.Serialize(this);

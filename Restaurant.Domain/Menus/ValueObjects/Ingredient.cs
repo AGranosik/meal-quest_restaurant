@@ -4,14 +4,14 @@ using FluentResults;
 
 namespace domain.Menus.ValueObjects
 {
-    public class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
+    public sealed class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
     {
         public static Result<Ingredient> Create(NotEmptyString name)
         {
             return Result.Ok(new Ingredient(name));
         }
 
-        protected Ingredient(NotEmptyString name)
+        private Ingredient(NotEmptyString name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
@@ -22,8 +22,7 @@ namespace domain.Menus.ValueObjects
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            Ingredient? other = obj as Ingredient;
-            if (other == null) return false;
+            if (obj is not Ingredient other) return false;
             return Name == other.Name;
         }
     }

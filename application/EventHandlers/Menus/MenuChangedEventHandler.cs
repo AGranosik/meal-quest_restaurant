@@ -25,8 +25,8 @@ namespace application.EventHandlers.Menus
                 () => _restaurantRepository.AddMenuAsync(
                         RestaurantMenu.Create(
                             new RestaurantMenuId(notification.Aggregate.Id!.Value),
-                            notification.Aggregate.Name).Value,
-                        new RRestaurantId(notification.Aggregate.Restaurant.Value), cancellationToken));
+                            notification.Aggregate.Name!).Value,
+                        new RRestaurantId(notification.Aggregate.Restaurant!.Value), cancellationToken));
 
             if (policyResult.Outcome == OutcomeType.Successful)
                 return true;

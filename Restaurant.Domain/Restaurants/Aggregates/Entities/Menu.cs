@@ -31,9 +31,8 @@ namespace domain.Restaurants.Aggregates.Entities
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            Menu other = obj as Menu;
-            if (other == null) return false;
-            return Id == other.Id;
+            if (obj is not Menu other) return false;
+            return Id! == other.Id!;
         }
 
         private static Result Validation(MenuId menuId, Name name)

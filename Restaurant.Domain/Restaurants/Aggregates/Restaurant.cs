@@ -14,7 +14,6 @@ namespace domain.Restaurants.Aggregates
         protected List<Menu> _menus = new();
         public IReadOnlyCollection<Menu> Menus => _menus.AsReadOnly();
 
-        protected Restaurant() : base() { }
         public Name Name { get; protected set; }
         public Owner Owner { get; protected set; }
         public OpeningHours OpeningHours { get; protected set; }
@@ -35,8 +34,9 @@ namespace domain.Restaurants.Aggregates
             _menus.Add(menu);
             return Result.Ok();
         }
+        protected Restaurant() : base() { }
 
-        protected Restaurant(Name name, Owner owner, OpeningHours openingHours)
+        private Restaurant(Name name, Owner owner, OpeningHours openingHours)
         {
             Owner = owner;
             OpeningHours = openingHours;

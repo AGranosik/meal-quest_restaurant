@@ -8,7 +8,7 @@ namespace domain.Restaurants.ValueObjects
 
         public static Result<WorkingDay> Create(DayOfWeek day, TimeOnly from, TimeOnly to)
         {
-            var validatioNResult = Validation(day, from, to);
+            var validatioNResult = Validation(from, to);
             if (validatioNResult.IsFailed)
                 return validatioNResult;
 
@@ -36,7 +36,7 @@ namespace domain.Restaurants.ValueObjects
         public bool Free { get; } = false;
 
 
-        private static Result Validation(DayOfWeek? day, TimeOnly from, TimeOnly to)
+        private static Result Validation(TimeOnly from, TimeOnly to)
         {
             if (from.Microsecond != 0 || to.Millisecond != 0)
                 return Result.Fail("Specify time without microseconds.");
@@ -59,7 +59,7 @@ namespace domain.Restaurants.ValueObjects
             if (ReferenceEquals(this, obj)) return true;
 
             WorkingDay? other = obj as WorkingDay;
-            return Day == other.Day && other.From == From && other.To == To;
+            return other is not null && Day == other.Day! && other.From == From && other.To == To;
         }
     }
 }

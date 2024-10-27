@@ -34,21 +34,21 @@ namespace unitTests.Domain.Menus.Entities
         [Test]
         public void Creation_GroupsCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(null, null, null);
+            var result = Menu.Create(null!, null!, null!);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_GroupsCannotBeEmpty_FailureResult()
         {
-            var result = Menu.Create([], null, null);
+            var result = Menu.Create([], null!, null!);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_GroupsHaveToBeUnique_FailureResult()
         {
-            var group = _validGroups.First();
+            var group = _validGroups[0];
             var result = Menu.Create([group, group], null!, null!);
             result.IsFailed.Should().BeTrue();
         }
@@ -56,14 +56,14 @@ namespace unitTests.Domain.Menus.Entities
         [Test]
         public void Creation_NameCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(_validGroups, null, null);
+            var result = Menu.Create(_validGroups, null!, null!);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_RestaurantIdCannotBeNull_FailureResult()
         {
-            var result = Menu.Create(_validGroups, _validName, null);
+            var result = Menu.Create(_validGroups, _validName, null!);
             result.IsFailed.Should().BeTrue();
         }
 

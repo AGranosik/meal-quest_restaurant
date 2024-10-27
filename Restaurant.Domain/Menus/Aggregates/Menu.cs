@@ -9,9 +9,18 @@ using domain.Common.DomainImplementationTypes;
 
 namespace domain.Menus.Aggregates
 {
-    //get rid of results -> move to exceptions??
+    //TODO: get rid of results -> move to exceptions??
     public sealed class Menu : Aggregate<MenuId>
     {
+        private Menu() { }
+        private Menu(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
+        {
+            Groups = groups;
+            Name = name;
+            Restaurant = restaurant;
+            _domainEvents.Add(new MenuCreatedEvent(Id, name, restaurant));
+        }
+
         public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
         {
             var validatioNResult = CreationValidation(groups, restaurant);
@@ -21,17 +30,9 @@ namespace domain.Menus.Aggregates
             var menu = new Menu(groups, name, restaurant);
             return Result.Ok(menu);
         }
-        private Menu() { }
         public Name Name { get; }
         public List<Group> Groups { get; }
         public RestaurantIdMenuId Restaurant { get; }
-        private Menu(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
-        {
-            Groups = groups;
-            Name = name;
-            Restaurant = restaurant;
-            _domainEvents.Add(new MenuCreatedEvent(Id, name, restaurant));
-        }
 
         private static Result CreationValidation(List<Group> groups, RestaurantIdMenuId restaurantId)
         {

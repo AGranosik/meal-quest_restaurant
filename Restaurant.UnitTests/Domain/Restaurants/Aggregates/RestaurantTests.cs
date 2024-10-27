@@ -12,9 +12,9 @@ namespace unitTests.Domain.Restaurants.Aggregates
     [TestFixture]
     public class RestaurantTests
     {
-        private Name _validName;
-        private Owner _validOwner;
-        private OpeningHours _validOpeningHours;
+        private readonly Name _validName;
+        private readonly Owner _validOwner;
+        private readonly OpeningHours _validOpeningHours;
         public RestaurantTests()
         {
             _validName = RestaurantDataFaker.ValidRestaurantName;
@@ -45,7 +45,7 @@ namespace unitTests.Domain.Restaurants.Aggregates
         [Test]
         public void Creation_IdOpenningHoursCannotBeNull_Failure()
         {
-            var creationResult = Restaurant.Create(_validName, _validOwner, null);
+            var creationResult = Restaurant.Create(_validName, _validOwner, null!);
             creationResult.IsFailed.Should().BeTrue();
         }
 

@@ -6,6 +6,7 @@ using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using unitTests.DataFakers;
 
 namespace unitTests.Application.EventHandlers
 {
@@ -51,7 +52,7 @@ namespace unitTests.Application.EventHandlers
         {
             var notification = CreateValidEvent();
             _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TKey>(), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new ArgumentException());
+                .ThrowsAsync(new MockedException());
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);
@@ -65,7 +66,7 @@ namespace unitTests.Application.EventHandlers
         {
             var notification = CreateValidEvent();
             _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TKey>(), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new ArgumentException());
+                .ThrowsAsync(new MockedException());
             MockLogger();
 
             var handler = CreateHandler();
@@ -99,7 +100,7 @@ namespace unitTests.Application.EventHandlers
             EventStoragePendingConfigurationSuccess();
             ConfigureSuccessfulProcessing();
             _eventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ThrowsAsync(new Exception());
+                .ThrowsAsync(new MockedException());
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);

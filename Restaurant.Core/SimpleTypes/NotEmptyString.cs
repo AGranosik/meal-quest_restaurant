@@ -35,7 +35,7 @@ namespace core.SimpleTypes
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            NotEmptyString other = obj as NotEmptyString;
+            NotEmptyString? other = obj as NotEmptyString;
             if (other == null) return false;
             return Value == other.Value;
         }

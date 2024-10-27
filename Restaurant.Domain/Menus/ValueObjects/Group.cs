@@ -30,9 +30,8 @@ namespace domain.Menus.ValueObjects
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            Group other = obj as Group;
-            if (other == null) return false;
-            return GroupName == other.GroupName && Meals.SequenceEqual(other.Meals);
+            if (obj is not Group other) return false;
+            return GroupName! == other.GroupName! && Meals!.SequenceEqual(other.Meals!);
         }
 
         private static Result CreationValidation(List<Meal> meals, Name groupName)

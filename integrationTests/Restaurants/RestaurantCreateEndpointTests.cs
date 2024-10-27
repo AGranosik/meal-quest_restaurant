@@ -107,7 +107,7 @@ namespace integrationTests.Restaurants
                 || dbAddress.Coordinates.Y != requestAddress.YCoordinate)
                 return false;
 
-            if (!db.OpeningHours.WorkingDays.Any(dtoWd => request.OpeningHours!.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
+            if (!db.OpeningHours.WorkingDays.Any(dtoWd => request.OpeningHours!.WorkingDays.Exists(domainWWd => dtoWd.Day == domainWWd.Day))
                 || db.OpeningHours.WorkingDays.Count != request.OpeningHours!.WorkingDays.Count)
                 return false;
 

@@ -23,28 +23,28 @@ namespace unitTests.Domain.Restaurants.Aggregates.Entities
         [Test]
         public void Creation_NameCannotBeNull_Failed()
         {
-            var result = Owner.Create(null, new Name("sss"), _validAddress);
+            var result = Owner.Create(null!, _validName, _validAddress);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_SurnameCannotBeNull_Success()
         {
-            var result = Owner.Create(new Name("name"), null, _validAddress);
+            var result = Owner.Create(_validName, null!, _validAddress);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Creation_AddressCannotBeNull_Success()
         {
-            var result = Owner.Create(new Name("name"), _validSurname, null);
+            var result = Owner.Create(_validName, _validSurname, null!);
             result.IsFailed.Should().BeTrue();
         }
 
         [Test]
         public void Equality_SameReference_True()
         {
-            var result = Owner.Create(new Name("name"), _validSurname, _validAddress);
+            var result = Owner.Create(_validName, _validSurname, _validAddress);
             (result.Value == result.Value).Should().BeTrue();
         }
     }

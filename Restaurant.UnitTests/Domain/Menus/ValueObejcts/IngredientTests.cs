@@ -11,7 +11,7 @@ namespace unitTests.Domain.Menus.ValueObejcts
         [Test]
         public void Creation_CannotBeNull_ThrowsException()
         {
-            var creation = () => Ingredient.Create(null);
+            var creation = () => Ingredient.Create(null!);
             creation.Should().Throw<ArgumentNullException>();
         }
 
