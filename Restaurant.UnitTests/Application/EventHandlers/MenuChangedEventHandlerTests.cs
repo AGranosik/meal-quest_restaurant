@@ -61,11 +61,11 @@ namespace unitTests.Application.EventHandlers
             => new(MenuDataFaker.ValidMenu());
 
         private void ConfigureRestaurantRepositorySuccessful()
-            => _restaurantRepository.Setup(r => r.AddMenuAsync(It.IsAny<domain.Restaurants.Aggregates.Entities.Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()))
+            => _restaurantRepository.Setup(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         private void ConfigureRestaurantRepositoryFailure()
-            => _restaurantRepository.Setup(r => r.AddMenuAsync(It.IsAny<domain.Restaurants.Aggregates.Entities.Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+            => _restaurantRepository.Setup(r => r.AddMenuAsync(It.IsAny<Menu>(), It.IsAny<RestaurantId>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
 
     }
 }
