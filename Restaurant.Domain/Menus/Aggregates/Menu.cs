@@ -47,15 +47,5 @@ namespace domain.Menus.Aggregates
 
             return Result.Ok();
         }
-
-        public override List<DomainEvent> GetEvents()
-        {
-            foreach (var @event in _domainEvents)
-            {
-                @event.SetId(Id!.Value);
-            }
-
-            return _domainEvents;
-        }
     }
 }

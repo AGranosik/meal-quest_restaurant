@@ -13,10 +13,6 @@ namespace integrationTests.Restaurants
     {
         protected MenuDbContext _menuDbContext;
         protected EventDbContext _eventDbContext;
-        public BaseRestaurantIntegrationTests()
-        {
-            
-        }
         protected override async Task OneTimeSetUp()
         {
             await base.OneTimeSetUp();

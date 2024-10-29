@@ -1,5 +1,4 @@
 ﻿using domain.Common.BaseTypes;
-using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.Aggregates.Entities;
@@ -56,19 +55,6 @@ namespace domain.Restaurants.Aggregates
                 return Result.Fail("Opening houts cannot be null.");
 
             return Result.Ok();
-        }
-
-        public override List<DomainEvent> GetEvents()
-        {
-            if (Id is null)
-                return _domainEvents;
-
-            foreach(var @event in _domainEvents)
-            {
-                @event.SetId(Id!.Value);
-            }
-
-            return _domainEvents;
         }
     }
 }

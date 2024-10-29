@@ -1,8 +1,10 @@
-﻿using application.Restaurants.Commands;
+﻿using application.EventHandlers;
+using application.Restaurants.Commands;
 using application.Restaurants.Commands.Interfaces;
 using Castle.Core.Logging;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.DomainEvents;
+using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -177,13 +179,13 @@ namespace unitTests.Application.Restaurants
         {
             var openingHours = new OpeningHoursCommand(
             [
-                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
             ]);
             var address = new CreateAddressCommand("street", "City", 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
@@ -200,21 +202,22 @@ namespace unitTests.Application.Restaurants
         {
             var openingHours = new OpeningHoursCommand(
             [
-                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
-                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00),new DateTime(12, 12, 12, 13, 00, 00)),
+                new(DayOfWeek.Monday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Tuesday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Wednesday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Thursday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Friday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Saturday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
+                new(DayOfWeek.Sunday, new DateTime(12, 12, 12, 11, 00, 00, DateTimeKind.Utc),new DateTime(12, 12, 12, 13, 00, 00, DateTimeKind.Utc)),
             ]);
             var address = new CreateAddressCommand("street", "City", 0, 0);
             var owner = new CreateOwnerCommand("name", "surname", address);
             var handler = CreateHandler();
             var command = new CreateRestaurantCommand(_validName, owner, openingHours);
             var result = await handler.Handle(command, CancellationToken.None);
+            result.IsSuccess.Should().BeTrue();
 
-            _mediatorMock.Verify(m => m.Publish(It.Is<object>(o => o is RestaurantCreatedEvent), It.IsAny<CancellationToken>()), Times.Once());
+            _mediatorMock.Verify(m => m.Publish(It.IsAny<AggregateChangedEvent<Restaurant, RestaurantId>>(), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         private CreateRestaurantCommandHandler CreateHandler()

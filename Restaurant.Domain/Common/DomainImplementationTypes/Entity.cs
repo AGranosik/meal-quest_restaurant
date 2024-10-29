@@ -16,8 +16,6 @@ namespace domain.Common.BaseTypes
             Id = id ?? throw new ArgumentNullException(nameof(id));
         }
 
-        public abstract List<DomainEvent> GetEvents();
-
         #region Equality
         public override bool Equals(object? obj)
         {

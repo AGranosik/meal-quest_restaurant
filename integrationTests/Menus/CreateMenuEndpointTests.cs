@@ -33,8 +33,8 @@ namespace integrationTests.Menus
         public async Task CreateMenu_Valid_Created()
         {
             var restaurants = await CreateRestaurantsAsync(1);
-            var restaurantId = restaurants.First().Value;
-            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId).First(), CancellationToken.None);
+            var restaurantId = restaurants[0].Value;
+            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId)[0], CancellationToken.None);
 
             result.Should().NotBeNull();
             result!.Value.Should().BeGreaterThan(0);
@@ -45,7 +45,7 @@ namespace integrationTests.Menus
         {
             var restaurantId = await CreateRestaurantForSystem();
 
-            var request = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value).First();
+            var request = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0];
             var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, request, CancellationToken.None);
 
             var dbRestaurant = await _restaurantDbContext.Restaurants
@@ -70,7 +70,7 @@ namespace integrationTests.Menus
         public async Task CreateMenu_Valid_EventStoredInEventStore()
         {
             var restaurantId = await CreateRestaurantForSystem();
-            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value).First(), CancellationToken.None);
+            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0], CancellationToken.None);
 
             var events = await _eventDbContext.GetDbSet<MenuEvent>()
                 .Where(e => e.StreamId == result!.Value)
@@ -79,7 +79,7 @@ namespace integrationTests.Menus
             events.Count.Should().Be(1);
             var @event = events.First();
 
-            @event.PropgationStatus.Should().Be(EventProapgationStatus.Propagated);
+            @event.PropgationStatus.Should().Be(HandlingStatus.Propagated);
 
             @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
         }

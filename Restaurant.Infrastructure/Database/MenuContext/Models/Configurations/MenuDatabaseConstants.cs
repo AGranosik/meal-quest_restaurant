@@ -1,6 +1,6 @@
 ﻿namespace infrastructure.Database.MenuContext.Models.Configurations
 {
-    public class MenuDatabaseConstants
+    public static class MenuDatabaseConstants
     {
         public const string SCHEMA = "menu";
 

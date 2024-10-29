@@ -1,5 +1,4 @@
 ﻿using domain.Common.BaseTypes;
-using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
 
@@ -85,9 +84,5 @@ namespace unitTests.Domain.Common
     }
     internal class EntityUnderTests : Entity<EntityIdUnderTests>
     {
-        public override List<DomainEvent> GetEvents()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

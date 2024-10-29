@@ -43,10 +43,5 @@ namespace domain.Restaurants.Aggregates.Entities
 
             return Result.Ok();
         }
-
-        public override List<DomainEvent> GetEvents()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
