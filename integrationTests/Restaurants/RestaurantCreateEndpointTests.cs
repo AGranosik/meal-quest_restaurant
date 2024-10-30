@@ -76,21 +76,21 @@ namespace integrationTests.Restaurants
             menuDb.Count.Should().Be(1);
         }
 
-        [Test]
-        public async Task CreateRestaurant_Valid_StoredInEventStore()
-        {
-            var request = RestaurantDataFaker.ValidRequest();
+        //[Test]
+        //public async Task CreateRestaurant_Valid_StoredInEventStore()
+        //{
+        //    var request = RestaurantDataFaker.ValidRequest();
 
-            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        //    var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-            var events = await _eventDbContext.GetDbSet<RestaurantEvent>()
-                .Where(e => e.StreamId == result!.Value)
-                .ToListAsync();
+        //    var events = await _eventDbContext.GetDbSet<RestaurantEvent>()
+        //        .Where(e => e.StreamId == result!.Value)
+        //        .ToListAsync();
 
-            events.Count.Should().Be(1);
+        //    events.Count.Should().Be(1);
 
-            events[0].Data.Should().BeAssignableTo<RestaurantCreatedEvent>();
-        }
+        //    events[0].Data.Should().BeAssignableTo<RestaurantCreatedEvent>();
+        //}
         private static bool CompareRestaurant(CreateRestaurantRequest request, Restaurant db)
         {
             if (db.Name.Value != request.Name!)

@@ -17,3 +17,5 @@
 /application/obj
 /integrationTests/obj
 /integrationTests/bin/Debug/net8.0
+/shared.tests/bin/Debug/net8.0
+/shared.tests/obj

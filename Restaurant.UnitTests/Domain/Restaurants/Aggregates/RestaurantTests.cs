@@ -5,7 +5,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
-using unitTests.DataFakers;
+using sharedTests.DataFakers;
 
 namespace unitTests.Domain.Restaurants.Aggregates
 {

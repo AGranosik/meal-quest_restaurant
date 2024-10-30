@@ -4,7 +4,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 
-namespace unitTests.DataFakers
+namespace sharedTests.DataFakers
 {
     public static class RestaurantDataFaker
     {

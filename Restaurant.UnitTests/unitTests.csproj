@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\application\application.csproj" />
     <ProjectReference Include="..\Restaurant.Domain\domain.csproj" />
+    <ProjectReference Include="..\shared.tests\sharedTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>

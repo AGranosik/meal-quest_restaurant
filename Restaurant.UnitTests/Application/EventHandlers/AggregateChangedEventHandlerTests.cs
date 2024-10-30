@@ -6,7 +6,7 @@ using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
-using unitTests.DataFakers;
+using sharedTests.DataFakers;
 
 namespace unitTests.Application.EventHandlers
 {
@@ -44,28 +44,28 @@ namespace unitTests.Application.EventHandlers
             var action = () => handler.Handle(notification, CancellationToken.None);
 
             await action.Should().NotThrowAsync();
-            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TKey>(x => x.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
+            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Test]
         public async Task PednigState_Failed_RetryPolicyApplied()
         {
             var notification = CreateValidEvent();
-            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TKey>(), It.IsAny<CancellationToken>()))
+            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new MockedException());
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);
 
             await action.Should().NotThrowAsync();
-            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TKey>(x => x.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
+            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
         }
 
         [Test]
         public async Task PednigState_Failed_MessageLogged()
         {
             var notification = CreateValidEvent();
-            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TKey>(), It.IsAny<CancellationToken>()))
+            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new MockedException());
             MockLogger();
 
@@ -73,7 +73,7 @@ namespace unitTests.Application.EventHandlers
             var action = () => handler.Handle(notification, CancellationToken.None);
 
             await action.Should().NotThrowAsync();
-            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TKey>(x => x.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
+            _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
             CheckIfLoggedError();
         }
 
@@ -161,7 +161,7 @@ namespace unitTests.Application.EventHandlers
 
         protected void EventStoragePendingConfigurationSuccess()
         {
-            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TKey>(), It.IsAny<CancellationToken>()))
+            _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_eventId);
         }
     }

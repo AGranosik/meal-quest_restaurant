@@ -1,24 +1,29 @@
-﻿using System.Reflection;
-using System.Text.Json;
-using domain.Common.DomainImplementationTypes;
+﻿using System.Text.Json;
+using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes.Identifiers;
 
 namespace infrastructure.EventStorage.DatabaseModels
 {
-    public class DomainEventModel<T>
-        where T : DomainEvent
+    public class DomainEventModel<TAggregate, TKey>
+        where TAggregate : Aggregate<TKey>
+        where TKey : SimpleValueType<int, TKey>
     {
         private readonly JsonSerializerOptions _serializingOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
-        private readonly T? _data;
+        private readonly TAggregate? _data;
 
-        public static DomainEventModel<T> Pending(int streamId, T data)
-            => new(streamId, data);
+        public static DomainEventModel<TAggregate, TKey> Pending(TAggregate data)
+            => new(data.Id!.Value, data);
 
-        private DomainEventModel(int streamId, T data)
+        private DomainEventModel(int streamId, TAggregate data)
         {
             _data = data;
+            StreamId = streamId;
+            SerializedData = JsonSerializer.Serialize(data, _serializingOptions);
+            AssemblyName = typeof(TAggregate).Assembly.GetName().Name;
+            HandlingStatus = HandlingStatus.Pending;
         }
         private DomainEventModel() { }
 
@@ -28,7 +33,7 @@ namespace infrastructure.EventStorage.DatabaseModels
         public string? SerializedData { get; }
         public string? Reason { get; private set; }
         public string? AssemblyName { get; }
-        public T? Data => _data ?? (T?)JsonSerializer.Deserialize(SerializedData!, Type.GetType(AssemblyName!)!, _serializingOptions);
+        public TAggregate? Data => _data ?? (TAggregate?)JsonSerializer.Deserialize(SerializedData!, Type.GetType(AssemblyName!)!, _serializingOptions);
 
         public void Failed(string reason)
         {

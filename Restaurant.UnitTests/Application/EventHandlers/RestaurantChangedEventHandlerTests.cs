@@ -7,7 +7,7 @@ using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using Moq;
-using unitTests.DataFakers;
+using sharedTests.DataFakers;
 
 namespace unitTests.Application.EventHandlers
 {

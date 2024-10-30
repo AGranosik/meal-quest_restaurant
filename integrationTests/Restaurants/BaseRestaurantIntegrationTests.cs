@@ -38,7 +38,7 @@ namespace integrationTests.Restaurants
         public override async Task OneTimeTearDown()
         {
             await base.OneTimeTearDown();
-            _connection!.Dispose();
+            await _connection!.DisposeAsync();
         }
     }
 }

@@ -4,7 +4,7 @@ using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 
-namespace unitTests.DataFakers
+namespace sharedTests.DataFakers
 {
     public static class MenuDataFaker
     {

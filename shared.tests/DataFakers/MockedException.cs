@@ -1,4 +1,4 @@
-﻿namespace unitTests.DataFakers
+﻿namespace sharedTests.DataFakers
 {
     public class MockedException : Exception
     {

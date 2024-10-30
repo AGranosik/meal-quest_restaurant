@@ -1,10 +1,11 @@
 ﻿using application.EventHandlers.Interfaces;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
+using infrastructure.EventStorage.DatabaseModels;
 namespace infrastructure.EventStorage
 {
     // TODO: TESTS
-    internal class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
+    public class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>
     {
@@ -15,9 +16,15 @@ namespace infrastructure.EventStorage
             throw new NotImplementedException();
         }
 
-        public Task<int> StorePendingEventAsync(TKey notification, CancellationToken cancellationToken)
+        public async Task<int> StorePendingEventAsync(TAggregate notification, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var dbSet = _context.GetDbSet<TAggregate, TKey>();
+            var @event = DomainEventModel<TAggregate, TKey>.Pending(notification);
+
+            dbSet.Add(@event);
+
+            await _context.SaveChangesAsync(cancellationToken);
+            return @event.EventId;
         }
 
         public Task StoreSuccessAsyncAsync(int eventId, CancellationToken cancellationToken)

@@ -29,7 +29,7 @@ namespace application.EventHandlers
         {
             Validation(notification);
             var policyResult = await FallbackRetryPolicies.AsyncRetry
-                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate.Id!, cancellationToken));
+                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate, cancellationToken));
 
             var storedSuccessfully = policyResult.Outcome == OutcomeType.Successful;
 

@@ -1,16 +1,17 @@
-﻿using domain.Common.DomainImplementationTypes;
+﻿using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace infrastructure.EventStorage.DatabaseModels.Configurations
 {
-    internal class DomainEventModelConfiguration<TEvent> : IEntityTypeConfiguration<DomainEventModel<TEvent>>
-        where TEvent : DomainEvent
-
+    internal class DomainEventModelConfiguration<TAggregate, TKey> : IEntityTypeConfiguration<DomainEventModel<TAggregate, TKey>>
+        where TAggregate : Aggregate<TKey>
+        where TKey : SimpleValueType<int, TKey>
     {
-        public virtual void Configure(EntityTypeBuilder<DomainEventModel<TEvent>> builder)
+        public virtual void Configure(EntityTypeBuilder<DomainEventModel<TAggregate, TKey>> builder)
         {
-            builder.ToTable(typeof(TEvent).Name + "s", "events");
+            builder.ToTable(typeof(TAggregate).Name + "s", "events");
 
             builder.Property(e => e.EventId)
                 .ValueGeneratedOnAdd();

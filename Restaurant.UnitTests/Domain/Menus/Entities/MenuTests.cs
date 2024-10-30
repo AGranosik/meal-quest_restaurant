@@ -5,7 +5,7 @@ using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentAssertions;
-using unitTests.DataFakers;
+using sharedTests.DataFakers;
 
 namespace unitTests.Domain.Menus.Entities
 {

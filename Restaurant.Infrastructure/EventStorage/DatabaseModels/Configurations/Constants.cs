@@ -1,11 +1,14 @@
-﻿namespace infrastructure.EventStorage.DatabaseModels.Configurations
+﻿using domain.Menus.Aggregates;
+
+namespace infrastructure.EventStorage.DatabaseModels.Configurations
 {
     public static class Constants
     {
         public const string SCHEMA = "events";
 
         #region TABLES
-        public const string MENU_EVENTS = typeof()
+        public const string MENU_EVENTS = "MENUS";
+        public const string RESTAURANT_EVENTS = "RESTAURANTS";
         #endregion
     }
 }

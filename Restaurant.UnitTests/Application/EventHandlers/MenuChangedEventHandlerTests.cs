@@ -6,7 +6,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using Moq;
-using unitTests.DataFakers;
+using sharedTests.DataFakers;
 
 namespace unitTests.Application.EventHandlers
 {

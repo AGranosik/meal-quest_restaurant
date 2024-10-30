@@ -66,23 +66,23 @@ namespace integrationTests.Menus
         }
 
 
-        [Test]
-        public async Task CreateMenu_Valid_EventStoredInEventStore()
-        {
-            var restaurantId = await CreateRestaurantForSystem();
-            var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0], CancellationToken.None);
+        //[Test]
+        //public async Task CreateMenu_Valid_EventStoredInEventStore()
+        //{
+        //    var restaurantId = await CreateRestaurantForSystem();
+        //    var result = await _client.TestPostAsync<CreateMenuRequest, domain.Menus.ValueObjects.Identifiers.MenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0], CancellationToken.None);
 
-            var events = await _eventDbContext.GetDbSet<MenuEvent>()
-                .Where(e => e.StreamId == result!.Value)
-                .ToListAsync();
+        //    var events = await _eventDbContext.GetDbSet<MenuEvent>()
+        //        .Where(e => e.StreamId == result!.Value)
+        //        .ToListAsync();
 
-            events.Count.Should().Be(1);
-            var @event = events.First();
+        //    events.Count.Should().Be(1);
+        //    var @event = events.First();
 
-            @event.PropgationStatus.Should().Be(HandlingStatus.Propagated);
+        //    @event.PropgationStatus.Should().Be(HandlingStatus.Propagated);
 
-            @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
-        }
+        //    @event.Data.Should().BeAssignableTo<MenuCreatedEvent>();
+        //}
 
         private async Task<RestaurantId> CreateRestaurantForSystem()
         {

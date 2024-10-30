@@ -7,7 +7,7 @@ namespace application.EventHandlers.Interfaces
         where TKey : ValueObject<TKey>
         where TAggregate : Aggregate<TKey>
     {
-        Task<int> StorePendingEventAsync(TKey notification, CancellationToken cancellationToken);
+        Task<int> StorePendingEventAsync(TAggregate notification, CancellationToken cancellationToken);
         Task StoreFailureAsync(int eventId, CancellationToken cancellationToken);
         Task StoreSuccessAsyncAsync(int eventId, CancellationToken cancellationToken);
     }

@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "application", "..\applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "integrationTests", "..\integrationTests\integrationTests.csproj", "{185CD607-64F4-4826-9023-CC9C0AE91582}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sharedTests", "..\shared.tests\sharedTests.csproj", "{D12C1FBC-77EF-4136-BB03-9769A13CCC29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{185CD607-64F4-4826-9023-CC9C0AE91582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{185CD607-64F4-4826-9023-CC9C0AE91582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{185CD607-64F4-4826-9023-CC9C0AE91582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D12C1FBC-77EF-4136-BB03-9769A13CCC29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12C1FBC-77EF-4136-BB03-9769A13CCC29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12C1FBC-77EF-4136-BB03-9769A13CCC29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12C1FBC-77EF-4136-BB03-9769A13CCC29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CD3F6133-9A21-4983-854B-6D1A9744CDB4} = {31542354-B254-48A3-B265-7A0A82DB04FC}
 		{185CD607-64F4-4826-9023-CC9C0AE91582} = {31542354-B254-48A3-B265-7A0A82DB04FC}
+		{D12C1FBC-77EF-4136-BB03-9769A13CCC29} = {31542354-B254-48A3-B265-7A0A82DB04FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E38EF970-DAC3-453E-A7CC-2ABE0B1CB2A8}
