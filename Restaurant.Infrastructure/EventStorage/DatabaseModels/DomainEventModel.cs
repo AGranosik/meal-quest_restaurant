@@ -31,15 +31,11 @@ namespace infrastructure.EventStorage.DatabaseModels
         public int StreamId { get; }
         public HandlingStatus HandlingStatus { get; set; }
         public string? SerializedData { get; }
-        public string? Reason { get; private set; }
         public string? AssemblyName { get; }
         public TAggregate? Data => _data ?? (TAggregate?)JsonSerializer.Deserialize(SerializedData!, Type.GetType(AssemblyName!)!, _serializingOptions);
 
-        public void Failed(string reason)
-        {
-            Reason = reason;
-            HandlingStatus = HandlingStatus.Failed;
-        }
+        public void Failed()
+            => HandlingStatus = HandlingStatus.Failed;
 
         public void Success()
             => HandlingStatus = HandlingStatus.Propagated;
