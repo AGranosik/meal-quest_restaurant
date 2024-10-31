@@ -5,8 +5,6 @@ namespace domain.Common.BaseTypes
     public abstract class Entity<TKey>
         where TKey : ValueObject<TKey>
     {
-        protected List<DomainEvent> _domainEvents = [];
-
         protected Entity() { }
 
         public TKey? Id { get; protected set; }

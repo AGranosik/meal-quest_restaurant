@@ -1,16 +1,13 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
-using infrastructure.EventStorage.DatabaseModels;
 using integrationTests.Common;
 using integrationTests.Menus.DataMocks;
 using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Menus.Requests;
-using webapi.Controllers.Restaurants.Requests;
 
 namespace integrationTests.Menus
 {

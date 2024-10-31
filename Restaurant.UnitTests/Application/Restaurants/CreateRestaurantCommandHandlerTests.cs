@@ -1,9 +1,7 @@
 ﻿using application.EventHandlers;
 using application.Restaurants.Commands;
 using application.Restaurants.Commands.Interfaces;
-using Castle.Core.Logging;
 using domain.Restaurants.Aggregates;
-using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using MediatR;

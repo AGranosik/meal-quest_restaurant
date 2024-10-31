@@ -3,9 +3,7 @@ using core.Extensions;
 using domain.Common.BaseTypes;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
-using domain.Menus.Aggregates.DomainEvents;
 using domain.Common.ValueTypes.Strings;
-using domain.Common.DomainImplementationTypes;
 
 namespace domain.Menus.Aggregates
 {
@@ -18,7 +16,6 @@ namespace domain.Menus.Aggregates
             Groups = groups;
             Name = name;
             Restaurant = restaurant;
-            _domainEvents.Add(new MenuCreatedEvent(Id, name, restaurant));
         }
 
         public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)

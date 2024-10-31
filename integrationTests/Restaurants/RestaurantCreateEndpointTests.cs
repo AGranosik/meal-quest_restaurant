@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using domain.Restaurants.Aggregates;
-using domain.Restaurants.Aggregates.DomainEvents;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using integrationTests.Common;

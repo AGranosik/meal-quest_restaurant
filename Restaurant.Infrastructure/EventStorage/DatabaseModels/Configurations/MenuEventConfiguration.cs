@@ -1,5 +1,4 @@
 ﻿using domain.Menus.Aggregates;
-using domain.Menus.Aggregates.DomainEvents;
 using domain.Menus.ValueObjects.Identifiers;
 
 namespace infrastructure.EventStorage.DatabaseModels.Configurations
