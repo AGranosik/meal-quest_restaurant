@@ -5,13 +5,13 @@ using infrastructure.EventStorage.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 namespace infrastructure.EventStorage
 {
-    // TODO: TESTS
     // TODO: retry should be implmeneted here?
     public class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+        private DomainEventModel<TAggregate, TKey>? _event;
         //TODO: store event reference within a scope
         public async Task StoreFailureAsync(int eventId, CancellationToken cancellationToken)
         {
@@ -24,12 +24,12 @@ namespace infrastructure.EventStorage
         public async Task<int> StorePendingEventAsync(TAggregate notification, CancellationToken cancellationToken)
         {
             var dbSet = _context.GetDbSet<TAggregate, TKey>();
-            var @event = DomainEventModel<TAggregate, TKey>.Pending(notification);
+            _event = DomainEventModel<TAggregate, TKey>.Pending(notification);
 
-            dbSet.Add(@event);
+            dbSet.Add(_event);
 
             await _context.SaveChangesAsync(cancellationToken);
-            return @event.EventId;
+            return _event.EventId;
         }
 
         public async Task StoreSuccessAsyncAsync(int eventId, CancellationToken cancellationToken)
@@ -40,8 +40,11 @@ namespace infrastructure.EventStorage
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task<DomainEventModel<TAggregate, TKey>> GetEventAsync(int eventId, CancellationToken cancellationToken)
+        private async ValueTask<DomainEventModel<TAggregate, TKey>> GetEventAsync(int eventId, CancellationToken cancellationToken)
         {
+            if (_event is not null)
+                return _event;
+
             var dbSet = _context.GetDbSet<TAggregate, TKey>();
             var @event = await dbSet.FirstOrDefaultAsync(e => e.EventId == eventId, cancellationToken);
             if(@event is null)
