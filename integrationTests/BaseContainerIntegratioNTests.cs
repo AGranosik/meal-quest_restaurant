@@ -15,7 +15,7 @@ namespace integrationTests
         where TDbContext : DbContext
     {
         protected IContainer _postgresContainer;
-        private ApiWebApplicationFactory _factory;
+        private readonly ApiWebApplicationFactory _factory;
 
         protected HttpClient _client;
         protected TDbContext _dbContext;
@@ -88,9 +88,9 @@ namespace integrationTests
         {
             await _postgresContainer.StopAsync();
             await _postgresContainer.DisposeAsync();
-            _factory.Dispose();
+            await _factory.DisposeAsync();
             _client.Dispose();
-            _dbContext.Dispose();
+            await _dbContext.DisposeAsync();
             _scope.Dispose();
         }
 

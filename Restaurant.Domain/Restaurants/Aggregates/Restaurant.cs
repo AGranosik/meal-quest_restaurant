@@ -1,4 +1,5 @@
-﻿using domain.Common.BaseTypes;
+﻿using System.Text.Json.Serialization;
+using domain.Common.BaseTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
@@ -32,6 +33,8 @@ namespace domain.Restaurants.Aggregates
             _menus.Add(menu);
             return Result.Ok();
         }
+
+        [JsonConstructor]
         protected Restaurant() : base() { }
 
         private Restaurant(Name name, Owner owner, OpeningHours openingHours)

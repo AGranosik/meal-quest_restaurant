@@ -4,12 +4,13 @@ using domain.Common.BaseTypes;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
 using domain.Common.ValueTypes.Strings;
+using System.Text.Json.Serialization;
 
 namespace domain.Menus.Aggregates
 {
-    //TODO: get rid of results -> move to exceptions??
     public sealed class Menu : Aggregate<MenuId>
     {
+        [JsonConstructor]
         private Menu() { }
         private Menu(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
         {

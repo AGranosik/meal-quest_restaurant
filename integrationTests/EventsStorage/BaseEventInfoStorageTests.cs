@@ -9,8 +9,6 @@ using Respawn;
 using Respawn.Graph;
 
 namespace integrationTests.EventsStorage
-
-    //TODO: unit tests
 {
     [TestFixture]
     internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContainerIntegrationTests<EventDbContext>

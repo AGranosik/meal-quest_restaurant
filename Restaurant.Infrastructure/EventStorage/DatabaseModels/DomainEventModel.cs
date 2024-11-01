@@ -22,7 +22,7 @@ namespace infrastructure.EventStorage.DatabaseModels
             _data = data;
             StreamId = streamId;
             SerializedData = JsonSerializer.Serialize(data, _serializingOptions);
-            AssemblyName = typeof(TAggregate).Assembly.GetName().Name;
+            AssemblyName = data.GetType().AssemblyQualifiedName;
             HandlingStatus = HandlingStatus.Pending;
         }
         private DomainEventModel() { }

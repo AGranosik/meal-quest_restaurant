@@ -12,7 +12,6 @@ namespace infrastructure.EventStorage
     {
         private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
         private DomainEventModel<TAggregate, TKey>? _event;
-        //TODO: store event reference within a scope
         public async Task StoreFailureAsync(int eventId, CancellationToken cancellationToken)
         {
             var @event = await GetEventAsync(eventId, cancellationToken);

@@ -6,6 +6,7 @@ namespace domain.Menus.ValueObjects
 {
     public sealed class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
     {
+        private Ingredient() { }
         public static Result<Ingredient> Create(NotEmptyString name)
         {
             return Result.Ok(new Ingredient(name));
