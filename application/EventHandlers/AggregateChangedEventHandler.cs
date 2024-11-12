@@ -5,6 +5,7 @@ using domain.Common.DomainImplementationTypes.Identifiers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Polly.Registry;
 
 namespace application.EventHandlers
 {
@@ -18,18 +19,20 @@ namespace application.EventHandlers
     {
         protected readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
         protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> _logger;
+        protected ResiliencePipeline _pipeline;
 
-        protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger)
+        protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger, ResiliencePipelineProvider<string> resilienceProvider)
         {
             _eventInfoStorage = eventInfoStorage;
             _logger = logger;
+            _pipeline = resilienceProvider.GetPipeline(FallbackRetryPolicies.RETRY_TYPE);
         }
 
         public async Task Handle(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken)
         {
             Validation(notification);
-            var policyResult = await FallbackRetryPolicies.AsyncRetry
-                .ExecuteAndCaptureAsync(() => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate, cancellationToken));
+            var policyResult = await _pipeline
+                .ExecuteAsync(cancellationToken => _eventInfoStorage.StorePendingEventAsync(notification.Aggregate, cancellationToken));
 
             var storedSuccessfully = policyResult.Outcome == OutcomeType.Successful;
 
