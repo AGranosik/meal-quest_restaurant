@@ -8,7 +8,6 @@ namespace domain.Menus.ValueObjects
 {
     public sealed class Meal : ValueObject<Meal>
     {
-        //TODO: Add category
         public List<Ingredient>? Ingredients { get; }
         public Price? Price { get; }
         public Name? Name { get; }
