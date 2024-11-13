@@ -11,9 +11,6 @@ namespace webapi.Controllers.Restaurants
 {
     public class RestaurantController(IMediator mediator, ILogger<RestaurantController> logger) : ApiController(mediator)
     {
-
-        private readonly ILogger<RestaurantController> _logger = logger;
-
         [HttpPost]
         [SwaggerOperation(Summary = "Create Resutarant.")]
         [SwaggerResponse(200, "", typeof(Result<RestaurantId>))]
@@ -33,11 +30,5 @@ namespace webapi.Controllers.Restaurants
             {
                 OwnerId = ownerId,
             }, cancellationToken));
-
-        [HttpGet("Test")]
-        public async Task<IActionResult> Test(CancellationToken cancellationToken)
-        {
-            throw new Exception();
-        }
     }
 }
