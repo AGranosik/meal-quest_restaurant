@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using infrastructure.Database;
 using infrastructure.EventStorage;
 using infrastructure.Observability;
+using infrastructure.BusService;
 
 namespace infrastructure
 {
@@ -14,6 +15,7 @@ namespace infrastructure
             services
                 .ConfigureDatabase(configuration)
                 .ConfigureEventStorage(configuration)
+                .ConfigureBusService(configuration)
                 .ConfigureLogging(configuration);
 
             return services;
