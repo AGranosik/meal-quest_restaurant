@@ -51,8 +51,16 @@ services:
           - esdata:/usr/share/elasticsearch/data
       mem_limit: "5000M"
 
-
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 volumes:
   esdata:
       driver: local
   grafana-storage:
+  rabbitmq_data:
