@@ -15,4 +15,8 @@
     <Folder Include="Menus\Queries\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.3.1" />
+  </ItemGroup>
+
 </Project>

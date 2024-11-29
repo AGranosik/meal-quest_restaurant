@@ -18,9 +18,10 @@ namespace infrastructure.BusService
         {
             services.AddMassTransit(x =>
             {
-                x.UsingRabbitMq((context, cfg) =>
+                x.UsingRabbitMq((_, cfg) =>
                 {
                     cfg.Host(configuration.GetConnectionString("rabbitmq"));
+                    cfg.UseTimeout(cfg => cfg.Timeout =  TimeSpan.FromMilliseconds(100));
                 });
             });
 

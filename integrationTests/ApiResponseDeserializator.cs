@@ -4,7 +4,7 @@ namespace integrationTests
 {
     internal static class ApiResponseDeserializator
     {
-        private static JsonSerializerOptions _options = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions _options = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };

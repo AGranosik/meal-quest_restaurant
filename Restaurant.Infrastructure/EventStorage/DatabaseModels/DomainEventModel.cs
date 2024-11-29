@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
+using infrastructure.Common;
 
 namespace infrastructure.EventStorage.DatabaseModels
 {
@@ -8,10 +9,6 @@ namespace infrastructure.EventStorage.DatabaseModels
         where TAggregate : Aggregate<TKey>
         where TKey : SimpleValueType<int, TKey>
     {
-        private readonly JsonSerializerOptions _serializingOptions = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
         private readonly TAggregate? _data;
 
         public static DomainEventModel<TAggregate, TKey> Pending(TAggregate data)
@@ -21,7 +18,7 @@ namespace infrastructure.EventStorage.DatabaseModels
         {
             _data = data;
             StreamId = streamId;
-            SerializedData = JsonSerializer.Serialize(data, _serializingOptions);
+            SerializedData = Serializer.Serialize(data);
             AssemblyName = data.GetType().AssemblyQualifiedName;
             HandlingStatus = HandlingStatus.Pending;
         }

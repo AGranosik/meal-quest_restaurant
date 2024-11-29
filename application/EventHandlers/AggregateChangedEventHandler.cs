@@ -1,7 +1,10 @@
-﻿using application.EventHandlers.Interfaces;
+﻿using System.Text.Json;
+using application.EventHandlers.Interfaces;
 using core.FallbackPolicies;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
+using domain.Restaurants.Aggregates;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -18,11 +21,13 @@ namespace application.EventHandlers
     {
         protected readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
         protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> _logger;
+        protected readonly IEventEmitter<TAggregate> _eventEmitter;
 
-        protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger)
+        protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger, IEventEmitter<TAggregate> eventEmitter)
         {
             _eventInfoStorage = eventInfoStorage;
             _logger = logger;
+            _eventEmitter = eventEmitter;
         }
 
         public async Task Handle(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken)
@@ -63,7 +68,6 @@ namespace application.EventHandlers
         }
 
         protected abstract Task<bool> ProcessingEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
-
         private static void Validation(AggregateChangedEvent<TAggregate, TKey> notification)
         {
             ArgumentNullException.ThrowIfNull(notification);

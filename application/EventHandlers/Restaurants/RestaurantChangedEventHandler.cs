@@ -4,14 +4,18 @@ using core.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
     public class RestaurantChangedEventHandler
-        (IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage, ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger, IMenuRepository menuRepository)
-        : AggregateChangedEventHandler<Restaurant, RestaurantId>(eventInfoStorage, logger)
+        (IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage,
+        ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger,
+        IPublishEndpoint publishEndpoint,
+        IMenuRepository menuRepository)
+        : AggregateChangedEventHandler<Restaurant, RestaurantId>(eventInfoStorage, logger, publishEndpoint)
     {
         private readonly IMenuRepository _menuRepository = menuRepository;
 

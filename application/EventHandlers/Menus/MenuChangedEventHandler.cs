@@ -15,7 +15,8 @@ namespace application.EventHandlers.Menus
     public class MenuChangedEventHandler(
             IEventInfoStorage<Menu, MenuId> eventInfoStorage,
             ILogger<AggregateChangedEventHandler<Menu, MenuId>> logger,
-            IRestaurantRepository restaurantRepository)
+            IRestaurantRepository restaurantRepository,
+            IEventEmitter<Restaurant> eventEmitter)
         : AggregateChangedEventHandler<Menu, MenuId>(eventInfoStorage, logger)
     {
         private readonly IRestaurantRepository _restaurantRepository = restaurantRepository;
