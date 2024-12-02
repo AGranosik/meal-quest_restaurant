@@ -29,7 +29,7 @@ namespace infrastructure.EventStorage.DatabaseModels
         public HandlingStatus HandlingStatus { get; set; }
         public string? SerializedData { get; }
         public string? AssemblyName { get; }
-        public TAggregate? Data => _data ?? (TAggregate?)JsonSerializer.Deserialize(SerializedData!, Type.GetType(AssemblyName!)!, _serializingOptions);
+        public TAggregate? Data => _data ?? Serializer.Deserialize<TAggregate>(SerializedData!, Type.GetType(AssemblyName!)!);
 
         public void Failed()
             => HandlingStatus = HandlingStatus.Failed;

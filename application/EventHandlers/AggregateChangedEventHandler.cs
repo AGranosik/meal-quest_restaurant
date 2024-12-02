@@ -3,8 +3,6 @@ using application.EventHandlers.Interfaces;
 using core.FallbackPolicies;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
-using domain.Restaurants.Aggregates;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -41,7 +39,7 @@ namespace application.EventHandlers
             if (!storedSuccessfully)
                 _logger.LogError(policyResult.FinalException, "Problem with storage {AggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
 
-            var result = await ProcessingEventAsync(notification, cancellationToken);
+            var result = await HandleEventAsync(notification, cancellationToken);
             if (result && storedSuccessfully)
                 await ProcessSuccessAsync(notification.Aggregate.Id!, policyResult.Result, cancellationToken);
 
@@ -67,7 +65,18 @@ namespace application.EventHandlers
                 _logger.LogError(policyResult.FinalException, "Problem with success storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
         }
 
-        protected abstract Task<bool> ProcessingEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
+        protected abstract Task<bool> ProcessEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);
+        private async Task<bool> HandleEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken)
+        {
+            var result = await ProcessEventAsync(notification, cancellationToken);
+            if (!result)
+                return result;
+
+            var eventEmitterResult = await _eventEmitter.EmitEvents(notification.Aggregate, cancellationToken);
+
+            return eventEmitterResult.IsSuccess;
+        }
+
         private static void Validation(AggregateChangedEvent<TAggregate, TKey> notification)
         {
             ArgumentNullException.ThrowIfNull(notification);

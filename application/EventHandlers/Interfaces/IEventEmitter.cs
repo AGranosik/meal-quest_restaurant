@@ -6,6 +6,6 @@ namespace application.EventHandlers.Interfaces
     public interface IEventEmitter<T>
         where T : class
     {
-        Task<Result> EmitEvents(Restaurant @event, CancellationToken cancellationToken);
+        Task<Result> EmitEvents(T @event, CancellationToken cancellationToken);
     }
 }

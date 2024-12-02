@@ -52,7 +52,7 @@ namespace unitTests.Application.EventHandlers
 
 
         protected override AggregateChangedEventHandler<Restaurant, RestaurantId> CreateHandler()
-            => new RestaurantChangedEventHandler(_eventInfoStorage.Object, _loggerMock.Object, _menuRepositoryMock.Object);
+            => new RestaurantChangedEventHandler(_eventInfoStorage.Object, _loggerMock.Object, _emitterMock.Object, _menuRepositoryMock.Object);
 
         protected override AggregateChangedEvent<Restaurant, RestaurantId> CreateValidEvent()
             => new(RestaurantDataFaker.ValidRestaurant());

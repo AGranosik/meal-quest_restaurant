@@ -16,11 +16,11 @@ namespace application.EventHandlers.Menus
             IEventInfoStorage<Menu, MenuId> eventInfoStorage,
             ILogger<AggregateChangedEventHandler<Menu, MenuId>> logger,
             IRestaurantRepository restaurantRepository,
-            IEventEmitter<Restaurant> eventEmitter)
-        : AggregateChangedEventHandler<Menu, MenuId>(eventInfoStorage, logger)
+            IEventEmitter<Menu> eventEmitter)
+        : AggregateChangedEventHandler<Menu, MenuId>(eventInfoStorage, logger, eventEmitter)
     {
         private readonly IRestaurantRepository _restaurantRepository = restaurantRepository;
-        protected override async Task<bool> ProcessingEventAsync(AggregateChangedEvent<Menu, MenuId> notification, CancellationToken cancellationToken)
+        protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Menu, MenuId> notification, CancellationToken cancellationToken)
         {
             var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
                 () => _restaurantRepository.AddMenuAsync(

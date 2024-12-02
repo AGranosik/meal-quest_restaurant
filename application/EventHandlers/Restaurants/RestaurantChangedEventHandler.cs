@@ -13,13 +13,13 @@ namespace application.EventHandlers.Restaurants
     public class RestaurantChangedEventHandler
         (IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage,
         ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger,
-        IPublishEndpoint publishEndpoint,
+        IEventEmitter<Restaurant> eventEmitter,
         IMenuRepository menuRepository)
-        : AggregateChangedEventHandler<Restaurant, RestaurantId>(eventInfoStorage, logger, publishEndpoint)
+        : AggregateChangedEventHandler<Restaurant, RestaurantId>(eventInfoStorage, logger, eventEmitter)
     {
         private readonly IMenuRepository _menuRepository = menuRepository;
 
-        protected override async Task<bool> ProcessingEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
+        protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
         {
             var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
                 () => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Aggregate.Id!.Value), cancellationToken));

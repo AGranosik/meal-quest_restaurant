@@ -17,6 +17,7 @@ namespace unitTests.Application.EventHandlers
     {
         protected Mock<IEventInfoStorage<TAggregate, TKey>> _eventInfoStorage;
         protected Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>> _loggerMock;
+        protected Mock<IEventEmitter<TAggregate>> _emitterMock;
         protected int _eventId;
 
         [SetUp]
@@ -24,6 +25,9 @@ namespace unitTests.Application.EventHandlers
         {
             _eventInfoStorage = new Mock<IEventInfoStorage<TAggregate, TKey>>();
             _loggerMock = new Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>>();
+            _emitterMock = new Mock<IEventEmitter<TAggregate>>();
+
+            //TODO: setup result
         }
 
         [Test]
