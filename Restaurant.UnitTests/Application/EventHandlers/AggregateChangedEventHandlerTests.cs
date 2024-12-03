@@ -4,6 +4,7 @@ using core.FallbackPolicies;
 using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
+using FluentResults;
 using Microsoft.Extensions.Logging;
 using Moq;
 using sharedTests.DataFakers;
@@ -26,8 +27,6 @@ namespace unitTests.Application.EventHandlers
             _eventInfoStorage = new Mock<IEventInfoStorage<TAggregate, TKey>>();
             _loggerMock = new Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>>();
             _emitterMock = new Mock<IEventEmitter<TAggregate>>();
-
-            //TODO: setup result
         }
 
         [Test]
@@ -43,6 +42,7 @@ namespace unitTests.Application.EventHandlers
         {
             var notification = CreateValidEvent();
             EventStoragePendingConfigurationSuccess();
+            EventEmitterResultSuccess();
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);
@@ -57,6 +57,7 @@ namespace unitTests.Application.EventHandlers
             var notification = CreateValidEvent();
             _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new MockedException());
+            EventEmitterResultSuccess();
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);
@@ -72,6 +73,7 @@ namespace unitTests.Application.EventHandlers
             _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new MockedException());
             MockLogger();
+            EventEmitterResultSuccess();
 
             var handler = CreateHandler();
             var action = () => handler.Handle(notification, CancellationToken.None);
@@ -87,6 +89,8 @@ namespace unitTests.Application.EventHandlers
             var notification = CreateValidEvent();
             EventStoragePendingConfigurationSuccess();
             ConfigureSuccessfulProcessing();
+            EventEmitterResultSuccess();
+
             _eventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
@@ -103,6 +107,7 @@ namespace unitTests.Application.EventHandlers
             var notification = CreateValidEvent();
             EventStoragePendingConfigurationSuccess();
             ConfigureSuccessfulProcessing();
+            EventEmitterResultSuccess();
             _eventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new MockedException());
 
@@ -120,6 +125,7 @@ namespace unitTests.Application.EventHandlers
             var notification = CreateValidEvent();
             EventStoragePendingConfigurationSuccess();
             ConfigureFailureProcessing();
+            EventEmitterResultSuccess();
             _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
@@ -136,6 +142,7 @@ namespace unitTests.Application.EventHandlers
             var notification = CreateValidEvent();
             EventStoragePendingConfigurationSuccess();
             ConfigureFailureProcessing();
+            EventEmitterResultSuccess();
             _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception());
 
@@ -155,18 +162,24 @@ namespace unitTests.Application.EventHandlers
 
         protected virtual void MockLogger()
         {
-            _loggerMock.Setup(l => l.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<object>(), It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()));
+            _loggerMock.Setup(l => l.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()));
         }
 
         protected void CheckIfLoggedError(int numberOfTimes = 1)
         {
-            _loggerMock.Verify(l => l.Log(It.Is<LogLevel>(lvl => lvl == LogLevel.Error), It.IsAny<EventId>(), It.IsAny<object>(), It.IsAny<Exception>(), It.IsAny<Func<object, Exception, string>>()), Times.Exactly(numberOfTimes));
+            _loggerMock.Verify(l => l.Log(It.Is<LogLevel>(lvl => lvl == LogLevel.Error), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Exactly(numberOfTimes));
         }
 
         protected void EventStoragePendingConfigurationSuccess()
         {
             _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(_eventId);
+        }
+
+        protected void EventEmitterResultSuccess()
+        {
+            _emitterMock.Setup(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Result.Ok());
         }
     }
 }
