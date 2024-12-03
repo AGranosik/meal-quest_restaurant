@@ -24,7 +24,7 @@ namespace unitTests.Application.EventHandlers
         [Test]
         public async Task Processing_Success()
         {
-            ConfigureRestaurantRepositorySuccessful();
+            ConfigureSuccessfulProcessing();
             var @event = CreateValidEvent();
             var handler = CreateHandler();
             var action = () => handler.Handle(@event, CancellationToken.None);
@@ -52,7 +52,10 @@ namespace unitTests.Application.EventHandlers
             => ConfigureRestaurantRepositoryFailure();
 
         protected override void ConfigureSuccessfulProcessing()
-            => ConfigureRestaurantRepositorySuccessful();
+        {
+            ConfigureRestaurantRepositorySuccessful();
+            EventEmitterConfigurationSuccess();
+        }
 
         protected override AggregateChangedEventHandler<domain.Menus.Aggregates.Menu, domain.Menus.ValueObjects.Identifiers.MenuId> CreateHandler()
             => new MenuChangedEventHandler(_eventInfoStorage.Object, _loggerMock.Object, _restaurantRepository.Object, _emitterMock.Object);
