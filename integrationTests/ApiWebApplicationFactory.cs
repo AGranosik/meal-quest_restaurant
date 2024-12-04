@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace integrationTests
 {
-    class ApiWebApplicationFactory : WebApplicationFactory<Program>
+    internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
     {
         public IConfiguration? Configuration { get; private set; }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -31,7 +31,7 @@ namespace integrationTests
             });
         }
 
-        private static void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+        protected virtual void RemoveUnnecessaryServicesForTests(IServiceCollection services)
         {
             //trace
             var descriptor = services.FirstOrDefault(

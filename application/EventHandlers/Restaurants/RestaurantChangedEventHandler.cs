@@ -4,7 +4,6 @@ using core.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
-using MassTransit;
 using Microsoft.Extensions.Logging;
 using Polly;
 

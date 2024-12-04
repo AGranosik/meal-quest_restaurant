@@ -1,4 +1,8 @@
-﻿using MassTransit;
+﻿using application.EventHandlers.Interfaces;
+using domain.Menus.Aggregates;
+using domain.Restaurants.Aggregates;
+using infrastructure.BusService.Emitters;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +28,9 @@ namespace infrastructure.BusService
                     cfg.UseTimeout(cfg => cfg.Timeout =  TimeSpan.FromMilliseconds(100));
                 });
             });
+
+            services.AddScoped<IEventEmitter<Menu>, MenuEventEmitter>();
+            services.AddScoped<IEventEmitter<Restaurant>, RestaurantEventEmitter>();
 
             return services;
         }
