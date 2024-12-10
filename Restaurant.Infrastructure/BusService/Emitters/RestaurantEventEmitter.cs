@@ -8,6 +8,7 @@ namespace infrastructure.BusService.Emitters
     [EntityName("restaurants.changes")]
     internal class RestaurantChangedDto
     {
+
         public string Name { get; set; }
         internal RestaurantChangedDto(Restaurant restaurant)
         {

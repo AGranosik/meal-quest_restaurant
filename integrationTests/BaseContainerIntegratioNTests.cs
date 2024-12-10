@@ -59,7 +59,7 @@ namespace integrationTests
                 .WithImage("rabbitmq:3")
                 .WithUsername("guest")
                 .WithPassword("guest")
-                .WithPortBinding("5671", "5672")
+                .WithPortBinding("5673", "5672")
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
                 .Build();
 
