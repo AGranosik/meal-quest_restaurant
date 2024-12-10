@@ -28,6 +28,7 @@
 		<PackageReference Include="Respawn.Postgres" Version="1.0.15" />
 		<PackageReference Include="Testcontainers" Version="3.9.0" />
 		<PackageReference Include="Testcontainers.PostgreSql" Version="3.9.0" />
+		<PackageReference Include="Testcontainers.RabbitMq" Version="3.9.0" />
 	</ItemGroup>
 
 	<ItemGroup>

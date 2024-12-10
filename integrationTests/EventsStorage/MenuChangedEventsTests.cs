@@ -7,7 +7,7 @@ namespace integrationTests.EventsStorage
     [TestFixture]
     internal sealed class MenuChangedEventsTests : BaseEventInfoStorageTests<Menu, MenuId>
     {
-        public override Menu CreateAggregate()
+        protected override Menu CreateAggregate()
             => MenuDataFaker.ValidMenu();
     }
 }

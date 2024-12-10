@@ -113,6 +113,6 @@ namespace integrationTests.EventsStorage
         protected virtual EventInfoStorage<TAggregate, TKey> CreateHandler()
             => new(_dbContext);
 
-        public abstract TAggregate CreateAggregate();
+        protected abstract TAggregate CreateAggregate();
     }
 }

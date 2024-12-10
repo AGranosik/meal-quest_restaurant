@@ -8,13 +8,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using Respawn.Graph;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 
 namespace integrationTests
 {
     public class BaseContainerIntegrationTests<TDbContext>
         where TDbContext : DbContext
     {
+        // TODO: DO NOT CREATE CONTAINER EVERY TIME
         protected IContainer _postgresContainer;
+        protected IContainer _rabbitContainer;
         private readonly ApiWebApplicationFactory _factory;
 
         protected HttpClient _client;
@@ -43,12 +46,21 @@ namespace integrationTests
 
         public BaseContainerIntegrationTests()
         {
+            // TODO: MOVE TO METHODS
             _postgresContainer = new PostgreSqlBuilder()
                 .WithImage("postgres:14-alpine")
                 .WithUsername("admin")
                 .WithPassword("S3cret")
                 .WithPortBinding("5431", "5432")
                 .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+                .Build();
+
+            _rabbitContainer = new RabbitMqBuilder()
+                .WithImage("rabbitmq:3")
+                .WithUsername("guest")
+                .WithPassword("guest")
+                .WithPortBinding("5671", "5672")
+                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
                 .Build();
 
             _factory = new ApiWebApplicationFactory();
@@ -59,6 +71,9 @@ namespace integrationTests
         {
             if (_postgresContainer.State != TestcontainersStates.Running)
                 await _postgresContainer.StartAsync();
+
+            if (_rabbitContainer.State != TestcontainersStates.Running)
+                await _rabbitContainer.StartAsync();
 
             _client = _factory.CreateClient();
             _scope = _factory.Services.CreateScope();
@@ -88,6 +103,10 @@ namespace integrationTests
         {
             await _postgresContainer.StopAsync();
             await _postgresContainer.DisposeAsync();
+
+            await _rabbitContainer.StopAsync();
+            await _rabbitContainer.DisposeAsync();
+
             await _factory.DisposeAsync();
             _client.Dispose();
             await _dbContext.DisposeAsync();

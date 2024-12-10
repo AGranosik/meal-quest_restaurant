@@ -1,5 +1,6 @@
 ﻿{
     "ConnectionStrings": {
-        "postgres": "Host=localhost;Database=Restaurant;Port=5431;Username=admin;Password=S3cret"
+        "postgres": "Host=localhost;Database=Restaurant;Port=5431;Username=admin;Password=S3cret",
+        "rabbitMq": "amqp://guest:guest@localhost:5671/"
     }
 }
