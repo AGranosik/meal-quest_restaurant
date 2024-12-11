@@ -15,6 +15,7 @@ using MenuMenuId = domain.Menus.ValueObjects.Identifiers.MenuId;
 namespace integrationTests.Menus
 {
     // check if event emitter return failure
+    // event handling shouldnt affect response
     [TestFixture]
     internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     {

@@ -10,11 +10,10 @@ namespace infrastructure.BusService
 {
     //TODO: publish endpoint
     //TODO: Tests
-    //TODO: observability & metrics for grafana
+    //TODO: observability & metrics for grafana of rabbitmq
 
     // interface in application layer
     // configuration here
-    // retry on application side
     // do not block thread on events publication
     internal static class BusServiceConfiguration
     {

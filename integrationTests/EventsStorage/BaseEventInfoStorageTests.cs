@@ -1,9 +1,11 @@
 ﻿using domain.Common.BaseTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
+using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using infrastructure.EventStorage;
 using infrastructure.EventStorage.DatabaseModels;
 using infrastructure.EventStorage.DatabaseModels.Configurations;
+using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
@@ -15,6 +17,10 @@ namespace integrationTests.EventsStorage
         where TAggregate : Aggregate<TKey>
         where TKey : SimpleValueType<int, TKey>
     {
+        protected BaseEventInfoStorageTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
+        {
+        }
+
         protected override async Task OneTimeSetUp()
         {
             await base.OneTimeSetUp();

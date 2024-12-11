@@ -3,6 +3,7 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext.Models.Configurations;
+using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
@@ -15,9 +16,7 @@ namespace integrationTests
     public class BaseContainerIntegrationTests<TDbContext>
         where TDbContext : DbContext
     {
-        // TODO: DO NOT CREATE CONTAINER EVERY TIME
-        protected IContainer _postgresContainer;
-        protected IContainer _rabbitContainer;
+        private readonly List<IContainer> _containers;
         private readonly ApiWebApplicationFactory _factory;
 
         protected HttpClient _client;
@@ -44,37 +43,16 @@ namespace integrationTests
             new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)
         ];
 
-        public BaseContainerIntegrationTests()
+        public BaseContainerIntegrationTests(List<IContainer> containers)
         {
-            // TODO: MOVE TO METHODS
-            _postgresContainer = new PostgreSqlBuilder()
-                .WithImage("postgres:14-alpine")
-                .WithUsername("admin")
-                .WithPassword("S3cret")
-                .WithPortBinding("5431", "5432")
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-                .Build();
-
-            _rabbitContainer = new RabbitMqBuilder()
-                .WithImage("rabbitmq:3")
-                .WithUsername("guest")
-                .WithPassword("guest")
-                .WithPortBinding("5673", "5672")
-                .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
-                .Build();
-
+            _containers = containers;
             _factory = new ApiWebApplicationFactory();
         }
 
         [OneTimeSetUp]
         protected virtual async Task OneTimeSetUp()
         {
-            if (_postgresContainer.State != TestcontainersStates.Running)
-                await _postgresContainer.StartAsync();
-
-            if (_rabbitContainer.State != TestcontainersStates.Running)
-                await _rabbitContainer.StartAsync();
-
+            await StartContainersAsync();
             _client = _factory.CreateClient();
             _scope = _factory.Services.CreateScope();
             SetUpDbContext();
@@ -101,11 +79,7 @@ namespace integrationTests
         [OneTimeTearDown]
         public virtual async Task OneTimeTearDown()
         {
-            await _postgresContainer.StopAsync();
-            await _postgresContainer.DisposeAsync();
-
-            await _rabbitContainer.StopAsync();
-            await _rabbitContainer.DisposeAsync();
+            await StopContainersAsync();
 
             await _factory.DisposeAsync();
             _client.Dispose();
@@ -113,6 +87,33 @@ namespace integrationTests
             _scope.Dispose();
         }
 
+        private async Task StartContainersAsync()
+        {
+            var tasks = new List<Task>(_containers.Count);
+            foreach(var container in _containers)
+            {
+                if(container.State != TestcontainersStates.Running)
+                    tasks.Add(container.StartAsync());
+            }
+
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task StopContainersAsync()
+        {
+            var tasks = new List<Task>(_containers.Count);
+            foreach(var container in _containers)
+            {
+                tasks.Add(container.StopAsync());
+            }
+
+            await Task.WhenAll(tasks);
+
+            foreach(var container in _containers)
+            {
+                await container.DisposeAsync();
+            }
+        }
 
         private void SetUpDbContext()
         {
