@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
+using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using integrationTests.Common;
 using integrationTests.Restaurants.DataMocks;
@@ -14,6 +15,10 @@ namespace integrationTests.Restaurants
     public class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         private const string _endpoint = "/api/Restaurant";
+
+        public RestaurantCreateEndpointTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
+        {
+        }
 
         [Test]
         public async Task CreateRestaurant_RequestIsNull_Repsonse()

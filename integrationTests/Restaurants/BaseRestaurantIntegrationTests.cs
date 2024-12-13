@@ -16,7 +16,7 @@ namespace integrationTests.Restaurants
         protected MenuDbContext _menuDbContext;
         protected EventDbContext _eventDbContext;
 
-        public BaseRestaurantIntegrationTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
+        public BaseRestaurantIntegrationTests(List<IContainer> containers) : base(containers)
         {
         }
 

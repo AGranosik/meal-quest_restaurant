@@ -1,4 +1,8 @@
-﻿using domain.Menus.ValueObjects.Identifiers;
+﻿using System.Net.Http.Json;
+using domain.Menus.ValueObjects.Identifiers;
+using domain.Restaurants.ValueObjects.Identifiers;
+using infrastructure.Database.MenuContext;
+using integrationTests.Restaurants.DataMocks;
 using webapi.Controllers.Menus.Requests;
 
 namespace integrationTests.Menus.DataMocks
@@ -42,6 +46,24 @@ namespace integrationTests.Menus.DataMocks
                 result.Add(new RestaurantIdMenuId(i));
             }
             return result;
+        }
+
+        internal static async Task<RestaurantId> CreateRestaurantForSystem(HttpClient client)
+        {
+            var request = RestaurantDataFaker.ValidRequest();
+
+            var response = await client.PostAsJsonAsync("/api/Restaurant", request, CancellationToken.None);
+            var resultString = await response.Content.ReadAsStringAsync();
+            return ApiResponseDeserializator.Deserialize<RestaurantId>(resultString)!;
+        }
+
+        internal static async Task<List<RestaurantIdMenuId>> CreateRestaurantsAsync(MenuDbContext dbContext, int numberOfRestaurants)
+        {
+            var restaurants = MenuDataFaker.Restaurants(numberOfRestaurants);
+            dbContext.Restaurants.AddRange(restaurants);
+            await dbContext.SaveChangesAsync();
+            dbContext.ChangeTracker.Clear();
+            return restaurants;
         }
     }
 }

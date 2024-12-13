@@ -1,13 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using domain.Menus.Aggregates;
-using domain.Menus.ValueObjects.Identifiers;
-using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 using infrastructure.EventStorage.DatabaseModels;
 using integrationTests.Common;
 using integrationTests.Menus.DataMocks;
-using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Menus.Requests;
 using MenuMenuId = domain.Menus.ValueObjects.Identifiers.MenuId;
@@ -34,7 +31,7 @@ namespace integrationTests.Menus
         [Test]
         public async Task CreateMenu_Valid_Created()
         {
-            var restaurants = await CreateRestaurantsAsync(1);
+            var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
             var restaurantId = restaurants[0].Value;
             var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId)[0], CancellationToken.None);
 
@@ -45,7 +42,7 @@ namespace integrationTests.Menus
         [Test]
         public async Task CreateMenu_CreatedInRestaurantContext_Success()
         {
-            var restaurantId = await CreateRestaurantForSystem();
+            var restaurantId = await MenuDataFaker.CreateRestaurantForSystem(_client);
 
             var request = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0];
             var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, request, CancellationToken.None);
@@ -70,7 +67,7 @@ namespace integrationTests.Menus
         [Test]
         public async Task CreateMenu_Valid_EventStoredInEventStore()
         {
-            var restaurantId = await CreateRestaurantForSystem();
+            var restaurantId = await MenuDataFaker.CreateRestaurantForSystem(_client);
             var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value)[0], CancellationToken.None);
 
             var events = await _eventDbContext.GetDbSet<Menu, MenuMenuId>()
@@ -84,25 +81,6 @@ namespace integrationTests.Menus
             @event.HandlingStatus.Should().Be(HandlingStatus.Propagated);
 
             @event.Data.Should().BeAssignableTo<Menu>();
-        }
-
-        private async Task<RestaurantId> CreateRestaurantForSystem()
-        {
-            var request = RestaurantDataFaker.ValidRequest();
-
-            var response = await _client.PostAsJsonAsync("/api/Restaurant", request, CancellationToken.None);
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            var resultString = await response.Content.ReadAsStringAsync();
-            return ApiResponseDeserializator.Deserialize<RestaurantId>(resultString)!;
-        }
-
-        private async Task<List<RestaurantIdMenuId>> CreateRestaurantsAsync(int numberOfRestaurants)
-        {
-            var restaurants = MenuDataFaker.Restaurants(numberOfRestaurants);
-            _dbContext.Restaurants.AddRange(restaurants);
-            await _dbContext.SaveChangesAsync();
-            _dbContext.ChangeTracker.Clear();
-            return restaurants;
         }
     }
 }

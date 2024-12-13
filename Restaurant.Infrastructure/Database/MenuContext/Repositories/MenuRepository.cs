@@ -5,6 +5,7 @@ using FluentResults;
 
 namespace infrastructure.Database.MenuContext.Repositories
 {
+    // TODO: SHould not throw on the same menu 
     public class MenuRepository(MenuDbContext context) : IMenuRepository
     {
         private readonly MenuDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
