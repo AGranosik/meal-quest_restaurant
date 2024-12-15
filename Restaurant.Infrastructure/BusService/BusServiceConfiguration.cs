@@ -17,6 +17,7 @@ namespace infrastructure.BusService
     // do not block thread on events publication
     internal static class BusServiceConfiguration
     {
+        public const int TIMEOUT_LIMIT = 5;
         public static IServiceCollection ConfigureBusService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMassTransit(x =>
@@ -24,7 +25,6 @@ namespace infrastructure.BusService
                 x.UsingRabbitMq((_, cfg) =>
                 {
                     cfg.Host(configuration.GetConnectionString("rabbitmq"));
-                    cfg.UseTimeout(cfg => cfg.Timeout =  TimeSpan.FromMilliseconds(100));
                 });
             });
 

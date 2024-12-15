@@ -10,8 +10,6 @@ using webapi.Controllers.Restaurants.Requests;
 namespace integrationTests.Restaurants
 {
     [TestFixture]
-    // timeout less
-    // 
     internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTests
     {
         private const string _endpoint = "/api/Restaurant";
