@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Restaurants.Commands
 {
-    public sealed class CreateRestaurantCommandHandler(IRestaurantRepository repository, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
+    internal sealed class CreateRestaurantCommandHandler(IRestaurantRepository repository, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
     {
         private readonly IRestaurantRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

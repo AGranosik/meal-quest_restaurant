@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext
 {
-    public class RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : DbContext(options)
+    internal class RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : DbContext(options)
     {
         public DbSet<Restaurant> Restaurants { get; set; }
 

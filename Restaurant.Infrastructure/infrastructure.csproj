@@ -7,6 +7,10 @@
     <UserSecretsId>c9737ca1-96ab-4c5d-b62d-9e597a177bf7</UserSecretsId>
   </PropertyGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="unitTests" />
+		<InternalsVisibleTo Include="integrationTests" />
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.15.6" />
     <PackageReference Include="MassTransit" Version="8.3.1" />

@@ -10,7 +10,7 @@ using Respawn.Graph;
 
 namespace integrationTests.Restaurants
 {
-    public class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
+    internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
     {
         protected MenuDbContext _menuDbContext;
         protected EventDbContext _eventDbContext;

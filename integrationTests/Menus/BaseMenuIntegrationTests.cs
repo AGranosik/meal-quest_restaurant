@@ -9,7 +9,7 @@ using Respawn;
 
 namespace integrationTests.Menus
 {
-    public class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbContext>
+    internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbContext>
     {
         protected RestaurantDbContext _restaurantDbContext;
         protected EventDbContext _eventDbContext;
@@ -43,7 +43,7 @@ namespace integrationTests.Menus
         public override async Task OneTimeTearDown()
         {
             await base.OneTimeTearDown();
-            _connection!.Dispose();
+            await _connection!.DisposeAsync();
         }
     }
 }

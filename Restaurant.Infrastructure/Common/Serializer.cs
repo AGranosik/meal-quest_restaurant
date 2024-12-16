@@ -2,7 +2,7 @@
 
 namespace infrastructure.Common
 {
-    public static class Serializer
+    internal static class Serializer
     {
         private static readonly JsonSerializerOptions _serializingOptions = new()
         {

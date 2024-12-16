@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace infrastructure.Database.MenuContext
 {
-    public static class MenuContextConfiguration
+    internal static class MenuContextConfiguration
     {
         public static IServiceCollection ConfigureMenuContext(this IServiceCollection serviceCollection, IConfiguration configuration)
         {

@@ -9,11 +9,11 @@ using Polly;
 
 namespace application.EventHandlers
 {
-    public record AggregateChangedEvent<TAggregate, TKey>(TAggregate Aggregate) : INotification
+    internal record AggregateChangedEvent<TAggregate, TKey>(TAggregate Aggregate) : INotification
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>;
 
-    public abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotificationHandler<AggregateChangedEvent<TAggregate, TKey>>
+    internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotificationHandler<AggregateChangedEvent<TAggregate, TKey>>
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>
     {

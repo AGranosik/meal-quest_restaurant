@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace infrastructure.EventStorage
 {
-    public static class EventStorageConfiguration
+    internal static class EventStorageConfiguration
     {
         public static IServiceCollection ConfigureEventStorage(this IServiceCollection services, IConfiguration configuration)
         {

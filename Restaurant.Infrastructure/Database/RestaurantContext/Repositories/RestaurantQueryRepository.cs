@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext.Repositories
 {
-    public sealed class RestaurantQueryRepository(RestaurantDbContext dbContext) : IRestaurantQueryRepository
+    internal sealed class RestaurantQueryRepository(RestaurantDbContext dbContext) : IRestaurantQueryRepository
     {
         private readonly RestaurantDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 

@@ -1,19 +1,15 @@
 ﻿using System.Data.Common;
-using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext.Models.Configurations;
-using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using Respawn.Graph;
-using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
 
 namespace integrationTests
 {
-    public class BaseContainerIntegrationTests<TDbContext>
+    internal class BaseContainerIntegrationTests<TDbContext>
         where TDbContext : DbContext
     {
         private readonly List<IContainer> _containers;

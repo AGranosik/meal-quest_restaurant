@@ -5,11 +5,10 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace infrastructure.Observability
 {
-    public static class Logging
+    internal static class Logging
     {
         public static IServiceCollection ConfigureLogging(this IServiceCollection services, IConfiguration configuration)
         {
@@ -38,7 +37,7 @@ namespace infrastructure.Observability
         }
     }
 
-    public class TraceEnricher : ILogEventEnricher
+    internal class TraceEnricher : ILogEventEnricher
     {
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {

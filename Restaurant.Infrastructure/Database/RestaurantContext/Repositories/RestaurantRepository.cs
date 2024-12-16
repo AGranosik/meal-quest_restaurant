@@ -7,14 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext.Repositories
 {
-    public class RestaurantReposiotry : IRestaurantRepository
+    internal class RestaurantReposiotry(RestaurantDbContext dbContext) : IRestaurantRepository
     {
-        private readonly RestaurantDbContext _dbContext;
-
-        public RestaurantReposiotry(RestaurantDbContext dbContext)
-        {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        }
+        private readonly RestaurantDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
         public async Task AddMenuAsync(Menu menu, RestaurantId restaurantId, CancellationToken cancellationToken)
         {

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Common.Extensions
 {
-    public static class MediatorExtensions
+    internal static class MediatorExtensions
     {
         public static async Task PublishEventsAsync<TAggregate, TKey>(this IMediator mediator, TAggregate entity, ILogger logger, CancellationToken cancellationToken)
             where TAggregate : Aggregate<TKey>

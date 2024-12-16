@@ -12,7 +12,7 @@ using webapi.Controllers.Restaurants.Requests;
 namespace integrationTests.Restaurants
 {
     [TestFixture]
-    public class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
+    internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         private const string _endpoint = "/api/Restaurant";
 

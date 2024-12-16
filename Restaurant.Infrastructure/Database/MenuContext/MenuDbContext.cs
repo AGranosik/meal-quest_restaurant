@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.MenuContext
 {
-    public class MenuDbContext(DbContextOptions<MenuDbContext> options) : DbContext(options)
+    internal class MenuDbContext(DbContextOptions<MenuDbContext> options) : DbContext(options)
     {
         public DbSet<Menu> Menus { get; set; }
         public DbSet<RestaurantIdMenuId> Restaurants { get; set; }

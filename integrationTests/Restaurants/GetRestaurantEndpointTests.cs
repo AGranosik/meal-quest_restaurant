@@ -5,14 +5,13 @@ using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
-using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using integrationTests.Common;
 
 namespace integrationTests.Restaurants
 {
     [TestFixture]
-    public class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
+    internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
     {
         public GetRestaurantEndpointTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
         {

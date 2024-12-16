@@ -12,7 +12,7 @@ using RRestaurantId = domain.Restaurants.ValueObjects.Identifiers.RestaurantId;
 
 namespace application.EventHandlers.Menus
 {
-    public class MenuChangedEventHandler(
+    internal sealed class MenuChangedEventHandler(
             IEventInfoStorage<Menu, MenuId> eventInfoStorage,
             ILogger<AggregateChangedEventHandler<Menu, MenuId>> logger,
             IRestaurantRepository restaurantRepository,

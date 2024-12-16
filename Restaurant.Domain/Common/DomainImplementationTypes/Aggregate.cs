@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace domain.Common.BaseTypes
+﻿namespace domain.Common.BaseTypes
 {
     public abstract class Aggregate<TKey> : Entity<TKey>
         where TKey : ValueObject<TKey>

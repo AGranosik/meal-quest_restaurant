@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.EventStorage
 {
-    public class EventDbContext(DbContextOptions<EventDbContext> options) : DbContext(options)
+    internal class EventDbContext(DbContextOptions<EventDbContext> options) : DbContext(options)
     {
         public DbSet<DomainEventModel<TAggregate, TKey>> GetDbSet<TAggregate, TKey>()
             where TAggregate : Aggregate<TKey>

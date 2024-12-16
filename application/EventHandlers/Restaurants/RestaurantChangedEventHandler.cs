@@ -9,7 +9,7 @@ using Polly;
 
 namespace application.EventHandlers.Restaurants
 {
-    public class RestaurantChangedEventHandler
+    internal sealed class RestaurantChangedEventHandler
         (IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage,
         ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger,
         IEventEmitter<Restaurant> eventEmitter,
