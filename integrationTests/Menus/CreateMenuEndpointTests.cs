@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using domain.Menus.Aggregates;
+using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using infrastructure.EventStorage.DatabaseModels;
 using integrationTests.Common;
@@ -11,12 +12,14 @@ using MenuMenuId = domain.Menus.ValueObjects.Identifiers.MenuId;
 
 namespace integrationTests.Menus
 {
-    // check if event emitter return failure
-    // event handling shouldnt affect response
     [TestFixture]
     internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     {
         private const string _endpoint = "/api/Menu";
+
+        public CreateMenuEndpointTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
+        {
+        }
 
         [Test]
         public async Task CreateMenu_RequestIsNull_BadRequest()

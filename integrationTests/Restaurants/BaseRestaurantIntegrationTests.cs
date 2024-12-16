@@ -4,7 +4,6 @@ using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext;
 using infrastructure.Database.RestaurantContext.Models.Configurations;
 using infrastructure.EventStorage;
-using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;

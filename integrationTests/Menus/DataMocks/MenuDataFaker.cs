@@ -59,7 +59,7 @@ namespace integrationTests.Menus.DataMocks
 
         internal static async Task<List<RestaurantIdMenuId>> CreateRestaurantsAsync(MenuDbContext dbContext, int numberOfRestaurants)
         {
-            var restaurants = MenuDataFaker.Restaurants(numberOfRestaurants);
+            var restaurants = Restaurants(numberOfRestaurants);
             dbContext.Restaurants.AddRange(restaurants);
             await dbContext.SaveChangesAsync();
             dbContext.ChangeTracker.Clear();

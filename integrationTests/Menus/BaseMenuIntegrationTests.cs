@@ -4,10 +4,8 @@ using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext;
 using infrastructure.Database.RestaurantContext.Models.Configurations;
 using infrastructure.EventStorage;
-using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
-using Respawn.Graph;
 
 namespace integrationTests.Menus
 {
@@ -16,7 +14,7 @@ namespace integrationTests.Menus
         protected RestaurantDbContext _restaurantDbContext;
         protected EventDbContext _eventDbContext;
 
-        public BaseMenuIntegrationTests() : base([ContainersCreator.Postgres, ContainersCreator.RabbitMq])
+        public BaseMenuIntegrationTests(List<IContainer> containers) : base(containers)
         {
         }
 
