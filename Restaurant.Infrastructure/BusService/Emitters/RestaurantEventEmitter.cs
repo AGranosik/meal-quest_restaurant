@@ -23,7 +23,7 @@ namespace infrastructure.BusService.Emitters
         {
             try
             {
-                using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(BusServiceConfiguration.TIMEOUT_LIMIT));
                 using var mergedCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, rabbitTimeout.Token);
                 
                 await _publishEndpoint.Publish(new RestaurantChangedDto(@event), mergedCancellationToken.Token);
