@@ -13,7 +13,7 @@ using sharedTests.MocksExtensions;
 namespace unitTests.Application.EventHandlers
 {
     [TestFixture]
-    public abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
+    internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>
     {

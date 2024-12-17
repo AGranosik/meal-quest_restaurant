@@ -21,7 +21,7 @@ namespace application.EventHandlers.Restaurants
         protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
         {
             var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
-                () => _menuRepository.AddRestaurantAsync(new RestaurantIdMenuId(notification.Aggregate.Id!.Value), cancellationToken));
+                () => _menuRepository.CreateRestaurantAsync(new RestaurantIdMenuId(notification.Aggregate.Id!.Value), cancellationToken));
 
             if (policyResult.Outcome == OutcomeType.Successful)
                 return true;

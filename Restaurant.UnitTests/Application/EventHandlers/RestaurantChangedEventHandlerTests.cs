@@ -12,7 +12,7 @@ using sharedTests.DataFakers;
 namespace unitTests.Application.EventHandlers
 {
     [TestFixture]
-    public class RestaurantChangedEventHandlerTests : AggregateChangedEventHandlerTests<Restaurant, RestaurantId>
+    internal class RestaurantChangedEventHandlerTests : AggregateChangedEventHandlerTests<Restaurant, RestaurantId>
     {
         private Mock<IMenuRepository> _menuRepositoryMock;
         public override void SetUp()
@@ -30,7 +30,7 @@ namespace unitTests.Application.EventHandlers
             var action = () => handler.Handle(@event, CancellationToken.None);
 
             await action.Should().NotThrowAsync();
-            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
+            _menuRepositoryMock.Verify(r => r.CreateRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
         }
 
 
@@ -45,7 +45,7 @@ namespace unitTests.Application.EventHandlers
             var action = () => handler.Handle(@event, CancellationToken.None);
 
             await action.Should().NotThrowAsync();
-            _menuRepositoryMock.Verify(r => r.AddRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
+            _menuRepositoryMock.Verify(r => r.CreateRestaurantAsync(It.Is<RestaurantIdMenuId>(id => id.Value == @event.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
             CheckIfLoggedError();
         }
 
@@ -67,9 +67,9 @@ namespace unitTests.Application.EventHandlers
             => ConfigureMenuRepositoryFailure();
 
         private void ConfigureMenuRepositorySuccessful()
-            => _menuRepositoryMock.Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            => _menuRepositoryMock.Setup(r => r.CreateRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
         private void ConfigureMenuRepositoryFailure()
-            => _menuRepositoryMock.Setup(r => r.AddRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
+            => _menuRepositoryMock.Setup(r => r.CreateRestaurantAsync(It.IsAny<RestaurantIdMenuId>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
     }
 }

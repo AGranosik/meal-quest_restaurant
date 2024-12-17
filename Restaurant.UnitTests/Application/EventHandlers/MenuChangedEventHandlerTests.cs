@@ -11,7 +11,7 @@ using sharedTests.DataFakers;
 namespace unitTests.Application.EventHandlers
 {
     [TestFixture]
-    public class MenuChangedEventHandlerTests : AggregateChangedEventHandlerTests<domain.Menus.Aggregates.Menu, domain.Menus.ValueObjects.Identifiers.MenuId>
+    internal class MenuChangedEventHandlerTests : AggregateChangedEventHandlerTests<domain.Menus.Aggregates.Menu, domain.Menus.ValueObjects.Identifiers.MenuId>
     {
         private Mock<IRestaurantRepository> _restaurantRepository;
 

@@ -5,14 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="unitTests" />
+		<InternalsVisibleTo Include="integrationTests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\Restaurant.Core\core.csproj" />
     <ProjectReference Include="..\Restaurant.Domain\domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Menus\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@
 using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.MenuContext.Repositories
 {
@@ -10,9 +11,13 @@ namespace infrastructure.Database.MenuContext.Repositories
     {
         private readonly MenuDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task AddRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken)
+        public async Task CreateRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken)
         {
-            _context.Restaurants.Add(new RestaurantIdMenuId(restaurant.Value));
+            var exists = await _context.Restaurants.AnyAsync(r => r.Value == restaurant.Value, cancellationToken);
+            if (exists)
+                return;
+
+            _context.Restaurants.Add(restaurant);
             await _context.SaveChangesAsync(cancellationToken);
         }
 

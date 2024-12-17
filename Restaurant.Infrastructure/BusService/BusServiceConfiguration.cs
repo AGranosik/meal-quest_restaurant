@@ -8,16 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace infrastructure.BusService
 {
-    //TODO: publish endpoint
-    //TODO: Tests
     //TODO: observability & metrics for grafana of rabbitmq
-
-    // interface in application layer
-    // configuration here
-    // do not block thread on events publication
     internal static class BusServiceConfiguration
     {
-        public const int TIMEOUT_LIMIT = 5;
+        public const int TIMEOUT_LIMIT = 2;
         public static IServiceCollection ConfigureBusService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMassTransit(x =>

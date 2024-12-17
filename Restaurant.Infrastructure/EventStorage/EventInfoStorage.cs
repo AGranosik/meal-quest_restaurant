@@ -5,7 +5,6 @@ using infrastructure.EventStorage.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 namespace infrastructure.EventStorage
 {
-    // TODO: retry should be implmeneted here?
     internal class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
         where TKey : SimpleValueType<int, TKey>
         where TAggregate : Aggregate<TKey>

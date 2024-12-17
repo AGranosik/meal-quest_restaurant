@@ -1,4 +1,5 @@
-﻿using application.Common.Extensions;
+﻿using System.Runtime.CompilerServices;
+using application.Common.Extensions;
 using application.Menus.Commands.Interfaces;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands
 {
-    // remove uneccessary logs for metrics
     internal sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
     {
         private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
