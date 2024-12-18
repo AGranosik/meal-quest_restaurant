@@ -12,7 +12,7 @@ namespace core.SimpleTypes
             if(string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("value cannot be null or white spacec");
 
-            Value = value;
+            Value = value; 
         }
 
         public static bool operator ==(NotEmptyString left, NotEmptyString rigtt)
