@@ -6,3 +6,6 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['host.docker.internal:5010']  # Your app's metrics endpoint
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15672']
