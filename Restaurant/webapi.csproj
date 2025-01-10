@@ -29,4 +29,8 @@
 		<InternalsVisibleTo Include="integrationTests" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Seed\" />
+	</ItemGroup>
+
 </Project>
