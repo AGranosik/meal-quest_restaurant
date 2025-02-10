@@ -1,10 +1,11 @@
-﻿using MassTransit.Mediator;
+﻿using MediatR;
 using webapi.Controllers.Restaurants.Requests;
 
-namespace webapi.Seed
+namespace Restaurant.DataSeed.Seed
 {
     public class DataSeed(IMediator mediator)
     {
+        // use controller
         private readonly IMediator _mediator = mediator;
 
         public async Task Seed()
@@ -18,7 +19,7 @@ namespace webapi.Seed
 
         private List<CreateRestaurantRequest> GenerateRestaurants(int n)
         {
-            Random rand = new Random();
+            Random rand = new();
             var result = new List<CreateRestaurantRequest>(n);
             var openingHours = new List<short> { 6, 7, 8, 9 };
             var closingHours = new List<short> { 20, 21, 22, 23 };

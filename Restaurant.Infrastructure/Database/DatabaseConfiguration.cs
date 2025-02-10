@@ -5,9 +5,9 @@ using infrastructure.Database.MenuContext;
 
 namespace infrastructure.Database
 {
-    public static class DatabaseConfiguration
+    internal static class DatabaseConfiguration
     {
-        public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+        internal static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services
                 .ConfigureRestaurantContext(configuration)
