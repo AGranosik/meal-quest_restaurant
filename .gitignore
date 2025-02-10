@@ -19,3 +19,5 @@
 /integrationTests/bin/Debug/net8.0
 /shared.tests/bin/Debug/net8.0
 /shared.tests/obj
+/Restaurant.DataSeed/bin/Debug/net8.0
+/Restaurant.DataSeed/obj
