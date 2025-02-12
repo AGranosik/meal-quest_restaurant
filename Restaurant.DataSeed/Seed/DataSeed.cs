@@ -1,23 +1,34 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
+using webapi.Controllers.Restaurants;
 using webapi.Controllers.Restaurants.Requests;
 
 namespace Restaurant.DataSeed.Seed
 {
-    public class DataSeed(IMediator mediator)
+    public class DataSeed
     {
         // use controller
-        private readonly IMediator _mediator = mediator;
+        private readonly IMediator _mediator;
+        private readonly ILogger<RestaurantController> _logger;
+        public DataSeed(IMediator mediator, ILogger<RestaurantController> logger)
+        {
+            _mediator = mediator;
+            _logger = logger;
+        }
+
+
 
         public async Task Seed()
         {
+            var controller = new RestaurantController(_mediator, _logger);
             var restaurants = GenerateRestaurants(100);
             foreach(var restaurant in restaurants)
             {
-                await _mediator.Send(restaurant);
+                await controller.CreateRestaurantAsync(restaurant, CancellationToken.None);
             }
         }
 
-        private List<CreateRestaurantRequest> GenerateRestaurants(int n)
+        private static List<CreateRestaurantRequest> GenerateRestaurants(int n)
         {
             Random rand = new();
             var result = new List<CreateRestaurantRequest>(n);

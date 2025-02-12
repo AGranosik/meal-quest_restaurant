@@ -3,6 +3,7 @@ using domain.Menus.Aggregates;
 using domain.Restaurants.Aggregates;
 using infrastructure.BusService.Emitters;
 using MassTransit;
+using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,7 @@ namespace infrastructure.BusService
         {
             services.AddMassTransit(x =>
             {
-                x.UsingRabbitMq((_, cfg) =>
+                x.UsingRabbitMq((bus, cfg) =>
                 {
                     cfg.Host(configuration.GetConnectionString("rabbitmq"));
                 });

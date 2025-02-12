@@ -6,7 +6,7 @@ using MassTransit;
 namespace infrastructure.BusService.Emitters
 {
     [EntityName("restaurants.changes")]
-    internal class RestaurantChangedDto
+    public class RestaurantChangedDto
     {
 
         public string Name { get; set; }

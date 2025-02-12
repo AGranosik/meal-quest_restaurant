@@ -1,12 +1,18 @@
 ﻿using application;
 using infrastructure;
 using infrastructure.Database;
+using infrastructure.Database.MenuContext;
 using infrastructure.Database.RestaurantContext;
+using infrastructure.EventStorage;
+using infrastructure.Observability;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Restaurant.DataSeed.Seed;
+using webapi.Controllers.Restaurants;
 
 var servicesCollection = new ServiceCollection();
 var builder = new ConfigurationBuilder()
@@ -14,17 +20,23 @@ var builder = new ConfigurationBuilder()
     .AddUserSecrets<Program>(); // Load user secrets
 
 IConfiguration configuration = builder.Build();
-servicesCollection.ConfigureDatabase(configuration)
+servicesCollection.AddInfrastructure(configuration)
     .AddApplication();
+
+servicesCollection.AddScoped(typeof(ILogger<>), typeof(NullLogger<>));
+
+
 var serviceProvider = servicesCollection.BuildServiceProvider();
 
 var mediator = serviceProvider.GetRequiredService<IMediator>();
-
 var restaurantDbContext = serviceProvider.GetRequiredService<RestaurantDbContext>();
-await restaurantDbContext.Database.MigrateAsync();
+var eventDbContext = serviceProvider.GetRequiredService<EventDbContext>();
+var menuDbContext = serviceProvider.GetRequiredService<MenuDbContext>();
 
-var seed = new DataSeed(mediator);
+await restaurantDbContext.Database.MigrateAsync();
+await eventDbContext.Database.MigrateAsync();
+await menuDbContext.Database.MigrateAsync();
+
+var seed = new DataSeed(mediator, NullLoggerFactory.Instance.CreateLogger<RestaurantController>());
 
 await seed.Seed();
-
-Console.WriteLine("Hello, World!");
