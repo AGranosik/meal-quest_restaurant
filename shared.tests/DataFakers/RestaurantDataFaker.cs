@@ -14,6 +14,9 @@ namespace sharedTests.DataFakers
         public static Owner ValidOwner
             => Owner.Create(new Name("test"), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
 
+        public static Address ValidRestaurantAddress
+            => Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value;
+
         public static OpeningHours ValidOpeningHours
             => OpeningHours.Create(
             [
@@ -28,7 +31,7 @@ namespace sharedTests.DataFakers
 
         public static Restaurant ValidRestaurant()
         {
-            var result = Restaurant.Create(ValidRestaurantName, ValidOwner, ValidOpeningHours).Value;
+            var result = Restaurant.Create(ValidRestaurantName, ValidOwner, ValidOpeningHours, ValidRestaurantAddress).Value;
             result.SetId(new RestaurantId(2));
             return result;
         }

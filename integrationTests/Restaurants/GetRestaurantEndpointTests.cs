@@ -109,7 +109,9 @@ namespace integrationTests.Restaurants
             while (iRestaurant < numberOfRestaurants)
             {
                 int iOwner = 0;
+                var restaurantAddress = Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value;
                 var owner = Owner.Create(new Name("test" + iRestaurant), new Name("surname"), Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value).Value;
+
                 while(iOwner < restaurantsPerOwner)
                 {
                     var openingHours = OpeningHours.Create(
@@ -123,7 +125,7 @@ namespace integrationTests.Restaurants
                         WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                     ]).Value;
 
-                    var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours);
+                    var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours , restaurantAddress);
                     restaurants.Add(restaurant.Value);
                     iOwner++;
                     iRestaurant++;

@@ -6,6 +6,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
+using MassTransit.NewIdProviders;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -69,6 +70,9 @@ namespace application.Restaurants.Commands
             if (openingHours.WorkingDays.Count == 0)
                 return Result.Fail("Working days cannot be empty.");
 
+            if (command.Address is null)
+                return Result.Fail("Restaurant address cannot be null.");
+
             return Result.Ok();
         }
 
@@ -78,18 +82,18 @@ namespace application.Restaurants.Commands
                 return Result.Fail("Name cannot be null.");
 
             var requestOwner = request.Owner;
-            var addressResult = Address.Create(
+            var ownerAddressResult = Address.Create(
                 new Street(requestOwner!.Address!.Street!),
-                new City(requestOwner!.Address!.City!),
+                new City(requestOwner.Address.City!),
                 new Coordinates(requestOwner.Address.XCoordinate, requestOwner.Address.YCoordinate)
             );
 
-            if (addressResult.IsFailed) return addressResult.ToResult();
+            if (ownerAddressResult.IsFailed) return ownerAddressResult.ToResult();
 
             var owner = Owner.Create(
                 new Name(request!.Owner!.Name!),
                 new Name(request!.Owner!.Surname!),
-                addressResult.Value
+                ownerAddressResult.Value
             );
 
             if(owner.IsFailed) return owner.ToResult();
@@ -113,12 +117,16 @@ namespace application.Restaurants.Commands
 
             if (openingHours.IsFailed) return openingHours.ToResult();
 
-            return Restaurant.Create(new Name(request.Name), owner.Value, openingHours.Value);
+            var restaurantAddressResult = Address.Create(new Street(request.Address.Street!), new City(request.Address.City!), new Coordinates(request.Address.XCoordinate, request.Address.YCoordinate));
+
+            if(restaurantAddressResult.IsFailed) return restaurantAddressResult.ToResult();
+
+            return Restaurant.Create(new Name(request.Name), owner.Value, openingHours.Value, restaurantAddressResult.Value);
         }
     }
 
 
-    public record CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours) : IRequest<Result<RestaurantId>>;
+    public record CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours, CreateAddressCommand? Address) : IRequest<Result<RestaurantId>>;
 
     public record CreateOwnerCommand(string? Name, string? Surname, CreateAddressCommand? Address);
 

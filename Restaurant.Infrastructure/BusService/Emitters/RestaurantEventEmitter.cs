@@ -9,7 +9,7 @@ namespace infrastructure.BusService.Emitters
     public class RestaurantChangedDto
     {
 
-        public string Name { get; set; }
+        public string Name { get; private set; }
         internal RestaurantChangedDto(Restaurant restaurant)
         {
             Name = restaurant.Name.Value.Value;

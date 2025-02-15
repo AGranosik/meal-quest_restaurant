@@ -36,11 +36,12 @@ namespace Restaurant.DataSeed.Seed
             var closingHours = new List<short> { 20, 21, 22, 23 };
             for(var i =0; i < n; i++)
             {
+                var restaurantAddress = new CreateAddressRequest($"restaurant-seed-street-{i}", $"restaurant-city-seed-{i}", rand.NextDouble(), rand.NextDouble());
                 var owner = new CreateOwnerRequest($"owner-seed-name-{i}", $"owner-seed-surname-{i}", new CreateAddressRequest($"seed-street-{i}", $"city-seed-{i}", rand.NextDouble(), rand.NextDouble()));
                 var openDays = Enumerable.Range(0, 7)
                     .Select(d => new WorkingDayRequest((DayOfWeek)d, new DateTime(2020, 12, 12, openingHours[i%openingHours.Count], 00, 00), new DateTime(2020, 12, 12, closingHours[i%closingHours.Count], 00, 00))).ToList();
                 var openinghours = new OpeningHoursRequest(openDays);
-                result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours));
+                result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress));
 
 
             }

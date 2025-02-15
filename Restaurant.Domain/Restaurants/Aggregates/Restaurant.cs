@@ -8,21 +8,22 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates
 {
-    public class Restaurant: Aggregate<RestaurantId>
+    public sealed class Restaurant: Aggregate<RestaurantId>
     {
-        protected List<Menu> _menus = new();
+        private List<Menu> _menus = new();
         public IReadOnlyCollection<Menu> Menus => _menus.AsReadOnly();
 
-        public Name Name { get; protected set; }
-        public Owner Owner { get; protected set; }
-        public OpeningHours OpeningHours { get; protected set; }
-        public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours)
+        public Name Name { get; }
+        public Owner Owner { get; }
+        public OpeningHours OpeningHours { get; }
+        public Address Address { get; }
+        public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours, Address address)
         {
-            var creationResult = CreationValidation(name, owner, openingHours);
+            var creationResult = CreationValidation(name, owner, openingHours, address);
             if (creationResult.IsFailed)
                 return creationResult;
 
-            return Result.Ok(new Restaurant(name, owner, openingHours));
+            return Result.Ok(new Restaurant(name, owner, openingHours, address));
         }
 
         public Result AddMenu(Menu menu)
@@ -35,16 +36,17 @@ namespace domain.Restaurants.Aggregates
         }
 
         [JsonConstructor]
-        protected Restaurant() : base() { }
+        private Restaurant() : base() { }
 
-        private Restaurant(Name name, Owner owner, OpeningHours openingHours)
+        private Restaurant(Name name, Owner owner, OpeningHours openingHours, Address address)
         {
             Owner = owner;
             OpeningHours = openingHours;
             Name = name;
+            Address = address;
         }
 
-        private static Result CreationValidation(Name name, Owner owner, OpeningHours openingHours)
+        private static Result CreationValidation(Name name, Owner owner, OpeningHours openingHours, Address address)
         {
             if (name is null)
                 return Result.Fail("Name cannot be null.");
@@ -54,6 +56,9 @@ namespace domain.Restaurants.Aggregates
 
             if (openingHours is null)
                 return Result.Fail("Opening houts cannot be null.");
+
+            if (address is null)
+                return Result.Fail("Address cannot be null.");
 
             return Result.Ok();
         }
