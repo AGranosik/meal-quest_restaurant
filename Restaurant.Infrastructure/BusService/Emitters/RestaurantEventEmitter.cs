@@ -10,9 +10,13 @@ namespace infrastructure.BusService.Emitters
     {
 
         public string Name { get; private set; }
+        public double XAxis { get; private set; }
+        public double YAxis { get; private set; }
         internal RestaurantChangedDto(Restaurant restaurant)
         {
             Name = restaurant.Name.Value.Value;
+            XAxis = restaurant.Address.Coordinates.X;
+            YAxis = restaurant.Address.Coordinates.Y;
         }
     }
     internal sealed class RestaurantEventEmitter(IPublishEndpoint publishEndpoint) : IEventEmitter<Restaurant>

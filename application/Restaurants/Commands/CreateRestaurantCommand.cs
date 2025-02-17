@@ -6,12 +6,12 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
-using MassTransit.NewIdProviders;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace application.Restaurants.Commands
 {
+    //TODO: reduce mappings
     internal sealed class CreateRestaurantCommandHandler(IRestaurantRepository repository, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
     {
         private readonly IRestaurantRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
