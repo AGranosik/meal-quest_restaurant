@@ -28,6 +28,10 @@ namespace Restaurant.DataSeed.Seed
             }
         }
 
+        //lodz cooridnates
+        // Latitude: ~ 51.65°N to 51.85°N
+        //Longitude: ~ 19.30°E to 19.65°E
+
         private static List<CreateRestaurantRequest> GenerateRestaurants(int n)
         {
             Random rand = new();
@@ -36,7 +40,7 @@ namespace Restaurant.DataSeed.Seed
             var closingHours = new List<short> { 20, 21, 22, 23 };
             for(var i =0; i < n; i++)
             {
-                var restaurantAddress = new CreateAddressRequest($"restaurant-seed-street-{i}", $"restaurant-city-seed-{i}", rand.NextDouble(), rand.NextDouble());
+                var restaurantAddress = new CreateAddressRequest($"restaurant-seed-street-{i}", $"restaurant-city-seed-{i}", GetRandomDouble(rand, 51.65, 51.85), GetRandomDouble(rand, 19.30, 19.65));
                 var owner = new CreateOwnerRequest($"owner-seed-name-{i}", $"owner-seed-surname-{i}", new CreateAddressRequest($"seed-street-{i}", $"city-seed-{i}", rand.NextDouble(), rand.NextDouble()));
                 var openDays = Enumerable.Range(0, 7)
                     .Select(d => new WorkingDayRequest((DayOfWeek)d, new DateTime(2020, 12, 12, openingHours[i%openingHours.Count], 00, 00), new DateTime(2020, 12, 12, closingHours[i%closingHours.Count], 00, 00))).ToList();
@@ -47,6 +51,11 @@ namespace Restaurant.DataSeed.Seed
             }
 
             return result;
+        }
+
+        static double GetRandomDouble(Random random, double min, double max)
+        {
+            return min + (random.NextDouble() * (max - min));
         }
     }
 
