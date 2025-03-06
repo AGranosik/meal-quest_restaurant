@@ -2,24 +2,23 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace webapi.Controllers
+namespace webapi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Produces("application/json")]
+public class ApiController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Produces("application/json")]
-    public class ApiController : ControllerBase
+    protected readonly IMediator _mediator;
+
+    protected ApiController(IMediator mediator)
+        => _mediator = mediator;
+
+    protected IActionResult MapApplicationResultToHttpResponse<T>(Result<T> result)
     {
-        protected readonly IMediator _mediator;
+        if (result.IsSuccess)
+            return Ok(result.Value);
 
-        protected ApiController(IMediator mediator)
-            => _mediator = mediator;
-
-        protected IActionResult MapApplicationResultToHttpResponse<T>(Result<T> result)
-        {
-            if (result.IsSuccess)
-                return Ok(result.Value);
-
-            return BadRequest(result.Errors);
-        }
+        return BadRequest(result.Errors);
     }
 }

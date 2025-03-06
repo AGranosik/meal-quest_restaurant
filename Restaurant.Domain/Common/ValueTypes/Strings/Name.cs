@@ -1,13 +1,12 @@
 ﻿using core.SimpleTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 
-namespace domain.Common.ValueTypes.Strings
+namespace domain.Common.ValueTypes.Strings;
+
+public class Name: SimpleValueType<NotEmptyString, Name>
 {
-    public class Name: SimpleValueType<NotEmptyString, Name>
+    public Name(string value) :base(value)
     {
-        public Name(string value) :base(value)
-        {
             
-        }
     }
 }

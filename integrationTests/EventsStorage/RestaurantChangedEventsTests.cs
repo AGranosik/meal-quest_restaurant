@@ -2,12 +2,11 @@
 using domain.Restaurants.ValueObjects.Identifiers;
 using sharedTests.DataFakers;
 
-namespace integrationTests.EventsStorage
+namespace integrationTests.EventsStorage;
+
+[TestFixture]
+internal class RestaurantChangedEventsTests : BaseEventInfoStorageTests<Restaurant, RestaurantId>
 {
-    [TestFixture]
-    internal class RestaurantChangedEventsTests : BaseEventInfoStorageTests<Restaurant, RestaurantId>
-    {
-        protected override Restaurant CreateAggregate()
-            => RestaurantDataFaker.ValidRestaurant();
-    }
+    protected override Restaurant CreateAggregate()
+        => RestaurantDataFaker.ValidRestaurant();
 }

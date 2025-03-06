@@ -1,14 +1,13 @@
 ﻿using domain.Common.DomainImplementationTypes.Identifiers;
 
-namespace domain.Menus.ValueObjects.Identifiers
-{
-    public class RestaurantIdMenuId : SimpleValueType<int, RestaurantIdMenuId>
-    {
-        public RestaurantIdMenuId(int value) : base(value)
-        {
-            
-        }
+namespace domain.Menus.ValueObjects.Identifiers;
 
-        private RestaurantIdMenuId() : base(0) { }
+public class RestaurantIdMenuId : SimpleValueType<int, RestaurantIdMenuId>
+{
+    public RestaurantIdMenuId(int value) : base(value)
+    {
+            
     }
+
+    private RestaurantIdMenuId() : base(0) { }
 }

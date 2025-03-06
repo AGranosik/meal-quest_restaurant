@@ -1,18 +1,17 @@
 ﻿using System.Text.Json;
 
-namespace infrastructure.Common
+namespace infrastructure.Common;
+
+internal static class Serializer
 {
-    internal static class Serializer
+    private static readonly JsonSerializerOptions _serializingOptions = new()
     {
-        private static readonly JsonSerializerOptions _serializingOptions = new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
 
-        public static string Serialize<T>(T data)
-            => JsonSerializer.Serialize<T>(data, _serializingOptions);
+    public static string Serialize<T>(T data)
+        => JsonSerializer.Serialize<T>(data, _serializingOptions);
 
-        public static T? Deserialize<T>(string data, Type type)
-            => (T?)JsonSerializer.Deserialize(data, type, _serializingOptions);
-    }
+    public static T? Deserialize<T>(string data, Type type)
+        => (T?)JsonSerializer.Deserialize(data, type, _serializingOptions);
 }

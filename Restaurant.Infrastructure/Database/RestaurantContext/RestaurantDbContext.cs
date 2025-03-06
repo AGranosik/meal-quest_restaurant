@@ -2,25 +2,24 @@
 using infrastructure.Database.RestaurantContext.Models.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace infrastructure.Database.RestaurantContext
+namespace infrastructure.Database.RestaurantContext;
+
+internal class RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : DbContext(options)
 {
-    internal class RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : DbContext(options)
+    public DbSet<Restaurant> Restaurants { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<Restaurant> Restaurants { get; set; }
+        modelBuilder.HasDefaultSchema(RestaurantDatabaseConstants.SCHEMA);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema(RestaurantDatabaseConstants.SCHEMA);
+        modelBuilder
+            .ApplyConfiguration(new AddressConfiguration())
+            .ApplyConfiguration(new OpeningHoursConfiguration())
+            .ApplyConfiguration(new OwnerConfiguration())
+            .ApplyConfiguration(new RestaurantConfiguration())
+            .ApplyConfiguration(new MenuConfiguration())
+            .ApplyConfiguration(new WorkingDayConfiguration());
 
-            modelBuilder
-                .ApplyConfiguration(new AddressConfiguration())
-                .ApplyConfiguration(new OpeningHoursConfiguration())
-                .ApplyConfiguration(new OwnerConfiguration())
-                .ApplyConfiguration(new RestaurantConfiguration())
-                .ApplyConfiguration(new MenuConfiguration())
-                .ApplyConfiguration(new WorkingDayConfiguration());
-
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

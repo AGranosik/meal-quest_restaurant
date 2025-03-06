@@ -3,19 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 using infrastructure.Database.RestaurantContext;
 using infrastructure.Database.MenuContext;
 
-namespace infrastructure.Database
+namespace infrastructure.Database;
+
+internal static class DatabaseConfiguration
 {
-    internal static class DatabaseConfiguration
+    internal static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        internal static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
-        {
-            services
-                .ConfigureRestaurantContext(configuration)
-                .ConfigureMenuContext(configuration);
+        services
+            .ConfigureRestaurantContext(configuration)
+            .ConfigureMenuContext(configuration);
 
-            return services;
-        }
-
-
+        return services;
     }
+
+
 }

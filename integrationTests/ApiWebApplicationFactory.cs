@@ -9,49 +9,48 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace integrationTests
-{
-    internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
-    {
-        public IConfiguration? Configuration { get; private set; }
+namespace integrationTests;
 
-        protected override IHost CreateHost(IHostBuilder builder)
+internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
+{
+    public IConfiguration? Configuration { get; private set; }
+
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.ConfigureHostConfiguration(config =>
         {
-            builder.ConfigureHostConfiguration(config =>
-            {
-                Configuration = new ConfigurationBuilder()
-                    .AddJsonFile("integrationsettings.json")
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("integrationsettings.json")
                 .Build();
 
-                config.AddConfiguration(Configuration, false);
-            });
-            return base.CreateHost(builder);
-        }
+            config.AddConfiguration(Configuration, false);
+        });
+        return base.CreateHost(builder);
+    }
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureTestServices(services =>
         {
-            builder.ConfigureTestServices(services =>
-            {
-                RemoveUnnecessaryServicesForTests(services);
-                services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration!.GetConnectionString("postgres")));
-            });
+            RemoveUnnecessaryServicesForTests(services);
+            services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration!.GetConnectionString("postgres")));
+        });
 
-            base.ConfigureWebHost(builder);
-        }
+        base.ConfigureWebHost(builder);
+    }
 
-        protected virtual void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+    protected virtual void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+    {
+        //trace
+        var descriptor = services.FirstOrDefault(
+            d => d.ServiceType == typeof(OpenTelemetry.Trace.TracerProvider));
+
+        if (descriptor != null)
         {
-            //trace
-            var descriptor = services.FirstOrDefault(
-                    d => d.ServiceType == typeof(OpenTelemetry.Trace.TracerProvider));
-
-            if (descriptor != null)
-            {
-                services.Remove(descriptor);
-            }
-
-            //logs
-            services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+            services.Remove(descriptor);
         }
+
+        //logs
+        services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
     }
 }

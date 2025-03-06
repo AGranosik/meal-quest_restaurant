@@ -1,9 +1,8 @@
 ﻿using application.Restaurants.Queries.GetRestaurantQueries.Dtos;
 
-namespace application.Restaurants.Queries.Interfaces
+namespace application.Restaurants.Queries.Interfaces;
+
+public interface IRestaurantQueryRepository
 {
-    public interface IRestaurantQueryRepository
-    {
-        Task<List<RestaurantDto>> GetRestaurantsForOwner(int ownerId, CancellationToken cancellationToken);
-    }
+    Task<List<RestaurantDto>> GetRestaurantsForOwner(int ownerId, CancellationToken cancellationToken);
 }

@@ -7,60 +7,59 @@ using integrationTests.Restaurants.DataMocks;
 using Microsoft.EntityFrameworkCore;
 using webapi.Controllers.Restaurants.Requests;
 
-namespace integrationTests.Restaurants
+namespace integrationTests.Restaurants;
+
+[TestFixture]
+internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTests
 {
-    [TestFixture]
-    internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTests
+    private const string _endpoint = "/api/Restaurant";
+    public RestaurantEventEmitterFailureTests() : base([ContainersCreator.Postgres])
     {
-        private const string _endpoint = "/api/Restaurant";
-        public RestaurantEventEmitterFailureTests() : base([ContainersCreator.Postgres])
-        {
-        }
+    }
 
-        [Test]
-        public async Task CreateRestaurant_ServiceBusIsNotAvailable_RestaurantSaved()
-        {
-            var request = RestaurantDataFaker.ValidRequest();
+    [Test]
+    public async Task CreateRestaurant_ServiceBusIsNotAvailable_RestaurantSaved()
+    {
+        var request = RestaurantDataFaker.ValidRequest();
 
-            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-            result.Should().NotBeNull();
-            result!.Value.Should().BeGreaterThan(0);
+        result.Should().NotBeNull();
+        result!.Value.Should().BeGreaterThan(0);
 
-            var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
-            anyRestaurants.Should().BeTrue();
-        }
+        var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
+        anyRestaurants.Should().BeTrue();
+    }
 
-        [Test]
-        public async Task CreateRestaurant_Valid_StoredInEventStore()
-        {
-            var request = RestaurantDataFaker.ValidRequest();
+    [Test]
+    public async Task CreateRestaurant_Valid_StoredInEventStore()
+    {
+        var request = RestaurantDataFaker.ValidRequest();
 
-            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-            var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
-                .Where(e => e.StreamId == result!.Value)
-                .ToListAsync();
+        var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
+            .Where(e => e.StreamId == result!.Value)
+            .ToListAsync();
 
-            events.Count.Should().Be(1);
+        events.Count.Should().Be(1);
 
-            events[0].Data.Should().BeAssignableTo<Restaurant>();
-        }
+        events[0].Data.Should().BeAssignableTo<Restaurant>();
+    }
 
-        [Test]
-        public async Task CreateRestaurant_Valid_StoredFailureInEventStore()
-        {
-            var request = RestaurantDataFaker.ValidRequest();
+    [Test]
+    public async Task CreateRestaurant_Valid_StoredFailureInEventStore()
+    {
+        var request = RestaurantDataFaker.ValidRequest();
 
-            var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-            var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
-                .Where(e => e.StreamId == result!.Value)
-                .ToListAsync();
+        var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
+            .Where(e => e.StreamId == result!.Value)
+            .ToListAsync();
 
 
-            var @event = events[0];
-            @event.HandlingStatus.Should().Be(HandlingStatus.Failed);
-        }
+        var @event = events[0];
+        @event.HandlingStatus.Should().Be(HandlingStatus.Failed);
     }
 }

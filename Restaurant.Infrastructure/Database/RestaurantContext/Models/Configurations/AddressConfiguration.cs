@@ -2,29 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace infrastructure.Database.RestaurantContext.Models.Configurations
+namespace infrastructure.Database.RestaurantContext.Models.Configurations;
+
+internal class AddressConfiguration : IEntityTypeConfiguration<Address>
 {
-    internal class AddressConfiguration : IEntityTypeConfiguration<Address>
+    public void Configure(EntityTypeBuilder<Address> builder)
     {
-        public void Configure(EntityTypeBuilder<Address> builder)
+        builder.ToTable(RestaurantDatabaseConstants.ADDRESSES, RestaurantDatabaseConstants.SCHEMA);
+        builder.Property<int>("AddressID")
+            .ValueGeneratedOnAdd();
+
+        builder.HasKey("AddressID");
+
+        builder.Property(x => x.Street)
+            .HasConversion(street => street.Value.Value, db => new Street(db));
+
+        builder.Property(x => x.City)
+            .HasConversion(city => city.Value.Value, db => new City(db));
+
+        builder.OwnsOne(a => a.Coordinates, coordinates =>
         {
-            builder.ToTable(RestaurantDatabaseConstants.ADDRESSES, RestaurantDatabaseConstants.SCHEMA);
-            builder.Property<int>("AddressID")
-                .ValueGeneratedOnAdd();
-
-            builder.HasKey("AddressID");
-
-            builder.Property(x => x.Street)
-                .HasConversion(street => street.Value.Value, db => new Street(db));
-
-            builder.Property(x => x.City)
-                .HasConversion(city => city.Value.Value, db => new City(db));
-
-            builder.OwnsOne(a => a.Coordinates, coordinates =>
-            {
-                coordinates.Property(c => c.X);
-                coordinates.Property(c => c.Y);
-            });
-        }
+            coordinates.Property(c => c.X);
+            coordinates.Property(c => c.Y);
+        });
     }
 }

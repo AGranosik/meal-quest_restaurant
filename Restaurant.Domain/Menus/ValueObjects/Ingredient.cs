@@ -2,29 +2,28 @@
 using domain.Common.BaseTypes;
 using FluentResults;
 
-namespace domain.Menus.ValueObjects
+namespace domain.Menus.ValueObjects;
+
+public sealed class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
 {
-    public sealed class Ingredient: ValueObject<Ingredient>, IEquatable<object?>
+    private Ingredient() { }
+    public static Result<Ingredient> Create(NotEmptyString name)
     {
-        private Ingredient() { }
-        public static Result<Ingredient> Create(NotEmptyString name)
-        {
-            return Result.Ok(new Ingredient(name));
-        }
+        return Result.Ok(new Ingredient(name));
+    }
 
-        private Ingredient(NotEmptyString name)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-        }
-        public NotEmptyString Name { get; }
+    private Ingredient(NotEmptyString name)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+    }
+    public NotEmptyString Name { get; }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
 
-            if (obj is not Ingredient other) return false;
-            return Name == other.Name;
-        }
+        if (obj is not Ingredient other) return false;
+        return Name == other.Name;
     }
 }

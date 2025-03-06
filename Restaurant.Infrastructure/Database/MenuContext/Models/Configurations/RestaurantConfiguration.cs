@@ -3,22 +3,21 @@ using domain.Menus.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace infrastructure.Database.MenuContext.Models.Configurations
+namespace infrastructure.Database.MenuContext.Models.Configurations;
+
+internal class RestaurantConfiguration : IEntityTypeConfiguration<RestaurantIdMenuId>
 {
-    internal class RestaurantConfiguration : IEntityTypeConfiguration<RestaurantIdMenuId>
+    public void Configure(EntityTypeBuilder<RestaurantIdMenuId> builder)
     {
-        public void Configure(EntityTypeBuilder<RestaurantIdMenuId> builder)
-        {
-            builder.ToTable(MenuDatabaseConstants.RESTAURANTS, MenuDatabaseConstants.SCHEMA);
+        builder.ToTable(MenuDatabaseConstants.RESTAURANTS, MenuDatabaseConstants.SCHEMA);
 
-            builder.HasMany<Menu>()
-                .WithOne()
-                .HasForeignKey("RestaurantID")
-                .HasConstraintName("FK_RestaurantId");
+        builder.HasMany<Menu>()
+            .WithOne()
+            .HasForeignKey("RestaurantID")
+            .HasConstraintName("FK_RestaurantId");
 
-            builder.HasKey(r => r.Value)
-                .HasName("RestaurantID");
+        builder.HasKey(r => r.Value)
+            .HasName("RestaurantID");
 
-        }
     }
 }

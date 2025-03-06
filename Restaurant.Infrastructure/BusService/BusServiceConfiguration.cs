@@ -7,26 +7,25 @@ using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace infrastructure.BusService
+namespace infrastructure.BusService;
+
+//TODO: observability & metrics for grafana of rabbitmq
+internal static class BusServiceConfiguration
 {
-    //TODO: observability & metrics for grafana of rabbitmq
-    internal static class BusServiceConfiguration
+    public const int TIMEOUT_LIMIT = 2;
+    public static IServiceCollection ConfigureBusService(this IServiceCollection services, IConfiguration configuration)
     {
-        public const int TIMEOUT_LIMIT = 2;
-        public static IServiceCollection ConfigureBusService(this IServiceCollection services, IConfiguration configuration)
+        services.AddMassTransit(x =>
         {
-            services.AddMassTransit(x =>
+            x.UsingRabbitMq((bus, cfg) =>
             {
-                x.UsingRabbitMq((bus, cfg) =>
-                {
-                    cfg.Host(configuration.GetConnectionString("rabbitmq"));
-                });
+                cfg.Host(configuration.GetConnectionString("rabbitmq"));
             });
+        });
 
-            services.AddScoped<IEventEmitter<Menu>, MenuEventEmitter>();
-            services.AddScoped<IEventEmitter<Restaurant>, RestaurantEventEmitter>();
+        services.AddScoped<IEventEmitter<Menu>, MenuEventEmitter>();
+        services.AddScoped<IEventEmitter<Restaurant>, RestaurantEventEmitter>();
 
-            return services;
-        }
+        return services;
     }
 }

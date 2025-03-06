@@ -4,46 +4,45 @@ using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentResults;
 
-namespace domain.Restaurants.Aggregates.Entities
+namespace domain.Restaurants.Aggregates.Entities;
+
+public class Menu : Entity<MenuId>
 {
-    public class Menu : Entity<MenuId>
+    public Name Name { get; }
+
+    public static Result<Menu> Create(MenuId menuId, Name name)
     {
-        public Name Name { get; }
+        var validationResult = Validation(menuId, name);
+        if (validationResult.IsFailed)
+            return validationResult;
 
-        public static Result<Menu> Create(MenuId menuId, Name name)
-        {
-            var validationResult = Validation(menuId, name);
-            if (validationResult.IsFailed)
-                return validationResult;
+        return Result.Ok(new Menu(menuId, name));
+    }
 
-            return Result.Ok(new Menu(menuId, name));
-        }
+    protected Menu() { }
 
-        protected Menu() { }
+    private Menu(MenuId menuId, Name name)
+    {
+        Id = menuId;
+        Name = name;
+    }
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
 
-        private Menu(MenuId menuId, Name name)
-        {
-            Id = menuId;
-            Name = name;
-        }
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
+        if (obj is not Menu other) return false;
+        return Id! == other.Id!;
+    }
 
-            if (obj is not Menu other) return false;
-            return Id! == other.Id!;
-        }
+    private static Result Validation(MenuId menuId, Name name)
+    {
+        if (menuId is null)
+            return Result.Fail("Menu id cannot be null.");
 
-        private static Result Validation(MenuId menuId, Name name)
-        {
-            if (menuId is null)
-                return Result.Fail("Menu id cannot be null.");
+        if (name is null)
+            return Result.Fail("Name cannot be null.");
 
-            if (name is null)
-                return Result.Fail("Name cannot be null.");
-
-            return Result.Ok();
-        }
+        return Result.Ok();
     }
 }

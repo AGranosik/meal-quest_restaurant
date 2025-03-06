@@ -1,16 +1,15 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace core.Exceptions
-{
-    public static class ArgumentExceptionExtensions
-    {
-        public static void ThrowIfNullOrEmpty<T>(IEnumerable<T> enumerable, [CallerArgumentExpression("enumerable")] string? paramName = null)
-        {
-            if (enumerable == null)
-                throw new ArgumentNullException(nameof(enumerable));
+namespace core.Exceptions;
 
-            if (!enumerable.Any())
-                throw new ArgumentException(null, nameof(paramName));
-        }
+public static class ArgumentExceptionExtensions
+{
+    public static void ThrowIfNullOrEmpty<T>(IEnumerable<T> enumerable, [CallerArgumentExpression("enumerable")] string? paramName = null)
+    {
+        if (enumerable == null)
+            throw new ArgumentNullException(nameof(enumerable));
+
+        if (!enumerable.Any())
+            throw new ArgumentException(null, nameof(paramName));
     }
 }

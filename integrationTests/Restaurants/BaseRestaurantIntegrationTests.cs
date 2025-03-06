@@ -8,43 +8,42 @@ using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Respawn.Graph;
 
-namespace integrationTests.Restaurants
+namespace integrationTests.Restaurants;
+
+internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
 {
-    internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<RestaurantDbContext>
+    protected MenuDbContext _menuDbContext;
+    protected EventDbContext _eventDbContext;
+
+    public BaseRestaurantIntegrationTests(List<IContainer> containers) : base(containers)
     {
-        protected MenuDbContext _menuDbContext;
-        protected EventDbContext _eventDbContext;
+    }
 
-        public BaseRestaurantIntegrationTests(List<IContainer> containers) : base(containers)
+    protected override async Task OneTimeSetUp()
+    {
+        await base.OneTimeSetUp();
+        _connection = _dbContext.Database.GetDbConnection();
+        await _connection.OpenAsync();
+
+        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
         {
-        }
+            DbAdapter = DbAdapter.Postgres,
+            TablesToInclude = [.. _restaurantTables, new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)],
+            SchemasToInclude =
+            [
+                "public",
+                RestaurantDatabaseConstants.SCHEMA,
+                MenuDatabaseConstants.SCHEMA
+            ]
+        });
 
-        protected override async Task OneTimeSetUp()
-        {
-            await base.OneTimeSetUp();
-            _connection = _dbContext.Database.GetDbConnection();
-            await _connection.OpenAsync();
+        _menuDbContext = await GetDifferentDbContext<MenuDbContext>();
+        _eventDbContext = await GetDifferentDbContext<EventDbContext>();
+    }
 
-            _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
-            {
-                DbAdapter = DbAdapter.Postgres,
-                TablesToInclude = [.. _restaurantTables, new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)],
-                SchemasToInclude =
-                [
-                    "public",
-                    RestaurantDatabaseConstants.SCHEMA,
-                    MenuDatabaseConstants.SCHEMA
-                ]
-            });
-
-            _menuDbContext = await GetDifferentDbContext<MenuDbContext>();
-            _eventDbContext = await GetDifferentDbContext<EventDbContext>();
-        }
-
-        public override async Task OneTimeTearDown()
-        {
-            await base.OneTimeTearDown();
-            await _connection!.DisposeAsync();
-        }
+    public override async Task OneTimeTearDown()
+    {
+        await base.OneTimeTearDown();
+        await _connection!.DisposeAsync();
     }
 }

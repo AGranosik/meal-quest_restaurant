@@ -3,24 +3,23 @@ using domain.Menus.ValueObjects.Identifiers;
 using infrastructure.Database.MenuContext.Models.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace infrastructure.Database.MenuContext
+namespace infrastructure.Database.MenuContext;
+
+internal class MenuDbContext(DbContextOptions<MenuDbContext> options) : DbContext(options)
 {
-    internal class MenuDbContext(DbContextOptions<MenuDbContext> options) : DbContext(options)
+    public DbSet<Menu> Menus { get; set; }
+    public DbSet<RestaurantIdMenuId> Restaurants { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<Menu> Menus { get; set; }
-        public DbSet<RestaurantIdMenuId> Restaurants { get; set; }
+        modelBuilder.HasDefaultSchema(MenuDatabaseConstants.SCHEMA);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema(MenuDatabaseConstants.SCHEMA);
+        modelBuilder.ApplyConfiguration(new GroupConfiguration())
+            .ApplyConfiguration(new IngredientConfiguration())
+            .ApplyConfiguration(new MealConfiguration())
+            .ApplyConfiguration(new RestaurantConfiguration())
+            .ApplyConfiguration(new MenuConfiguration());
 
-            modelBuilder.ApplyConfiguration(new GroupConfiguration())
-                .ApplyConfiguration(new IngredientConfiguration())
-                .ApplyConfiguration(new MealConfiguration())
-                .ApplyConfiguration(new RestaurantConfiguration())
-                .ApplyConfiguration(new MenuConfiguration());
-
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

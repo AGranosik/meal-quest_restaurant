@@ -1,18 +1,17 @@
-﻿namespace infrastructure.Database.MenuContext.Models.Configurations
+﻿namespace infrastructure.Database.MenuContext.Models.Configurations;
+
+public static class MenuDatabaseConstants
 {
-    public static class MenuDatabaseConstants
-    {
-        public const string SCHEMA = "menu";
+    public const string SCHEMA = "menu";
 
-        #region TABLES
-        public const string RESTAURANTS = "Restaurants";
-        public const string MENUS = "Menus";
-        public const string MEALS = "Meals";
-        public const string MEALINGREDIENTS = "MealIngredients";
-        public const string INGREDIENTS = "Ingredients";
-        public const string GROUPS = "Groups";
-        public const string GROUPMEALS = "GroupMeals";
+    #region TABLES
+    public const string RESTAURANTS = "Restaurants";
+    public const string MENUS = "Menus";
+    public const string MEALS = "Meals";
+    public const string MEALINGREDIENTS = "MealIngredients";
+    public const string INGREDIENTS = "Ingredients";
+    public const string GROUPS = "Groups";
+    public const string GROUPMEALS = "GroupMeals";
 
-        #endregion
-    }
+    #endregion
 }

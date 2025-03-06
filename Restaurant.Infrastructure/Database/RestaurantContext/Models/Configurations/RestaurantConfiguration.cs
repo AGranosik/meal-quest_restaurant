@@ -4,29 +4,28 @@ using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace infrastructure.Database.RestaurantContext.Models.Configurations
+namespace infrastructure.Database.RestaurantContext.Models.Configurations;
+
+internal class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
 {
-    internal class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
+    public void Configure(EntityTypeBuilder<Restaurant> builder)
     {
-        public void Configure(EntityTypeBuilder<Restaurant> builder)
-        {
-            builder.ToTable(RestaurantDatabaseConstants.RESTAURANTS, RestaurantDatabaseConstants.SCHEMA);
+        builder.ToTable(RestaurantDatabaseConstants.RESTAURANTS, RestaurantDatabaseConstants.SCHEMA);
 
-            builder.Property(r => r.Id)
-                .HasConversion(restaurant => restaurant!.Value, db => new RestaurantId(db))
-                .ValueGeneratedOnAdd();
+        builder.Property(r => r.Id)
+            .HasConversion(restaurant => restaurant!.Value, db => new RestaurantId(db))
+            .ValueGeneratedOnAdd();
 
-            builder.Property(r => r.Name)
-                .HasConversion(r => r.Value.Value, db => new Name(db));
+        builder.Property(r => r.Name)
+            .HasConversion(r => r.Value.Value, db => new Name(db));
 
-            builder.HasKey(r => r.Id);
+        builder.HasKey(r => r.Id);
 
-            builder.HasOne(r => r.Owner);
+        builder.HasOne(r => r.Owner);
 
-            builder.HasOne(r => r.OpeningHours);
+        builder.HasOne(r => r.OpeningHours);
 
-            builder.HasMany(r => r.Menus)
-                .WithOne();
-        }
+        builder.HasMany(r => r.Menus)
+            .WithOne();
     }
 }

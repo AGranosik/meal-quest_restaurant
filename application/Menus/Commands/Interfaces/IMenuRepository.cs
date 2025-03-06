@@ -2,11 +2,10 @@
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
 
-namespace application.Menus.Commands.Interfaces
+namespace application.Menus.Commands.Interfaces;
+
+public interface IMenuRepository
 {
-    public interface IMenuRepository
-    {
-        Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken);
-        Task CreateRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken);
-    }
+    Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken);
+    Task CreateRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken);
 }

@@ -3,27 +3,26 @@ using domain.Menus.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace infrastructure.Database.MenuContext.Models.Configurations
+namespace infrastructure.Database.MenuContext.Models.Configurations;
+
+internal class GroupConfiguration : IEntityTypeConfiguration<Group>
 {
-    internal class GroupConfiguration : IEntityTypeConfiguration<Group>
+    public void Configure(EntityTypeBuilder<Group> builder)
     {
-        public void Configure(EntityTypeBuilder<Group> builder)
-        {
-            var idName = "GroupID";
-            builder.ToTable(MenuDatabaseConstants.GROUPS, MenuDatabaseConstants.SCHEMA);
-            builder.Property<int>(idName)
-                .ValueGeneratedOnAdd();
+        var idName = "GroupID";
+        builder.ToTable(MenuDatabaseConstants.GROUPS, MenuDatabaseConstants.SCHEMA);
+        builder.Property<int>(idName)
+            .ValueGeneratedOnAdd();
 
-            builder.Property(g => g.GroupName)
-                .HasConversion(name => name.Value.Value, db => new Name(db));
+        builder.Property(g => g.GroupName)
+            .HasConversion(name => name.Value.Value, db => new Name(db));
 
-            builder.HasMany(g => g.Meals)
-                .WithMany()
-                .UsingEntity<Dictionary<string, object>>(
-                    MenuDatabaseConstants.GROUPMEALS,
-                    e => e.HasOne<Meal>().WithMany().HasForeignKey("MealID"),
-                    e => e.HasOne<Group>().WithMany().HasForeignKey("GroupID")
-                    );
-        }
+        builder.HasMany(g => g.Meals)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>(
+                MenuDatabaseConstants.GROUPMEALS,
+                e => e.HasOne<Meal>().WithMany().HasForeignKey("MealID"),
+                e => e.HasOne<Group>().WithMany().HasForeignKey("GroupID")
+            );
     }
 }
