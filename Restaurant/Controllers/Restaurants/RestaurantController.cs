@@ -9,8 +9,12 @@ using webapi.Controllers.Restaurants.Requests;
 
 namespace webapi.Controllers.Restaurants;
 
-public class RestaurantController(IMediator mediator, ILogger<RestaurantController> logger) : ApiController(mediator)
+public class RestaurantController : ApiController
 {
+    public RestaurantController(IMediator mediator, ILogger<RestaurantController> logger) : base(mediator)
+    {
+    }
+
     [HttpPost]
     [SwaggerOperation(Summary = "Create Resutarant.")]
     [SwaggerResponse(200, "", typeof(Result<RestaurantId>))]

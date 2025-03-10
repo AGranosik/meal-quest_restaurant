@@ -7,8 +7,12 @@ using webapi.Controllers.Menus.Requests;
 
 namespace webapi.Controllers.Menus;
 
-public class MenuController(IMediator mediator) : ApiController(mediator)
+public class MenuController : ApiController
 {
+    public MenuController(IMediator mediator) : base(mediator)
+    {
+    }
+
     [HttpPost]
     [SwaggerOperation(Summary = "Create menu for restaurant.")]
     [SwaggerResponse(200, "", typeof(Result<MenuId>))]
