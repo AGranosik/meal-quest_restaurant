@@ -1,6 +1,5 @@
-﻿using domain.Common.BaseTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
-using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using infrastructure.EventStorage;
 using infrastructure.EventStorage.DatabaseModels;

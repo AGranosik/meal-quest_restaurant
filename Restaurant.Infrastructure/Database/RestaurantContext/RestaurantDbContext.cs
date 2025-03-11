@@ -4,8 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext;
 
-internal class RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : DbContext(options)
+internal class RestaurantDbContext : DbContext
 {
+    public RestaurantDbContext(DbContextOptions<RestaurantDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<Restaurant> Restaurants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

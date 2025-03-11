@@ -1,16 +1,22 @@
 ﻿using application.EventHandlers.Interfaces;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using infrastructure.EventStorage.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 namespace infrastructure.EventStorage;
 
-internal class EventInfoStorage<TAggregate, TKey>(EventDbContext context) : IEventInfoStorage<TAggregate, TKey>
+internal class EventInfoStorage<TAggregate, TKey> : IEventInfoStorage<TAggregate, TKey>
     where TKey : SimpleValueType<int, TKey>
     where TAggregate : Aggregate<TKey>
 {
-    private readonly EventDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly EventDbContext _context;
     private DomainEventModel<TAggregate, TKey>? _event;
+
+    public EventInfoStorage(EventDbContext context)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
     public async Task StoreFailureAsync(int eventId, CancellationToken cancellationToken)
     {
         var @event = await GetEventAsync(eventId, cancellationToken);

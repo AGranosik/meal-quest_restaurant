@@ -25,14 +25,6 @@ public record CreateRestaurantRequest
     public CreateOwnerRequest? Owner { get; init; }
     public OpeningHoursRequest? OpeningHours { get; init; }
     public CreateAddressRequest? Address { get; init; }
-
-    public void Deconstruct(out string? Name, out CreateOwnerRequest? Owner, out OpeningHoursRequest? OpeningHours, out CreateAddressRequest? Address)
-    {
-        Name = this.Name;
-        Owner = this.Owner;
-        OpeningHours = this.OpeningHours;
-        Address = this.Address;
-    }
 }
 
 public record CreateOwnerRequest
@@ -47,13 +39,6 @@ public record CreateOwnerRequest
     public string? Name { get; init; }
     public string? Surname { get; init; }
     public CreateAddressRequest? Address { get; init; }
-
-    public void Deconstruct(out string? Name, out string? Surname, out CreateAddressRequest? Address)
-    {
-        Name = this.Name;
-        Surname = this.Surname;
-        Address = this.Address;
-    }
 }
 
 public record CreateAddressRequest
@@ -70,14 +55,6 @@ public record CreateAddressRequest
     public string? City { get; init; }
     public double XCoordinate { get; init; }
     public double YCoordinate { get; init; }
-
-    public void Deconstruct(out string? Street, out string? City, out double XCoordinate, out double YCoordinate)
-    {
-        Street = this.Street;
-        City = this.City;
-        XCoordinate = this.XCoordinate;
-        YCoordinate = this.YCoordinate;
-    }
 }
 
 public record OpeningHoursRequest
@@ -88,11 +65,6 @@ public record OpeningHoursRequest
     }
 
     public List<WorkingDayRequest> WorkingDays { get; init; }
-
-    public void Deconstruct(out List<WorkingDayRequest> WorkingDays)
-    {
-        WorkingDays = this.WorkingDays;
-    }
 }
 
 public record WorkingDayRequest
@@ -107,11 +79,4 @@ public record WorkingDayRequest
     public DayOfWeek Day { get; init; }
     public DateTime From { get; init; }
     public DateTime To { get; init; }
-
-    public void Deconstruct(out DayOfWeek Day, out DateTime From, out DateTime To)
-    {
-        Day = this.Day;
-        From = this.From;
-        To = this.To;
-    }
 }

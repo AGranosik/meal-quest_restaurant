@@ -1,6 +1,6 @@
 ﻿using application.EventHandlers.Interfaces;
 using application.Restaurants.Commands.Interfaces;
-using core.FallbackPolicies;
+using core.Operations.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using Microsoft.Extensions.Logging;
@@ -12,14 +12,18 @@ using RRestaurantId = domain.Restaurants.ValueObjects.Identifiers.RestaurantId;
 
 namespace application.EventHandlers.Menus;
 
-internal sealed class MenuChangedEventHandler(
-    IEventInfoStorage<Menu, MenuId> eventInfoStorage,
-    ILogger<AggregateChangedEventHandler<Menu, MenuId>> logger,
-    IRestaurantRepository restaurantRepository,
-    IEventEmitter<Menu> eventEmitter)
-    : AggregateChangedEventHandler<Menu, MenuId>(eventInfoStorage, logger, eventEmitter)
+internal sealed class MenuChangedEventHandler : AggregateChangedEventHandler<Menu, MenuId>
 {
-    private readonly IRestaurantRepository _restaurantRepository = restaurantRepository;
+    private readonly IRestaurantRepository _restaurantRepository;
+
+    public MenuChangedEventHandler(IEventInfoStorage<Menu, MenuId> eventInfoStorage,
+        ILogger<AggregateChangedEventHandler<Menu, MenuId>> logger,
+        IRestaurantRepository restaurantRepository,
+        IEventEmitter<Menu> eventEmitter) : base(eventInfoStorage, logger, eventEmitter)
+    {
+        _restaurantRepository = restaurantRepository;
+    }
+
     protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Menu, MenuId> notification, CancellationToken cancellationToken)
     {
         var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(

@@ -1,4 +1,4 @@
-﻿using domain.Common.BaseTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

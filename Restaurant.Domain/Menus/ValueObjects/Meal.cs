@@ -1,6 +1,6 @@
 ﻿using core.Exceptions;
 using core.Extensions;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
 

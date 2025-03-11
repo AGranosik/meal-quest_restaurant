@@ -2,6 +2,9 @@
 
 namespace domain.Restaurants.ValueObjects.Identifiers;
 
-public class MenuId(int value) : SimpleValueType<int, MenuId>(value)
+public class MenuId : SimpleValueType<int, MenuId>
 {
+    public MenuId(int value) : base(value)
+    {
+    }
 }

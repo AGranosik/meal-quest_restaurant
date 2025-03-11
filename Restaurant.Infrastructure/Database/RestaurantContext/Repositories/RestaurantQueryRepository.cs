@@ -5,9 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.RestaurantContext.Repositories;
 
-internal sealed class RestaurantQueryRepository(RestaurantDbContext dbContext) : IRestaurantQueryRepository
+internal sealed class RestaurantQueryRepository : IRestaurantQueryRepository
 {
-    private readonly RestaurantDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+    private readonly RestaurantDbContext _dbContext;
+
+    public RestaurantQueryRepository(RestaurantDbContext dbContext)
+    {
+        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+    }
 
     public Task<List<RestaurantDto>> GetRestaurantsForOwner(int ownerId, CancellationToken cancellationToken)
         => _dbContext.Restaurants

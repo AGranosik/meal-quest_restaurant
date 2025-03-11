@@ -1,7 +1,7 @@
 ﻿using application.EventHandlers;
 using application.EventHandlers.Menus;
 using application.Restaurants.Commands.Interfaces;
-using core.FallbackPolicies;
+using core.Operations.FallbackPolicies;
 using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;

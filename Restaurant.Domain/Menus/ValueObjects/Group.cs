@@ -1,11 +1,11 @@
 ﻿using core.Extensions;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using FluentResults;
 
 namespace domain.Menus.ValueObjects;
 
-public class Group : ValueObject<Group>
+public sealed class Group : ValueObject<Group>
 {
     public static Result<Group> Create(List<Meal> meals, Name groupName)
     {

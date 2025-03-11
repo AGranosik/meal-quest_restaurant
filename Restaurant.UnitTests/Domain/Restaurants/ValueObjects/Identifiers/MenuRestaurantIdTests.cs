@@ -1,5 +1,4 @@
-﻿using domain.Common.ValueTypes.Strings;
-using domain.Restaurants.ValueObjects.Identifiers;
+﻿using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
 
 namespace unitTests.Domain.Restaurants.ValueObjects.Identifiers;

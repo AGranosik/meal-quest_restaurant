@@ -1,6 +1,4 @@
-﻿using domain.Menus.Aggregates;
-
-namespace infrastructure.EventStorage.DatabaseModels.Configurations;
+﻿namespace infrastructure.EventStorage.DatabaseModels.Configurations;
 
 public static class Constants
 {

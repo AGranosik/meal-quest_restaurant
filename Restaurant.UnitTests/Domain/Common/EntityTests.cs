@@ -1,4 +1,4 @@
-﻿using domain.Common.BaseTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
 
@@ -79,8 +79,11 @@ internal class EntityTests
     }
 }
 
-internal class EntityIdUnderTests(int value) : SimpleValueType<int, EntityIdUnderTests>(value)
+internal class EntityIdUnderTests : SimpleValueType<int, EntityIdUnderTests>
 {
+    public EntityIdUnderTests(int value) : base(value)
+    {
+    }
 }
 internal class EntityUnderTests : Entity<EntityIdUnderTests>
 {

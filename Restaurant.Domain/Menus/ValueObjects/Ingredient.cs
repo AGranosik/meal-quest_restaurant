@@ -1,5 +1,5 @@
 ﻿using core.SimpleTypes;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using FluentResults;
 
 namespace domain.Menus.ValueObjects;

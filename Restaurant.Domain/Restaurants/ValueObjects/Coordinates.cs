@@ -1,11 +1,17 @@
-﻿using domain.Common.BaseTypes;
+﻿using domain.Common.DomainImplementationTypes;
 
 namespace domain.Restaurants.ValueObjects;
 
-public class Coordinates(double x, double y) : ValueObject<Coordinates>
+public class Coordinates : ValueObject<Coordinates>
 {
-    public double X { get; } = x;
-    public double Y { get; } = y;
+    public Coordinates(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public double X { get; }
+    public double Y { get; }
 
     public override bool Equals(object? obj)
     {

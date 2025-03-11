@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using application.Common.Extensions;
+﻿using application.Common.Extensions;
 using application.Menus.Commands.Interfaces;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
@@ -12,11 +11,18 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands;
 
-internal sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger) : IRequestHandler<CreateMenuCommand, Result<MenuId>>
+internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, Result<MenuId>>
 {
-    private readonly IMenuRepository _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
-    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    private readonly ILogger<CreateMenuCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IMenuRepository _menuRepository;
+    private readonly IMediator _mediator;
+    private readonly ILogger<CreateMenuCommandHandler> _logger;
+
+    public CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger)
+    {
+        _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
     public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
     {
@@ -88,7 +94,52 @@ internal sealed class CreateMenuCommandHandler(IMenuRepository menuRepository, I
     }
 }
 
-public record CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups, int RestaurantId) : IRequest<Result<MenuId>>;
-public record CreateGroupCommand(string? GroupName, List<CreateMealCommand> Meals);
-public record CreateMealCommand(string? Name, decimal Price, List<CreateIngredientCommand> Ingredients);
-public record CreateIngredientCommand(string? Name);
+public record CreateMenuCommand : IRequest<Result<MenuId>>
+{
+    public CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups, int RestaurantId)
+    {
+        this.Name = Name;
+        this.Groups = Groups;
+        this.RestaurantId = RestaurantId;
+    }
+
+    public string? Name { get; init; }
+    public List<CreateGroupCommand> Groups { get; init; }
+    public int RestaurantId { get; init; }
+}
+
+public record CreateGroupCommand
+{
+    public CreateGroupCommand(string? GroupName, List<CreateMealCommand> Meals)
+    {
+        this.GroupName = GroupName;
+        this.Meals = Meals;
+    }
+
+    public string? GroupName { get; init; }
+    public List<CreateMealCommand> Meals { get; init; }
+}
+
+public record CreateMealCommand
+{
+    public CreateMealCommand(string? Name, decimal Price, List<CreateIngredientCommand> Ingredients)
+    {
+        this.Name = Name;
+        this.Price = Price;
+        this.Ingredients = Ingredients;
+    }
+
+    public string? Name { get; init; }
+    public decimal Price { get; init; }
+    public List<CreateIngredientCommand> Ingredients { get; init; }
+}
+
+public record CreateIngredientCommand
+{
+    public CreateIngredientCommand(string? Name)
+    {
+        this.Name = Name;
+    }
+
+    public string? Name { get; init; }
+}

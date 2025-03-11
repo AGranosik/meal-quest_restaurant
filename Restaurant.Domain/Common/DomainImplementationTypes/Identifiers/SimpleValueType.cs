@@ -1,14 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using domain.Common.BaseTypes;
-
-namespace domain.Common.DomainImplementationTypes.Identifiers;
+﻿namespace domain.Common.DomainImplementationTypes.Identifiers;
 
 public abstract class SimpleValueType<TValue, TKey>: ValueObject<TKey>
 {
     public TValue Value { get; }
     protected SimpleValueType(TValue value)
     {
-        Value = value;
+        Value = value ?? throw new ArgumentNullException(nameof(value));
     }
     public override bool Equals(object? obj)
     {

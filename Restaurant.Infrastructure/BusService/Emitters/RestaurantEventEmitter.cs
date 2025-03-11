@@ -19,9 +19,14 @@ public class RestaurantChangedDto
         YAxis = restaurant.Address.Coordinates.Y;
     }
 }
-internal sealed class RestaurantEventEmitter(IPublishEndpoint publishEndpoint) : IEventEmitter<Restaurant>
+internal sealed class RestaurantEventEmitter : IEventEmitter<Restaurant>
 {
-    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    private readonly IPublishEndpoint _publishEndpoint;
+
+    public RestaurantEventEmitter(IPublishEndpoint publishEndpoint)
+    {
+        _publishEndpoint = publishEndpoint;
+    }
 
     public async Task<Result> EmitEvents(Restaurant @event, CancellationToken cancellationToken)
     {

@@ -1,7 +1,6 @@
 ﻿using application.EventHandlers;
 using application.EventHandlers.Interfaces;
-using core.FallbackPolicies;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
 using FluentResults;

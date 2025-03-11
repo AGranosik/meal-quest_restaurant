@@ -1,4 +1,4 @@
-﻿using domain.Common.BaseTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.Aggregates.Entities;

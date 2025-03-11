@@ -1,5 +1,4 @@
-﻿using domain.Common.BaseTypes;
-using domain.Common.DomainImplementationTypes;
+﻿using domain.Common.DomainImplementationTypes;
 
 namespace application.EventHandlers.Interfaces;
 

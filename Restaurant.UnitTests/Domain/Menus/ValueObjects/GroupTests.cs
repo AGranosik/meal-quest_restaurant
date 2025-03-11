@@ -3,7 +3,7 @@ using domain.Common.ValueTypes.Strings;
 using domain.Menus.ValueObjects;
 using FluentAssertions;
 
-namespace unitTests.Domain.Menus.ValueObejcts;
+namespace unitTests.Domain.Menus.ValueObjects;
 
 [TestFixture]
 public class GroupTests

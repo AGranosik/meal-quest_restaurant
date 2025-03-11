@@ -1,10 +1,10 @@
 ﻿using FluentResults;
 using core.Extensions;
-using domain.Common.BaseTypes;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Menus.ValueObjects;
 using domain.Common.ValueTypes.Strings;
 using System.Text.Json.Serialization;
+using domain.Common.DomainImplementationTypes;
 
 namespace domain.Menus.Aggregates;
 

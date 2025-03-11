@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
-using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using integrationTests.Common;
 using integrationTests.Restaurants.DataMocks;

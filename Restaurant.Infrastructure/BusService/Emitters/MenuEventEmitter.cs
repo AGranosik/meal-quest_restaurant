@@ -15,9 +15,14 @@ internal class MenuChangedDto
     }
 }
 
-internal sealed class MenuEventEmitter(IPublishEndpoint publishEndpoint) : IEventEmitter<Menu>
+internal sealed class MenuEventEmitter : IEventEmitter<Menu>
 {
-    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+    private readonly IPublishEndpoint _publishEndpoint;
+
+    public MenuEventEmitter(IPublishEndpoint publishEndpoint)
+    {
+        _publishEndpoint = publishEndpoint;
+    }
 
     public async Task<Result> EmitEvents(Menu @event, CancellationToken cancellationToken)
     {

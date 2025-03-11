@@ -1,8 +1,7 @@
-﻿
-using domain.Menus.ValueObjects.Identifiers;
+﻿using domain.Menus.ValueObjects.Identifiers;
 using FluentAssertions;
 
-namespace unitTests.Domain.Menus.ValueObejcts.Identifiers;
+namespace unitTests.Domain.Menus.ValueObjects.Identifiers;
 
 [TestFixture]
 public class MenuIdTests

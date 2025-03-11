@@ -1,10 +1,8 @@
 ﻿using application;
 using infrastructure;
-using infrastructure.Database;
 using infrastructure.Database.MenuContext;
 using infrastructure.Database.RestaurantContext;
 using infrastructure.EventStorage;
-using infrastructure.Observability;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

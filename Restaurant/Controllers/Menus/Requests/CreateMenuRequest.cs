@@ -31,13 +31,6 @@ public record CreateMenuRequest
     public string? Name { get; init; }
     public List<CreateGroupRequest> Groups { get; init; }
     public int RestaurantId { get; init; }
-
-    public void Deconstruct(out string? Name, out List<CreateGroupRequest> Groups, out int RestaurantId)
-    {
-        Name = this.Name;
-        Groups = this.Groups;
-        RestaurantId = this.RestaurantId;
-    }
 }
 
 public record CreateGroupRequest
@@ -50,12 +43,6 @@ public record CreateGroupRequest
 
     public string? Name { get; init; }
     public List<CreateMealRequest> Meals { get; init; }
-
-    public void Deconstruct(out string? Name, out List<CreateMealRequest> Meals)
-    {
-        Name = this.Name;
-        Meals = this.Meals;
-    }
 }
 
 public record CreateMealRequest
@@ -70,13 +57,6 @@ public record CreateMealRequest
     public string? Name { get; init; }
     public decimal Price { get; init; }
     public List<CreateIngredientRequest> Ingredients { get; init; }
-
-    public void Deconstruct(out string? Name, out decimal Price, out List<CreateIngredientRequest> Ingredients)
-    {
-        Name = this.Name;
-        Price = this.Price;
-        Ingredients = this.Ingredients;
-    }
 }
 
 public record CreateIngredientRequest
@@ -87,9 +67,4 @@ public record CreateIngredientRequest
     }
 
     public string? Name { get; init; }
-
-    public void Deconstruct(out string? Name)
-    {
-        Name = this.Name;
-    }
 }

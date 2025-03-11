@@ -1,5 +1,5 @@
 ﻿using application.EventHandlers;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using MediatR;
 using Microsoft.Extensions.Logging;

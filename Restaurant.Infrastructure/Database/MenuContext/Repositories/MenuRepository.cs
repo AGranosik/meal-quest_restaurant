@@ -7,9 +7,14 @@ using Microsoft.EntityFrameworkCore;
 namespace infrastructure.Database.MenuContext.Repositories;
 
 // TODO: SHould not throw on the same menu 
-internal class MenuRepository(MenuDbContext context) : IMenuRepository
+internal class MenuRepository : IMenuRepository
 {
-    private readonly MenuDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly MenuDbContext _context;
+
+    public MenuRepository(MenuDbContext context)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
     public async Task CreateRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken)
     {

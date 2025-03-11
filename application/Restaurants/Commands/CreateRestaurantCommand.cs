@@ -12,11 +12,18 @@ using Microsoft.Extensions.Logging;
 namespace application.Restaurants.Commands;
 
 //TODO: reduce mappings
-internal sealed class CreateRestaurantCommandHandler(IRestaurantRepository repository, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger) : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
+internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
 {
-    private readonly IRestaurantRepository _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    private readonly ILogger<CreateRestaurantCommandHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IRestaurantRepository _repository;
+    private readonly IMediator _mediator;
+    private readonly ILogger<CreateRestaurantCommandHandler> _logger;
+
+    public CreateRestaurantCommandHandler(IRestaurantRepository repository, IMediator mediator, ILogger<CreateRestaurantCommandHandler> logger)
+    {
+        _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
     public async Task<Result<RestaurantId>> Handle(CreateRestaurantCommand request, CancellationToken cancellationToken)
     {
@@ -126,12 +133,72 @@ internal sealed class CreateRestaurantCommandHandler(IRestaurantRepository repos
 }
 
 
-public record CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours, CreateAddressCommand? Address) : IRequest<Result<RestaurantId>>;
+public record CreateRestaurantCommand : IRequest<Result<RestaurantId>>
+{
+    public CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours, CreateAddressCommand? Address)
+    {
+        this.Name = Name;
+        this.Owner = Owner;
+        this.OpeningHours = OpeningHours;
+        this.Address = Address;
+    }
 
-public record CreateOwnerCommand(string? Name, string? Surname, CreateAddressCommand? Address);
+    public string? Name { get; init; }
+    public CreateOwnerCommand? Owner { get; init; }
+    public OpeningHoursCommand? OpeningHours { get; init; }
+    public CreateAddressCommand? Address { get; init; }
+}
 
-public record CreateAddressCommand (string? Street, string? City, double XCoordinate, double YCoordinate);
+public record CreateOwnerCommand
+{
+    public CreateOwnerCommand(string? Name, string? Surname, CreateAddressCommand? Address)
+    {
+        this.Name = Name;
+        this.Surname = Surname;
+        this.Address = Address;
+    }
 
-public record OpeningHoursCommand(List<WorkingDayCommand> WorkingDays);
+    public string? Name { get; init; }
+    public string? Surname { get; init; }
+    public CreateAddressCommand? Address { get; init; }
+}
 
-public record  WorkingDayCommand(DayOfWeek Day, DateTime From, DateTime To);
+public record CreateAddressCommand
+{
+    public CreateAddressCommand(string? Street, string? City, double XCoordinate, double YCoordinate)
+    {
+        this.Street = Street;
+        this.City = City;
+        this.XCoordinate = XCoordinate;
+        this.YCoordinate = YCoordinate;
+    }
+
+    public string? Street { get; init; }
+    public string? City { get; init; }
+    public double XCoordinate { get; init; }
+    public double YCoordinate { get; init; }
+}
+
+public record OpeningHoursCommand
+{
+    public OpeningHoursCommand(List<WorkingDayCommand> WorkingDays)
+    {
+        this.WorkingDays = WorkingDays;
+    }
+
+    public List<WorkingDayCommand> WorkingDays { get; init; }
+}
+
+public record  WorkingDayCommand
+{
+    public WorkingDayCommand(DayOfWeek Day, DateTime From, DateTime To)
+    {
+        this.Day = Day;
+        this.From = From;
+        this.To = To;
+    }
+
+    public DayOfWeek Day { get; init; }
+    public DateTime From { get; init; }
+    public DateTime To { get; init; }
+}

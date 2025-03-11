@@ -1,5 +1,5 @@
 ﻿using core.Extensions;
-using domain.Common.BaseTypes;
+using domain.Common.DomainImplementationTypes;
 using FluentResults;
 
 namespace domain.Restaurants.ValueObjects;

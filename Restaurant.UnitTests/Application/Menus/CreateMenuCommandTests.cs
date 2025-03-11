@@ -1,6 +1,5 @@
 ﻿using application.Menus.Commands;
 using application.Menus.Commands.Interfaces;
-using Castle.Core.Logging;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,4 @@
-﻿using domain.Common.BaseTypes;
-using domain.Common.ValueTypes.Numeric;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects;

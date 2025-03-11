@@ -1,7 +1,6 @@
-﻿using System.Text.Json;
-using application.EventHandlers.Interfaces;
-using core.FallbackPolicies;
-using domain.Common.BaseTypes;
+﻿using application.EventHandlers.Interfaces;
+using core.Operations.FallbackPolicies;
+using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -9,9 +8,17 @@ using Polly;
 
 namespace application.EventHandlers;
 
-internal record AggregateChangedEvent<TAggregate, TKey>(TAggregate Aggregate) : INotification
+internal record AggregateChangedEvent<TAggregate, TKey> : INotification
     where TKey : SimpleValueType<int, TKey>
-    where TAggregate : Aggregate<TKey>;
+    where TAggregate : Aggregate<TKey>
+{
+    public AggregateChangedEvent(TAggregate Aggregate)
+    {
+        this.Aggregate = Aggregate;
+    }
+
+    public TAggregate Aggregate { get; init; }
+}
 
 internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotificationHandler<AggregateChangedEvent<TAggregate, TKey>>
     where TKey : SimpleValueType<int, TKey>

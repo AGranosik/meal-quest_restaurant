@@ -1,6 +1,6 @@
 ﻿using application.EventHandlers.Interfaces;
 using application.Menus.Commands.Interfaces;
-using core.FallbackPolicies;
+using core.Operations.FallbackPolicies;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -9,14 +9,17 @@ using Polly;
 
 namespace application.EventHandlers.Restaurants;
 
-internal sealed class RestaurantChangedEventHandler
-(IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage,
-    ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger,
-    IEventEmitter<Restaurant> eventEmitter,
-    IMenuRepository menuRepository)
-    : AggregateChangedEventHandler<Restaurant, RestaurantId>(eventInfoStorage, logger, eventEmitter)
+internal sealed class RestaurantChangedEventHandler : AggregateChangedEventHandler<Restaurant, RestaurantId>
 {
-    private readonly IMenuRepository _menuRepository = menuRepository;
+    private readonly IMenuRepository _menuRepository;
+
+    public RestaurantChangedEventHandler(IEventInfoStorage<Restaurant, RestaurantId> eventInfoStorage,
+        ILogger<AggregateChangedEventHandler<Restaurant, RestaurantId>> logger,
+        IEventEmitter<Restaurant> eventEmitter,
+        IMenuRepository menuRepository) : base(eventInfoStorage, logger, eventEmitter)
+    {
+        _menuRepository = menuRepository;
+    }
 
     protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
     {

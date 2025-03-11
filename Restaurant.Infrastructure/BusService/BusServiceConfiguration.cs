@@ -3,7 +3,6 @@ using domain.Menus.Aggregates;
 using domain.Restaurants.Aggregates;
 using infrastructure.BusService.Emitters;
 using MassTransit;
-using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

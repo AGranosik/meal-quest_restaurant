@@ -1,4 +1,4 @@
-﻿using core.FallbackPolicies;
+﻿using core.Operations.FallbackPolicies;
 using Moq;
 
 namespace sharedTests.MocksExtensions;

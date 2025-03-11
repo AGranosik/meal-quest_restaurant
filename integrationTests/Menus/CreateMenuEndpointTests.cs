@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using domain.Menus.Aggregates;
-using DotNet.Testcontainers.Containers;
 using FluentAssertions;
 using infrastructure.EventStorage.DatabaseModels;
 using integrationTests.Common;

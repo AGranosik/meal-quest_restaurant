@@ -1,7 +1,7 @@
-﻿using Polly.Retry;
-using Polly;
+﻿using Polly;
+using Polly.Retry;
 
-namespace core.FallbackPolicies;
+namespace core.Operations.FallbackPolicies;
 
 public static class FallbackRetryPolicies
 {

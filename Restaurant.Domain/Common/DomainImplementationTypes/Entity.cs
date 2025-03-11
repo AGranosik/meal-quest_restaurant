@@ -1,6 +1,4 @@
-﻿using domain.Common.DomainImplementationTypes;
-
-namespace domain.Common.BaseTypes;
+﻿namespace domain.Common.DomainImplementationTypes;
 
 public abstract class Entity<TKey>
     where TKey : ValueObject<TKey>

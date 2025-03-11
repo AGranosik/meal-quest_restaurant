@@ -1,5 +1,4 @@
-﻿using domain.Common.BaseTypes;
-using domain.Common.DomainImplementationTypes;
+﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;

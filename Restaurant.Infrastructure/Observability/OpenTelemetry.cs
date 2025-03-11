@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
-using OpenTelemetry.Logs;
 
 
 namespace infrastructure.Observability;

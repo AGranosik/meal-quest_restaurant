@@ -1,4 +1,4 @@
-﻿namespace domain.Common.BaseTypes;
+﻿namespace domain.Common.DomainImplementationTypes;
 
 public abstract class ValueObject<T>
 {
