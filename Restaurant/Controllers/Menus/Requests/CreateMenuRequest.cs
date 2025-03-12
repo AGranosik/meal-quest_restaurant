@@ -1,14 +1,15 @@
 ﻿using application.Menus.Commands;
+using domain.Menus.ValueObjects;
 
 namespace webapi.Controllers.Menus.Requests;
 
-public record CreateMenuRequest
+public sealed class CreateMenuRequest
 {
-    public CreateMenuRequest(string? Name, List<CreateGroupRequest> Groups, int RestaurantId)
+    public CreateMenuRequest(string? name, List<string> categories, List<CreateGroupRequest> groups, int restaurantId)
     {
-        this.Name = Name;
-        this.Groups = Groups;
-        this.RestaurantId = RestaurantId;
+        Name = name;
+        Groups = groups;
+        RestaurantId = restaurantId;
     }
 
     public CreateMenuCommand CastToCommand()
@@ -25,12 +26,16 @@ public record CreateMenuRequest
             groups.Add(groupCommand);
         }
 
-        return new CreateMenuCommand(Name, groups, RestaurantId);
+        var categories = Categories.Select(c => new CreateCategoryCommand(c)).ToList();
+
+        return new CreateMenuCommand(Name, categories,  groups, RestaurantId);
     }
 
     public string? Name { get; init; }
     public List<CreateGroupRequest> Groups { get; init; }
     public int RestaurantId { get; init; }
+    public List<string> Categories { get; init; }
+    
 }
 
 public record CreateGroupRequest
