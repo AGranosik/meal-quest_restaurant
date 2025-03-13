@@ -4,6 +4,7 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using sharedTests.DataFakers;
 
 namespace unitTests.Application.Menus;
 
@@ -79,7 +80,32 @@ internal class CreateMenuCommandTests
         var result = await handler.Handle(new CreateMenuCommand(null,
         [
             new CreateGroupCommand(null, [
-                new(null, 0, null!)
+                new(null, 0, null!, null!)
+            ])
+        ], default), CancellationToken.None);
+        result.IsFailed.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task Creation_CategoriesCannotBeNull_Fail()
+    {
+        var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
+        var result = await handler.Handle(new CreateMenuCommand(null,
+        [
+            new CreateGroupCommand(null, [
+                new(null, 0, [new CreateIngredientCommand("test")], null!)
+            ])
+        ], default), CancellationToken.None);
+        result.IsFailed.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task Creation_NameCannotBeNull_Fail()
+    {
+        var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
+        var result = await handler.Handle(new CreateMenuCommand(null, [
+            new CreateGroupCommand(null, [
+                new(null, 1, [new CreateIngredientCommand("test")], [new CreateCategoryCommand("cat")])
             ])
         ], default), CancellationToken.None);
         result.IsFailed.Should().BeTrue();

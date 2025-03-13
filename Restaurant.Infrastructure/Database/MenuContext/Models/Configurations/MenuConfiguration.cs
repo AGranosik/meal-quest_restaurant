@@ -10,7 +10,7 @@ internal class MenuConfiguration : IEntityTypeConfiguration<Menu>
 {
     public void Configure(EntityTypeBuilder<Menu> builder)
     {
-        builder.ToTable(MenuDatabaseConstants.MENUS, MenuDatabaseConstants.SCHEMA);
+        builder.ToTable(MenuDatabaseConstants.Menus, MenuDatabaseConstants.Schema);
 
         builder.Property(m => m.Id)
             .HasConversion(id => id!.Value, db => new MenuId(db))

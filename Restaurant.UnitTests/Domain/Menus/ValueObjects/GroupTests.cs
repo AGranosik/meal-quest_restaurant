@@ -21,10 +21,11 @@ public class GroupTests
             Ingredient.Create("test2").Value,
             Ingredient.Create("test3").Value,
         ];
+        
         _validMeals = [
-            new Meal(_validIngredients.Take(1).ToList(), new Price(20), new Name("test")),
-            new Meal(_validIngredients.Skip(1).Take(1).ToList(), new Price(20), new Name("test")),
-            new Meal(_validIngredients.Skip(2).Take(1).ToList(), new Price(20), new Name("test")),
+            new Meal(_validIngredients.Take(1).ToList(), [new Category("1")], new Price(20), new Name("test")),
+            new Meal(_validIngredients.Skip(1).Take(1).ToList(),[new Category("1"), new Category("2")], new Price(20), new Name("test")),
+            new Meal(_validIngredients.Skip(2).Take(1).ToList(),[new Category("3")], new Price(20), new Name("test")),
         ];
 
         _validName = new Name("test");

@@ -5,7 +5,7 @@ namespace webapi.Controllers.Menus.Requests;
 
 public sealed class CreateMenuRequest
 {
-    public CreateMenuRequest(string? name, List<string> categories, List<CreateGroupRequest> groups, int restaurantId)
+    public CreateMenuRequest(string? name, List<CreateGroupRequest> groups, int restaurantId)
     {
         Name = name;
         Groups = groups;
@@ -19,22 +19,24 @@ public sealed class CreateMenuRequest
         {
             var meals = new List<CreateMealCommand>(group.Meals.Count);
 
-            foreach(var meal in group.Meals)
-                meals.Add(new CreateMealCommand(meal.Name, meal.Price, meal.Ingredients.Select(i => new CreateIngredientCommand(i.Name)).ToList()));
+            foreach (var meal in group.Meals)
+            {
+                var categories = meal.Categories.Select(c => new CreateCategoryCommand(c)).ToList();
+                meals.Add(new CreateMealCommand(meal.Name, meal.Price,
+                    meal.Ingredients.Select(i => new CreateIngredientCommand(i.Name)).ToList(),
+                    categories));
+            }
 
             var groupCommand = new CreateGroupCommand(group.Name, meals);
             groups.Add(groupCommand);
         }
 
-        var categories = Categories.Select(c => new CreateCategoryCommand(c)).ToList();
-
-        return new CreateMenuCommand(Name, categories,  groups, RestaurantId);
+        return new CreateMenuCommand(Name,  groups, RestaurantId);
     }
 
     public string? Name { get; init; }
     public List<CreateGroupRequest> Groups { get; init; }
     public int RestaurantId { get; init; }
-    public List<string> Categories { get; init; }
     
 }
 
@@ -50,18 +52,20 @@ public record CreateGroupRequest
     public List<CreateMealRequest> Meals { get; init; }
 }
 
-public record CreateMealRequest
+public sealed class CreateMealRequest
 {
-    public CreateMealRequest(string? Name, decimal Price, List<CreateIngredientRequest> Ingredients)
+    public CreateMealRequest(string? name, decimal price, List<CreateIngredientRequest> ingredients, List<string> categories)
     {
-        this.Name = Name;
-        this.Price = Price;
-        this.Ingredients = Ingredients;
+        Name = name;
+        Price = price;
+        Ingredients = ingredients;
+        Categories = categories;
     }
 
     public string? Name { get; init; }
     public decimal Price { get; init; }
     public List<CreateIngredientRequest> Ingredients { get; init; }
+    public List<string> Categories { get; init; }
 }
 
 public record CreateIngredientRequest

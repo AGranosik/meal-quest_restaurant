@@ -21,6 +21,9 @@ public static class MenuDataFaker
     public static Name ValidName
         => new("test");
 
+    public static List<Category> ValidCategories
+        => [new Category("Restaurant"), new Category("Meal")];
+    
     public static List<Group> ValidGroups
         =>
         [
@@ -29,14 +32,18 @@ public static class MenuDataFaker
                 new(
                 [
                     Ingredient.Create("test").Value
-                ], new Price(20), new Name("test"))
+                ],
+                new List<Category>(){new Category("cat1"),  new Category("cat2")}
+                , new Price(20), new Name("test"))
             ], new Name("hehe")).Value,
             Group.Create(
             [
                 new(
                 [
                     Ingredient.Create("test2").Value
-                ], new Price(20), new Name("test2"))
+                ],
+                new List<Category>(){new Category("cat3"),  new Category("cat2")},
+                new Price(20), new Name("test2"))
             ], new Name("hehe2")).Value
         ];
 

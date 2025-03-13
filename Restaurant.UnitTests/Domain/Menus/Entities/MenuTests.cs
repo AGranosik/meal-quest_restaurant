@@ -14,14 +14,16 @@ public class MenuTests
     private List<Group> _validGroups;
     private Name _validName;
     private RestaurantIdMenuId _validRestaurantId;
+    private List<Category> _validCategories;
 
     [SetUp]
     public void SetUp()
     {
         _validName = MenuDataFaker.ValidName;
         _validGroups = MenuDataFaker.ValidGroups;
-
         _validRestaurantId = MenuDataFaker.ValidRestaurant;
+        _validCategories = MenuDataFaker.ValidCategories;
+        
     }
 
     [Test]
@@ -33,14 +35,14 @@ public class MenuTests
     [Test]
     public void Creation_GroupsCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(null!, null!, null!);
+        var result = Menu.Create(null!,null!, null!);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_GroupsCannotBeEmpty_FailureResult()
     {
-        var result = Menu.Create([], null!, null!);
+        var result = Menu.Create([],null!, null!);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -48,14 +50,21 @@ public class MenuTests
     public void Creation_GroupsHaveToBeUnique_FailureResult()
     {
         var group = _validGroups[0];
-        var result = Menu.Create([group, group], null!, null!);
+        var result = Menu.Create([group, group],null!, null!);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
+    public void Creation_CategoriesCannotBeNull_FailureResult()
+    {
+        var result = Menu.Create(_validGroups,null!, null!);
+        result.IsFailed.Should().BeTrue();
+    }
+    
+    [Test]
     public void Creation_NameCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(_validGroups, null!, null!);
+        var result = Menu.Create(_validGroups,null!, null!);
         result.IsFailed.Should().BeTrue();
     }
 

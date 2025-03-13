@@ -11,13 +11,15 @@ public sealed class Meal : ValueObject<Meal>
     public List<Ingredient>? Ingredients { get; }
     public Price? Price { get; }
     public Name? Name { get; }
+    public List<Category> Categories { get; }
 
-    public Meal(List<Ingredient> ingredients, Price price, Name name)
+    public Meal(List<Ingredient> ingredients, List<Category> categories, Price price, Name name)
     {
-        CreationValidation(ingredients, price, name);
+        CreationValidation(ingredients, categories, price, name);
         Ingredients = ingredients;
         Price = price;
         Name = name;
+        Categories = categories;
     }
 
     private Meal() { }
@@ -34,13 +36,19 @@ public sealed class Meal : ValueObject<Meal>
                && Name! == other.Name!;
     }
 
-    private static void CreationValidation(List<Ingredient> ingredients, Price price, Name name)
+    private static void CreationValidation(List<Ingredient> ingredients, List<Category> categories, Price price, Name name)
     {
         ArgumentNullException.ThrowIfNull(price);
         ArgumentExceptionExtensions.ThrowIfNullOrEmpty(ingredients);
         if(!ingredients.HasUniqueValues())
             throw new ArgumentException("Not unique values for ingredients.");
 
+        ArgumentExceptionExtensions.ThrowIfNullOrEmpty(categories);
+        if(!categories.HasUniqueValues())
+            throw new ArgumentException("Not unique values for categories.");
+        
         ArgumentNullException.ThrowIfNull(name);
+        
+        
     }
 }

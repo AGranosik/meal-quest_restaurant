@@ -9,7 +9,7 @@ namespace integrationTests.Menus.DataMocks;
 
 internal static class MenuDataFaker
 {
-    internal static List<CreateMenuRequest> ValidRequests(int numberOfMenus, int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId)
+    internal static List<CreateMenuRequest> ValidRequests(int numberOfMenus, int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId, int numberOfCategories)
     {
         var result = new List<CreateMenuRequest>(numberOfMenus);
         for(var m = 0; m < numberOfMenus; m++)
@@ -27,11 +27,18 @@ internal static class MenuDataFaker
                     {
                         ingredients.Add(new CreateIngredientRequest("ingredient" + i));
                     }
-                    meals.Add(new CreateMealRequest("meal" + mealI, mealI + 1, ingredients));
+
+                    var categories = new List<string>(numberOfCategories);
+                    for (var i = 0; i < numberOfCategories; i++)
+                    {
+                        categories.Add(i.ToString());
+                    }
+                    meals.Add(new CreateMealRequest("meal" + mealI, mealI + 1, ingredients, categories));
                 }
 
                 groups.Add(new CreateGroupRequest("group" + g, meals));
             }
+            
             result.Add(new CreateMenuRequest("Menu" + m, groups, restaurantId));
         }
 

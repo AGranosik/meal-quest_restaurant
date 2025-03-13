@@ -28,12 +28,12 @@ internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<Re
         _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = [.. _restaurantTables, new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)],
+            TablesToInclude = [.. _restaurantTables, new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants)],
             SchemasToInclude =
             [
                 "public",
                 RestaurantDatabaseConstants.SCHEMA,
-                MenuDatabaseConstants.SCHEMA
+                MenuDatabaseConstants.Schema
             ]
         });
 

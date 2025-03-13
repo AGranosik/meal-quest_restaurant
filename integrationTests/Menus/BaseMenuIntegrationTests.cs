@@ -32,7 +32,7 @@ internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbCo
             [
                 "public",
                 RestaurantDatabaseConstants.SCHEMA,
-                MenuDatabaseConstants.SCHEMA
+                MenuDatabaseConstants.Schema
             ]
         });
 

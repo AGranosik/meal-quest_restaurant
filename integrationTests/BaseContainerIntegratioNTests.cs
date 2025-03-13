@@ -32,11 +32,11 @@ internal class BaseContainerIntegrationTests<TDbContext>
 
     protected Table[] _MenuTables =
     [
-        new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.GROUPS),
-        new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.INGREDIENTS),
-        new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.MEALS),
-        new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.MENUS),
-        new Table(MenuDatabaseConstants.SCHEMA, MenuDatabaseConstants.RESTAURANTS)
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Groups),
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Ingredients),
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Meals),
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Menus),
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants)
     ];
 
     public BaseContainerIntegrationTests(List<IContainer> containers)

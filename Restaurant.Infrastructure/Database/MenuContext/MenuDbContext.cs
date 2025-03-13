@@ -16,7 +16,7 @@ internal class MenuDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(MenuDatabaseConstants.SCHEMA);
+        modelBuilder.HasDefaultSchema(MenuDatabaseConstants.Schema);
 
         modelBuilder.ApplyConfiguration(new GroupConfiguration())
             .ApplyConfiguration(new IngredientConfiguration())

@@ -11,7 +11,7 @@ internal class MealConfiguration : IEntityTypeConfiguration<Meal>
     public void Configure(EntityTypeBuilder<Meal> builder)
     {
         var idName = "MealID";
-        builder.ToTable(MenuDatabaseConstants.MEALS, MenuDatabaseConstants.SCHEMA);
+        builder.ToTable(MenuDatabaseConstants.Meals, MenuDatabaseConstants.Schema);
         builder.Property<int>(idName)
             .ValueGeneratedOnAdd();
 
@@ -26,7 +26,7 @@ internal class MealConfiguration : IEntityTypeConfiguration<Meal>
         builder.HasMany<Ingredient>("Ingredients")
             .WithMany()
             .UsingEntity<Dictionary<string, object>>(
-                MenuDatabaseConstants.MEALINGREDIENTS,
+                MenuDatabaseConstants.MealIngredients,
                 e => e.HasOne<Ingredient>().WithMany().HasForeignKey("MealID"),
                 e => e.HasOne<Meal>().WithMany().HasForeignKey("GroupID")
             );

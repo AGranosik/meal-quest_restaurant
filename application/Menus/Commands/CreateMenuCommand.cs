@@ -48,13 +48,22 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
         if (groups is null || !groups.Any())
             return Result.Fail("Groups cannot be null.");
 
+        
         var meals = groups.Where(g => g.Meals is not null).SelectMany(g => g.Meals).ToList();
         if (meals.Count == 0)
             return Result.Fail("Meals cannot be null.");
 
+        
         var ingredients = meals.Where(m => m.Ingredients is not null).SelectMany(m => m.Ingredients).ToList();
         if (ingredients.Count == 0)
             return Result.Fail("Ingredients cannot be null.");
+
+        var categories = meals.Where(m => m.Categories is not null).SelectMany(m => m.Categories).ToList();
+        if (categories.Count == 0)
+            return Result.Fail("Categories cannot be null.");
+
+        if (string.IsNullOrEmpty(command.Name))
+            return Result.Fail("Menu name cannot be empty.");
 
         return Result.Ok();
     }
@@ -70,7 +79,8 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
             foreach(var commandMeal in commandGroup.Meals)
             {
                 var ingriedients = new List<Ingredient>(commandMeal.Ingredients.Count);
-
+                var categories = commandMeal.Categories.Select(c => new Category(c.Name)).ToList();
+                
                 foreach(var commandIngredient in commandMeal.Ingredients)
                 {
                     var domainIngredient = Ingredient.Create(commandIngredient.Name!);
@@ -78,7 +88,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
                         return domainIngredient.ToResult();
                     ingriedients.Add(domainIngredient.Value);
                 }
-                meals.Add(new Meal(ingriedients, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
+                meals.Add(new Meal(ingriedients, categories, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
             }
             var group = Group.Create(meals, new Name(commandGroup.GroupName!));
             if(group.IsFailed)
@@ -86,6 +96,8 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
 
             groups.Add(group.Value);
         }
+        // var categories = command.Categories.Select(c => new Category(c.Name)).ToList();
+        
         var menu = Menu.Create(groups, new Name(command.Name!), new RestaurantIdMenuId(command.RestaurantId));
         if (menu.IsFailed)
             return menu.ToResult();
@@ -94,18 +106,19 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
     }
 }
 
-public record CreateMenuCommand : IRequest<Result<MenuId>>
+public sealed class CreateMenuCommand : IRequest<Result<MenuId>>
 {
-    public CreateMenuCommand(string? Name, List<CreateGroupCommand> Groups, int RestaurantId)
+    public CreateMenuCommand(string? name, List<CreateGroupCommand> groups, int restaurantId)
     {
-        this.Name = Name;
-        this.Groups = Groups;
-        this.RestaurantId = RestaurantId;
+        Name = name;
+        Groups = groups;
+        RestaurantId = restaurantId;
     }
 
     public string? Name { get; init; }
     public List<CreateGroupCommand> Groups { get; init; }
     public int RestaurantId { get; init; }
+    public List<CreateCategoryCommand> Categories { get; set; }
 }
 
 public record CreateGroupCommand
@@ -120,26 +133,38 @@ public record CreateGroupCommand
     public List<CreateMealCommand> Meals { get; init; }
 }
 
-public record CreateMealCommand
+public sealed class CreateMealCommand
 {
-    public CreateMealCommand(string? Name, decimal Price, List<CreateIngredientCommand> Ingredients)
-    {
-        this.Name = Name;
-        this.Price = Price;
-        this.Ingredients = Ingredients;
-    }
+    public string? Name { get; }
+    public decimal Price { get; }
+    public List<CreateIngredientCommand> Ingredients { get; }
+    public List<CreateCategoryCommand> Categories { get; }
 
-    public string? Name { get; init; }
-    public decimal Price { get; init; }
-    public List<CreateIngredientCommand> Ingredients { get; init; }
+    public CreateMealCommand(string? name, decimal price, List<CreateIngredientCommand> ingredients, List<CreateCategoryCommand> categories)
+    {
+        Name = name;
+        Price = price;
+        Ingredients = ingredients;
+        Categories = categories;
+    }
 }
 
-public record CreateIngredientCommand
+public sealed class CreateIngredientCommand
 {
-    public CreateIngredientCommand(string? Name)
-    {
-        this.Name = Name;
-    }
+    public string? Name { get; }
 
-    public string? Name { get; init; }
+    public CreateIngredientCommand(string? name)
+    {
+        Name = name;
+    }
+}
+
+public sealed class CreateCategoryCommand
+{
+    public string Name { get; }
+
+    public CreateCategoryCommand(string name)
+    {
+        Name = name;
+    }
 }

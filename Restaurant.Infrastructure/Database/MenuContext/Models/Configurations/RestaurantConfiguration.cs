@@ -9,7 +9,7 @@ internal class RestaurantConfiguration : IEntityTypeConfiguration<RestaurantIdMe
 {
     public void Configure(EntityTypeBuilder<RestaurantIdMenuId> builder)
     {
-        builder.ToTable(MenuDatabaseConstants.RESTAURANTS, MenuDatabaseConstants.SCHEMA);
+        builder.ToTable(MenuDatabaseConstants.Restaurants, MenuDatabaseConstants.Schema);
 
         builder.HasMany<Menu>()
             .WithOne()

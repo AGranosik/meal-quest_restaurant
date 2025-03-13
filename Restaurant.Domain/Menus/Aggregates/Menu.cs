@@ -19,7 +19,7 @@ public sealed class Menu : Aggregate<MenuId>
         Restaurant = restaurant;
     }
 
-    public static Result<Menu> Create(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
+    public static Result<Menu> Create(List<Group> groups,Name name, RestaurantIdMenuId restaurant)
     {
         var validatioNResult = CreationValidation(groups, restaurant);
         if (validatioNResult.IsFailed)

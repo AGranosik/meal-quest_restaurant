@@ -59,7 +59,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
             SchemasToInclude =
             [
                 "public",
-                MenuDatabaseConstants.SCHEMA
+                MenuDatabaseConstants.Schema
             ]
         });
     }
