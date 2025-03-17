@@ -9,7 +9,7 @@ internal class IngredientConfiguration : IEntityTypeConfiguration<Ingredient>
 {
     public void Configure(EntityTypeBuilder<Ingredient> builder)
     {
-        var idName = "IngredientID";
+        const string idName = "IngredientID";
         builder.ToTable(MenuDatabaseConstants.Ingredients, MenuDatabaseConstants.Schema);
         builder.Property<int>(idName)
             .ValueGeneratedOnAdd();

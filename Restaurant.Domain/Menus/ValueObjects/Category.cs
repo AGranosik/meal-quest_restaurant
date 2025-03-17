@@ -5,7 +5,7 @@ using FluentResults;
 
 namespace domain.Menus.ValueObjects;
 
-public sealed class Category : SimpleValueType<NotEmptyString, Category>
+public class Category : SimpleValueType<NotEmptyString, Category>
 {
     public Category(NotEmptyString value) : base(value)
     {

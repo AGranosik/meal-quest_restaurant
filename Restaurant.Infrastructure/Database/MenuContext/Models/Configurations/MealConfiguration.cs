@@ -10,7 +10,7 @@ internal class MealConfiguration : IEntityTypeConfiguration<Meal>
 {
     public void Configure(EntityTypeBuilder<Meal> builder)
     {
-        var idName = "MealID";
+        const string idName = "MealID";
         builder.ToTable(MenuDatabaseConstants.Meals, MenuDatabaseConstants.Schema);
         builder.Property<int>(idName)
             .ValueGeneratedOnAdd();
@@ -23,12 +23,20 @@ internal class MealConfiguration : IEntityTypeConfiguration<Meal>
         builder.Property(m => m.Name)
             .HasConversion(name => name!.Value.Value, db => new Name(db));
 
-        builder.HasMany<Ingredient>("Ingredients")
+        builder.HasMany<Ingredient>(MenuDatabaseConstants.Ingredients)
             .WithMany()
             .UsingEntity<Dictionary<string, object>>(
                 MenuDatabaseConstants.MealIngredients,
-                e => e.HasOne<Ingredient>().WithMany().HasForeignKey("MealID"),
+                e => e.HasOne<Ingredient>().WithMany().HasForeignKey(idName),
                 e => e.HasOne<Meal>().WithMany().HasForeignKey("GroupID")
             );
+
+        builder.HasMany<Category>(MenuDatabaseConstants.Categories)
+            .WithMany()
+            .UsingEntity<Dictionary<string, object>>(
+                MenuDatabaseConstants.MealCategories,
+                e => e.HasOne<Category>().WithMany().HasForeignKey(idName),
+                e => e.HasOne<Meal>().WithMany().HasForeignKey("CategoryID")
+                );
     }
 }

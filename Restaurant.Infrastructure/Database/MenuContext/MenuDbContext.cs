@@ -22,6 +22,7 @@ internal class MenuDbContext : DbContext
             .ApplyConfiguration(new IngredientConfiguration())
             .ApplyConfiguration(new MealConfiguration())
             .ApplyConfiguration(new RestaurantConfiguration())
+            .ApplyConfiguration(new CategoryConfiguration())
             .ApplyConfiguration(new MenuConfiguration());
 
         base.OnModelCreating(modelBuilder);

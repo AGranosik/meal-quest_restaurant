@@ -7,11 +7,9 @@ namespace infrastructure.Database.MenuContext.Models.Configurations;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
-
-
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        var idName = "CategoryID";
+        const string idName = "CategoryID";
         builder.ToTable(MenuDatabaseConstants.Categories, MenuDatabaseConstants.Schema);
         builder.Property<int>(idName)
             .ValueGeneratedOnAdd();

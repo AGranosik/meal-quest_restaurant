@@ -13,6 +13,7 @@ public static class MenuDatabaseConstants
     public const string Groups = "Groups";
     public const string GroupMeals = "GroupMeals";
     public const string Categories = "Categories";
+    public const string MealCategories = "MealCategories";
 
     #endregion
 }
