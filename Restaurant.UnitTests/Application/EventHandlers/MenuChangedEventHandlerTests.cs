@@ -58,7 +58,7 @@ internal class MenuChangedEventHandlerTests : AggregateChangedEventHandlerTests<
     }
 
     protected override AggregateChangedEventHandler<domain.Menus.Aggregates.Menu, domain.Menus.ValueObjects.Identifiers.MenuId> CreateHandler()
-        => new MenuChangedEventHandler(_eventInfoStorage.Object, _loggerMock.Object, _restaurantRepository.Object, _emitterMock.Object);
+        => new MenuChangedEventHandler(EventInfoStorage.Object, LoggerMock.Object, _restaurantRepository.Object, EmitterMock.Object);
 
     protected override AggregateChangedEvent<domain.Menus.Aggregates.Menu, domain.Menus.ValueObjects.Identifiers.MenuId> CreateValidEvent()
         => new(MenuDataFaker.ValidMenu());

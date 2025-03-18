@@ -8,10 +8,12 @@ namespace infrastructure.BusService.Emitters;
 [EntityName("menus.changes")]
 internal class MenuChangedDto
 {
-    public string Name { get; set; }
+    public Menu Menu { get; init; }
+    public int RestaurantId { get; set; }
     internal MenuChangedDto(Menu menu)
     {
-        Name = menu.Name.Value.Value;
+        Menu =  menu;
+        RestaurantId = menu.Restaurant.Value;
     }
 }
 

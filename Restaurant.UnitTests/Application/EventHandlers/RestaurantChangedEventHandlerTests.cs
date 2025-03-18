@@ -52,7 +52,7 @@ internal class RestaurantChangedEventHandlerTests : AggregateChangedEventHandler
 
 
     protected override AggregateChangedEventHandler<Restaurant, RestaurantId> CreateHandler()
-        => new RestaurantChangedEventHandler(_eventInfoStorage.Object, _loggerMock.Object, _emitterMock.Object, _menuRepositoryMock.Object);
+        => new RestaurantChangedEventHandler(EventInfoStorage.Object, LoggerMock.Object, EmitterMock.Object, _menuRepositoryMock.Object);
 
     protected override AggregateChangedEvent<Restaurant, RestaurantId> CreateValidEvent()
         => new(RestaurantDataFaker.ValidRestaurant());

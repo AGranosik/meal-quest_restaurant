@@ -16,17 +16,17 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
     where TKey : SimpleValueType<int, TKey>
     where TAggregate : Aggregate<TKey>
 {
-    protected Mock<IEventInfoStorage<TAggregate, TKey>> _eventInfoStorage;
-    protected Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>> _loggerMock;
-    protected Mock<IEventEmitter<TAggregate>> _emitterMock;
-    protected int _eventId;
+    protected Mock<IEventInfoStorage<TAggregate, TKey>> EventInfoStorage;
+    protected Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>> LoggerMock;
+    protected Mock<IEventEmitter<TAggregate>> EmitterMock;
+    protected int EventId;
 
     [SetUp]
     public virtual void SetUp()
     {
-        _eventInfoStorage = new Mock<IEventInfoStorage<TAggregate, TKey>>();
-        _loggerMock = new Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>>();
-        _emitterMock = new Mock<IEventEmitter<TAggregate>>();
+        EventInfoStorage = new Mock<IEventInfoStorage<TAggregate, TKey>>();
+        LoggerMock = new Mock<ILogger<AggregateChangedEventHandler<TAggregate, TKey>>>();
+        EmitterMock = new Mock<IEventEmitter<TAggregate>>();
     }
 
     [Test]
@@ -48,14 +48,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         var action = () => handler.Handle(notification, CancellationToken.None);
 
         await action.Should().NotThrowAsync();
-        _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
+        EventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test]
     public async Task PednigState_Failed_RetryPolicyApplied()
     {
         var notification = CreateValidEvent();
-        _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new MockedException());
         EventEmitterConfigurationSuccess();
 
@@ -63,14 +63,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         var action = () => handler.Handle(notification, CancellationToken.None);
 
         await action.Should().NotThrowAsync();
-        _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
+        EventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
     }
 
     [Test]
     public async Task PednigState_Failed_MessageLogged()
     {
         var notification = CreateValidEvent();
-        _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new MockedException());
         MockLogger();
         EventEmitterConfigurationSuccess();
@@ -79,7 +79,7 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         var action = () => handler.Handle(notification, CancellationToken.None);
 
         await action.Should().NotThrowAsync();
-        _eventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
+        EventInfoStorage.Verify(e => e.StorePendingEventAsync(It.Is<TAggregate>(x => x.Id!.Value == notification.Aggregate.Id!.Value), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
         CheckIfLoggedError();
     }
 
@@ -91,14 +91,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         ConfigureSuccessfulProcessing();
         EventEmitterConfigurationSuccess();
 
-        _eventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        _eventInfoStorage.Verify(e => e.StoreSuccessAsyncAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), Times.Once());
+        EventInfoStorage.Verify(e => e.StoreSuccessAsyncAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test]
@@ -108,14 +108,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         EventStoragePendingConfigurationSuccess();
         ConfigureSuccessfulProcessing();
         EventEmitterConfigurationSuccess();
-        _eventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreSuccessAsyncAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new MockedException());
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        _eventInfoStorage.Verify(e => e.StoreSuccessAsyncAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
+        EventInfoStorage.Verify(e => e.StoreSuccessAsyncAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
         CheckIfLoggedError();
     }
 
@@ -126,14 +126,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         EventStoragePendingConfigurationSuccess();
         ConfigureFailureProcessing();
         EventEmitterConfigurationSuccess();
-        _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        _eventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), Times.Once());
+        EventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test]
@@ -143,14 +143,14 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         EventStoragePendingConfigurationSuccess();
         ConfigureFailureProcessing();
         EventEmitterConfigurationSuccess();
-        _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        _eventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
+        EventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
         CheckIfLoggedError(2);
     }
 
@@ -162,15 +162,15 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         ConfigureSuccessfulProcessing();
         EventEmitterConfigurationFailure();
 
-        _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
-        _emitterMock.Verify(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()));
+        EmitterMock.Verify(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()));
 
-        _eventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), Times.Once());
+        EventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test]
@@ -181,15 +181,15 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
         ConfigureSuccessfulProcessing();
         EventEmitterConfigurationFailure();
 
-        _eventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        EventInfoStorage.Setup(e => e.StoreFailureAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception());
 
         var handler = CreateHandler();
         var action = () => handler.Handle(notification, CancellationToken.None);
         await action.Should().NotThrowAsync();
-        _emitterMock.Verify(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()));
+        EmitterMock.Verify(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()));
 
-        _eventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == _eventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
+        EventInfoStorage.Verify(e => e.StoreFailureAsync(It.Is<int>(id => id == EventId), It.IsAny<CancellationToken>()), RetryPolicyExtensions.NumberOfAppRetries());
     }
 
     protected abstract AggregateChangedEventHandler<TAggregate, TKey> CreateHandler();
@@ -199,29 +199,29 @@ internal abstract class AggregateChangedEventHandlerTests<TAggregate, TKey>
 
     protected virtual void MockLogger()
     {
-        _loggerMock.Setup(l => l.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()));
+        LoggerMock.Setup(l => l.Log(It.IsAny<LogLevel>(), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()));
     }
 
     protected void CheckIfLoggedError(int numberOfTimes = 1)
     {
-        _loggerMock.Verify(l => l.Log(It.Is<LogLevel>(lvl => lvl == LogLevel.Error), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Exactly(numberOfTimes));
+        LoggerMock.Verify(l => l.Log(It.Is<LogLevel>(lvl => lvl == LogLevel.Error), It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception?, string>>()), Times.Exactly(numberOfTimes));
     }
 
     protected void EventStoragePendingConfigurationSuccess()
     {
-        _eventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(_eventId);
+        EventInfoStorage.Setup(e => e.StorePendingEventAsync(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(EventId);
     }
 
     protected void EventEmitterConfigurationSuccess()
     {
-        _emitterMock.Setup(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+        EmitterMock.Setup(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result.Ok());
     }
 
     protected void EventEmitterConfigurationFailure()
     {
-        _emitterMock.Setup(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
+        EmitterMock.Setup(e => e.EmitEvents(It.IsAny<TAggregate>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result.Fail("Mock failed."));
     }
 }
