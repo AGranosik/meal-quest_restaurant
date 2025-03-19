@@ -1,5 +1,10 @@
-﻿using MediatR;
+﻿using domain.Restaurants.ValueObjects.Identifiers;
+using FluentResults;
+using infrastructure.Database.RestaurantContext;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using webapi.Controllers.Menus.Requests;
 using webapi.Controllers.Restaurants;
 using webapi.Controllers.Restaurants.Requests;
 
@@ -10,6 +15,7 @@ public class DataSeed
     // use controller
     private readonly IMediator _mediator;
     private readonly ILogger<RestaurantController> _logger;
+    private readonly RestaurantDbContext _restaurantContext;
     public DataSeed(IMediator mediator, ILogger<RestaurantController> logger)
     {
         _mediator = mediator;
@@ -18,13 +24,18 @@ public class DataSeed
 
 
 
-    public async Task Seed()
+    public async Task SeedRestaurants()
     {
         var controller = new RestaurantController(_mediator, _logger);
         var restaurants = GenerateRestaurants(10000);
         foreach(var restaurant in restaurants)
         {
-            await controller.CreateRestaurantAsync(restaurant, CancellationToken.None);
+            var result = await controller.CreateRestaurantAsync(restaurant, CancellationToken.None);
+            var okResult = result as OkObjectResult;
+            var data = okResult.Value as Result<RestaurantId>;
+            var restaurantId = data.Value;
+
+            var menus = CreateMenus(10, restaurantId.Value);
         }
     }
 
@@ -46,15 +57,65 @@ public class DataSeed
                 .Select(d => new WorkingDayRequest((DayOfWeek)d, new DateTime(2020, 12, 12, openingHours[i%openingHours.Count], 00, 00), new DateTime(2020, 12, 12, closingHours[i%closingHours.Count], 00, 00))).ToList();
             var openinghours = new OpeningHoursRequest(openDays);
             result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress));
-
-
         }
 
         return result;
     }
 
+    private static List<CreateMenuRequest> CreateMenus(int n, int restaurantId)
+    {
+        Random rand = new();
+        const int groupsPerMenu = 100;
+        const int mealsPerGroup = 80;
+        const string menuName = "menu-name-seed";
+        const string groupName = "group-name-seed";
+        const string mealName = "meal-name-seed";
+        const string categoryName = "cat-";
+        
+        var ingredients = Enumerable.Range(0, 1000)
+            .Select(i => new CreateIngredientRequest($"ingredient-{i}")).ToList();
+
+
+        var categories = Enumerable.Range(0, 1000)
+            .Select(i => $"{categoryName}{i}").ToList();
+        var menus  = new List<CreateMenuRequest>(n);
+        var groups = new List<CreateGroupRequest>(groupsPerMenu);
+        var meals = new List<CreateMealRequest>(mealsPerGroup);
+        
+        for (int i = 0; i < n; i++)
+        {
+            var name = menuName + i;
+            groups.Clear();
+            for (var j = 0; j < groupsPerMenu; j++)
+            {
+                meals.Clear();
+                for (var k = 0; k < mealsPerGroup; k++)
+                {
+                    var meal = new CreateMealRequest(
+                        mealName + i + j + k, 
+                        (decimal)rand.NextDouble(),
+                        GetRandomNumbersOfElements(ingredients, rand, 30),
+                        GetRandomNumbersOfElements(categories, rand, 12));
+                    
+                    meals.Add(meal);
+                }
+                var group = new CreateGroupRequest(groupName + i + j, meals);
+                groups.Add(group);
+            }
+            
+            menus.Add(new CreateMenuRequest(name, groups, restaurantId));
+        }
+        
+        return  menus;
+    }
+
     static double GetRandomDouble(Random random, double min, double max)
     {
         return min + (random.NextDouble() * (max - min));
+    }
+
+    static List<T> GetRandomNumbersOfElements<T>(List<T> source, Random random, int numberOfElements)
+    {
+        return source.OrderBy(x => random.Next()).Take(Math.Min(numberOfElements, source.Count)).ToList();
     }
 }

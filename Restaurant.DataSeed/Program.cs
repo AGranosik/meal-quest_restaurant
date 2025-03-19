@@ -37,4 +37,4 @@ await menuDbContext.Database.MigrateAsync();
 
 var seed = new DataSeed(mediator, NullLoggerFactory.Instance.CreateLogger<RestaurantController>());
 
-await seed.Seed();
+await seed.SeedRestaurants();
