@@ -14,7 +14,7 @@ internal class RestaurantConfiguration : IEntityTypeConfiguration<RestaurantIdMe
         builder.HasMany<Menu>()
             .WithOne()
             .HasForeignKey("RestaurantID")
-            .HasConstraintName("FK_RestaurantId");
+            .HasConstraintName(cd ..);
 
         builder.HasKey(r => r.Value)
             .HasName("RestaurantID");

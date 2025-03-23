@@ -18,7 +18,10 @@ internal class MenuConfiguration : IEntityTypeConfiguration<Menu>
 
         builder.HasKey(m => m.Id);
 
-        builder.Ignore(m => m.Restaurant);
+        builder.HasOne<RestaurantIdMenuId>()
+            .WithMany()
+            .HasForeignKey("RestaurantID")
+            .HasConstraintName("FK_RestaurantId");
 
         builder.Property(m => m.Name)
             .HasConversion(name => name.Value.Value, db => new Name(db));

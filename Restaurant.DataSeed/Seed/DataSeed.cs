@@ -4,6 +4,7 @@ using infrastructure.Database.RestaurantContext;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using webapi.Controllers.Menus;
 using webapi.Controllers.Menus.Requests;
 using webapi.Controllers.Restaurants;
 using webapi.Controllers.Restaurants.Requests;
@@ -26,16 +27,21 @@ public class DataSeed
 
     public async Task SeedRestaurants()
     {
-        var controller = new RestaurantController(_mediator, _logger);
+        var restaurantController = new RestaurantController(_mediator, _logger);
+        var menuController = new MenuController(_mediator);
         var restaurants = GenerateRestaurants(10000);
         foreach(var restaurant in restaurants)
         {
-            var result = await controller.CreateRestaurantAsync(restaurant, CancellationToken.None);
+            var result = await restaurantController.CreateRestaurantAsync(restaurant, CancellationToken.None);
             var okResult = result as OkObjectResult;
-            var data = okResult.Value as Result<RestaurantId>;
+            var data = okResult.Value as RestaurantId;
             var restaurantId = data.Value;
 
-            var menus = CreateMenus(10, restaurantId.Value);
+            var menus = CreateMenus(10, restaurantId);
+            foreach (var menu in menus)
+            {
+                await menuController.CreateMenuAsync(menu, CancellationToken.None);
+            }
         }
     }
 
@@ -93,7 +99,7 @@ public class DataSeed
                 {
                     var meal = new CreateMealRequest(
                         mealName + i + j + k, 
-                        (decimal)rand.NextDouble(),
+                        2,
                         GetRandomNumbersOfElements(ingredients, rand, 30),
                         GetRandomNumbersOfElements(categories, rand, 12));
                     
