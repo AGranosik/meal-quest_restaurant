@@ -5,7 +5,7 @@ using FluentResults;
 
 namespace domain.Restaurants.Aggregates.Entities;
 
-public class Menu : Entity<MenuId>
+public sealed class Menu : Entity<MenuId>
 {
     public Name Name { get; }
 

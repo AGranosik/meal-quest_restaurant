@@ -13,7 +13,7 @@ public class MenuTests
 {
     private List<Group> _validGroups;
     private Name _validName;
-    private RestaurantIdMenuId _validRestaurantId;
+    private MenuRestaurant _validRestaurant;
     private List<Category> _validCategories;
 
     [SetUp]
@@ -21,7 +21,7 @@ public class MenuTests
     {
         _validName = MenuDataFaker.ValidName;
         _validGroups = MenuDataFaker.ValidGroups;
-        _validRestaurantId = MenuDataFaker.ValidRestaurant;
+        _validRestaurant = MenuDataFaker.ValidRestaurant;
         _validCategories = MenuDataFaker.ValidCategories;
         
     }
@@ -78,14 +78,14 @@ public class MenuTests
     [Test]
     public void Creation_SuccessResult()
     {
-        var menu = Menu.Create(_validGroups, _validName, _validRestaurantId);
+        var menu = Menu.Create(_validGroups, _validName, _validRestaurant);
         menu.IsSuccess.Should().BeTrue();
     }
 
     [Test]
     public void Equality_SameReference_True()
     {
-        var menu = Menu.Create(_validGroups, _validName, _validRestaurantId).Value;
+        var menu = Menu.Create(_validGroups, _validName, _validRestaurant).Value;
         (menu == menu).Should().BeTrue();
     }
 

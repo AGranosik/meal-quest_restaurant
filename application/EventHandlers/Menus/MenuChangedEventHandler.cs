@@ -31,7 +31,7 @@ internal sealed class MenuChangedEventHandler : AggregateChangedEventHandler<Men
                 RestaurantMenu.Create(
                     new RestaurantMenuId(notification.Aggregate.Id!.Value),
                     notification.Aggregate.Name!).Value,
-                new RRestaurantId(notification.Aggregate.Restaurant!.Value), cancellationToken));
+                new RRestaurantId(notification.Aggregate.Restaurant!.Id!.Value), cancellationToken));
 
         if (policyResult.Outcome == OutcomeType.Successful)
             return true;

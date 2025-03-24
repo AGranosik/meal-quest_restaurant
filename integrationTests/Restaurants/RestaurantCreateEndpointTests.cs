@@ -73,7 +73,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
         var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         var menuDb = await _menuDbContext.Restaurants
-            .Where(r => r.Value == result!.Value)
+            .Where(r => r.Id!.Value == result!.Value)
             .ToListAsync();
 
         menuDb.Count.Should().Be(1);

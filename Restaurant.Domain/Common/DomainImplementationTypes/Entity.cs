@@ -5,13 +5,17 @@ public abstract class Entity<TKey>
 {
     protected Entity() { }
 
+    protected Entity(TKey id)
+    {
+        SetId(id);
+    }
     public TKey? Id { get; protected set; }
 
     public void SetId(TKey id)
     {
         Id = id ?? throw new ArgumentNullException(nameof(id));
     }
-
+    
     #region Equality
     public override bool Equals(object? obj)
     {

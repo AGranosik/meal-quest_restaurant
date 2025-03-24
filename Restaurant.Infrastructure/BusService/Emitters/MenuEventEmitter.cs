@@ -13,7 +13,7 @@ internal class MenuChangedDto
     internal MenuChangedDto(Menu menu)
     {
         Menu =  menu;
-        RestaurantId = menu.Restaurant.Value;
+        RestaurantId = menu.Restaurant.Id!.Value;
     }
 }
 

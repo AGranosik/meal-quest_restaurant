@@ -8,13 +8,13 @@ namespace sharedTests.DataFakers;
 
 public static class MenuDataFaker
 {
-    public const int RESTAURANT_ID = 2;
-    public const int MENU_ID = 1;
+    public const int RestaurantId = 2;
+    public const int MenuId = 1;
 
     public static Menu ValidMenu()
     {
         var menu = Menu.Create(ValidGroups, ValidName, ValidRestaurant).Value;
-        menu.SetId(new MenuId(MENU_ID));
+        menu.SetId(new MenuId(MenuId));
         return menu;
     }
 
@@ -47,6 +47,6 @@ public static class MenuDataFaker
             ], new Name("hehe2")).Value
         ];
 
-    public static RestaurantIdMenuId ValidRestaurant
-        => new(RESTAURANT_ID);
+    public static MenuRestaurant ValidRestaurant
+        => new(new RestaurantIdMenuId(RestaurantId));
 }

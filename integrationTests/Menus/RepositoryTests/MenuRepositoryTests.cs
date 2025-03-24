@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using domain.Menus.ValueObjects;
+using FluentAssertions;
 using infrastructure.Database.MenuContext;
 using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.MenuContext.Repositories;
@@ -21,10 +22,10 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     {
         var restuarantId = 1;
         var repo = CreateRepository();
-        var action = () => repo.CreateRestaurantAsync(new RestaurantIdMenuId(restuarantId), CancellationToken.None);
+        var action = () => repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        var dbRestuarant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Value == restuarantId);
+        var dbRestuarant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id!.Value == restuarantId);
         dbRestuarant.Should().NotBeNull();
     }
 
@@ -33,9 +34,9 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     {
         var restuarantId = 1;
         var repo = CreateRepository();
-        await repo.CreateRestaurantAsync(new RestaurantIdMenuId(restuarantId), CancellationToken.None);
+        await repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
 
-        var action = () => repo.CreateRestaurantAsync(new RestaurantIdMenuId(restuarantId), CancellationToken.None);
+        var action = () => repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
         await action.Should().NotThrowAsync();
     }
 

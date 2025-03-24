@@ -1,4 +1,5 @@
 ﻿using domain.Menus.Aggregates;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using infrastructure.Database.MenuContext.Models.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ internal class MenuDbContext : DbContext
     }
 
     public DbSet<Menu> Menus { get; set; }
-    public DbSet<RestaurantIdMenuId> Restaurants { get; set; }
+    public DbSet<MenuRestaurant> Restaurants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

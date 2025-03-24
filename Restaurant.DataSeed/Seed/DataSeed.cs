@@ -30,8 +30,10 @@ public class DataSeed
         var restaurantController = new RestaurantController(_mediator, _logger);
         var menuController = new MenuController(_mediator);
         var restaurants = GenerateRestaurants(10000);
+        int i = 0;
         foreach(var restaurant in restaurants)
         {
+            i++;
             var result = await restaurantController.CreateRestaurantAsync(restaurant, CancellationToken.None);
             var okResult = result as OkObjectResult;
             var data = okResult.Value as RestaurantId;
@@ -42,6 +44,8 @@ public class DataSeed
             {
                 await menuController.CreateMenuAsync(menu, CancellationToken.None);
             }
+
+            Console.WriteLine($"Restaurant: {i}");
         }
     }
 

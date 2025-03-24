@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.ValueObjects.Identifiers;
 using infrastructure.Database.MenuContext;
@@ -45,12 +46,12 @@ internal static class MenuDataFaker
         return result;
     }
 
-    internal static List<RestaurantIdMenuId> Restaurants(int numberOfRestaurants)
+    private static List<MenuRestaurant> Restaurants(int numberOfRestaurants)
     {
-        var result = new List<RestaurantIdMenuId>(numberOfRestaurants);
+        var result = new List<MenuRestaurant>(numberOfRestaurants);
         for(var i = 1; i <= numberOfRestaurants; i++)
         {
-            result.Add(new RestaurantIdMenuId(i));
+            result.Add(new MenuRestaurant(new RestaurantIdMenuId(i)));
         }
         return result;
     }
@@ -64,7 +65,7 @@ internal static class MenuDataFaker
         return ApiResponseDeserializator.Deserialize<RestaurantId>(resultString)!;
     }
 
-    internal static async Task<List<RestaurantIdMenuId>> CreateRestaurantsAsync(MenuDbContext dbContext, int numberOfRestaurants)
+    internal static async Task<List<MenuRestaurant>> CreateRestaurantsAsync(MenuDbContext dbContext, int numberOfRestaurants)
     {
         var restaurants = Restaurants(numberOfRestaurants);
         dbContext.Restaurants.AddRange(restaurants);

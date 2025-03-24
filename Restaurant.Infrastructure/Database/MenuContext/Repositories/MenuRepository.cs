@@ -1,5 +1,6 @@
 ﻿using application.Menus.Commands.Interfaces;
 using domain.Menus.Aggregates;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +17,15 @@ internal class MenuRepository : IMenuRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task CreateRestaurantAsync(RestaurantIdMenuId restaurant, CancellationToken cancellationToken)
+    public async Task CreateRestaurantAsync(MenuRestaurant restaurant, CancellationToken cancellationToken)
     {
-        var exists = await _context.Restaurants.AnyAsync(r => r.Value == restaurant.Value, cancellationToken);
-        if (exists)
-            return;
-
         _context.Restaurants.Add(restaurant);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
     {
+        _context.Restaurants.Attach(menu.Restaurant);
         _context.Menus.Add(menu);
         await _context.SaveChangesAsync(cancellationToken);
         return menu.Id!;

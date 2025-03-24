@@ -12,14 +12,14 @@ public sealed class Menu : Aggregate<MenuId>
 {
     [JsonConstructor]
     private Menu() { }
-    private Menu(List<Group> groups, Name name, RestaurantIdMenuId restaurant)
+    private Menu(List<Group> groups, Name name, MenuRestaurant restaurant)
     {
         Groups = groups;
         Name = name;
         Restaurant = restaurant;
     }
 
-    public static Result<Menu> Create(List<Group> groups,Name name, RestaurantIdMenuId restaurant)
+    public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant restaurant)
     {
         var validatioNResult = CreationValidation(groups, restaurant);
         if (validatioNResult.IsFailed)
@@ -30,9 +30,9 @@ public sealed class Menu : Aggregate<MenuId>
     }
     public Name Name { get; }
     public List<Group> Groups { get; }
-    public RestaurantIdMenuId Restaurant { get; }
+    public MenuRestaurant Restaurant { get; }
 
-    private static Result CreationValidation(List<Group> groups, RestaurantIdMenuId restaurantId)
+    private static Result CreationValidation(List<Group> groups, MenuRestaurant restaurantId)
     {
         if (groups is null || groups.Count == 0)
             return Result.Fail("Groups are missing.");

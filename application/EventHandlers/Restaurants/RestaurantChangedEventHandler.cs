@@ -1,6 +1,7 @@
 ﻿using application.EventHandlers.Interfaces;
 using application.Menus.Commands.Interfaces;
 using core.Operations.FallbackPolicies;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
@@ -24,7 +25,7 @@ internal sealed class RestaurantChangedEventHandler : AggregateChangedEventHandl
     protected override async Task<bool> ProcessEventAsync(AggregateChangedEvent<Restaurant, RestaurantId> notification, CancellationToken cancellationToken)
     {
         var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
-            () => _menuRepository.CreateRestaurantAsync(new RestaurantIdMenuId(notification.Aggregate.Id!.Value), cancellationToken));
+            () => _menuRepository.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(notification.Aggregate.Id!.Value)), cancellationToken));
 
         if (policyResult.Outcome == OutcomeType.Successful)
             return true;

@@ -21,7 +21,7 @@ internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
     public async Task CreateMenu_ServiceBusIsNotAvailable_MenuSaved()
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
-        var restaurantId = restaurants[0].Value;
+        var restaurantId = restaurants[0].Id!.Value;
         var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10)[0], CancellationToken.None);
 
         result.Should().NotBeNull();
@@ -32,7 +32,7 @@ internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
     public async Task CreateMenu_Valid_StoredInEventStore()
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
-        var restaurantId = restaurants[0].Value;
+        var restaurantId = restaurants[0].Id!.Value;
         var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10)[0], CancellationToken.None);
 
         var events = await _eventDbContext.GetDbSet<Menu, MenuMenuId>()
@@ -47,7 +47,7 @@ internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
     public async Task CreateMenu_Valid_StoredFailureInEventStore()
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
-        var restaurantId = restaurants[0].Value;
+        var restaurantId = restaurants[0].Id!.Value;
         var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10)[0], CancellationToken.None);
 
         var events = await _eventDbContext.GetDbSet<Menu, MenuMenuId>()

@@ -98,7 +98,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
         }
         // var categories = command.Categories.Select(c => new Category(c.Name)).ToList();
         
-        var menu = Menu.Create(groups, new Name(command.Name!), new RestaurantIdMenuId(command.RestaurantId));
+        var menu = Menu.Create(groups, new Name(command.Name!), new MenuRestaurant(new RestaurantIdMenuId(command.RestaurantId)));
         if (menu.IsFailed)
             return menu.ToResult();
 

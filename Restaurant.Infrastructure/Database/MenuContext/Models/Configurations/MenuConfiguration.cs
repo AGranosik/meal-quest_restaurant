@@ -1,5 +1,6 @@
 ﻿using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,10 +19,13 @@ internal class MenuConfiguration : IEntityTypeConfiguration<Menu>
 
         builder.HasKey(m => m.Id);
 
-        builder.HasOne<RestaurantIdMenuId>()
-            .WithMany()
-            .HasForeignKey("RestaurantID")
-            .HasConstraintName("FK_RestaurantId");
+        builder.Property(m => m.Restaurant)
+            .HasConversion(r => r.Id!.Value, db => new MenuRestaurant(new RestaurantIdMenuId(db)))
+            .HasColumnName("RestaurantID");
+        
+        // builder.Property(m => m.Restaurant)
+        //     .HasConversion(r => r.Value, db => new RestaurantIdMenuId(db));
+        
 
         builder.Property(m => m.Name)
             .HasConversion(name => name.Value.Value, db => new Name(db));

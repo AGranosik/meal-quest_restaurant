@@ -34,7 +34,7 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     public async Task CreateMenu_Valid_Created()
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
-        var restaurantId = restaurants[0].Value;
+        var restaurantId = restaurants[0].Id!.Value;
         var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10)[0], CancellationToken.None);
 
         result.Should().NotBeNull();
