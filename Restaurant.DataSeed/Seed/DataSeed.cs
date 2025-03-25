@@ -30,7 +30,7 @@ public class DataSeed
         var restaurantController = new RestaurantController(_mediator, _logger);
         var menuController = new MenuController(_mediator);
         var restaurants = GenerateRestaurants(10000);
-        int i = 0;
+        var i = 0;
         foreach(var restaurant in restaurants)
         {
             i++;
@@ -56,6 +56,7 @@ public class DataSeed
     private static List<CreateRestaurantRequest> GenerateRestaurants(int n)
     {
         Random rand = new();
+        //move it 
         var result = new List<CreateRestaurantRequest>(n);
         var openingHours = new List<short> { 6, 7, 8, 9 };
         var closingHours = new List<short> { 20, 21, 22, 23 };
@@ -75,17 +76,16 @@ public class DataSeed
     private static List<CreateMenuRequest> CreateMenus(int n, int restaurantId)
     {
         Random rand = new();
-        const int groupsPerMenu = 100;
-        const int mealsPerGroup = 80;
-        const string menuName = "menu-name-seed";
-        const string groupName = "group-name-seed";
-        const string mealName = "meal-name-seed";
+        const int groupsPerMenu = 10;
+        const int mealsPerGroup = 25;
+        const string menuName = "menu-name-seed-";
+        const string groupName = "group-name-seed-";
+        const string mealName = "meal-name-seed-";
         const string categoryName = "cat-";
         
         var ingredients = Enumerable.Range(0, 1000)
             .Select(i => new CreateIngredientRequest($"ingredient-{i}")).ToList();
-
-
+        
         var categories = Enumerable.Range(0, 1000)
             .Select(i => $"{categoryName}{i}").ToList();
         var menus  = new List<CreateMenuRequest>(n);
@@ -94,7 +94,7 @@ public class DataSeed
         
         for (int i = 0; i < n; i++)
         {
-            var name = menuName + i;
+            var name = restaurantId + menuName + i;
             groups.Clear();
             for (var j = 0; j < groupsPerMenu; j++)
             {
@@ -102,30 +102,28 @@ public class DataSeed
                 for (var k = 0; k < mealsPerGroup; k++)
                 {
                     var meal = new CreateMealRequest(
-                        mealName + i + j + k, 
+                        name + mealName + i + j + k, 
                         2,
-                        GetRandomNumbersOfElements(ingredients, rand, 30),
+                        GetRandomNumbersOfElements(ingredients, rand, 15),
                         GetRandomNumbersOfElements(categories, rand, 12));
                     
                     meals.Add(meal);
                 }
-                var group = new CreateGroupRequest(groupName + i + j, meals);
+                var group = new CreateGroupRequest(restaurantId + groupName + i + j, [..meals]);
                 groups.Add(group);
             }
             
-            menus.Add(new CreateMenuRequest(name, groups, restaurantId));
+            menus.Add(new CreateMenuRequest(name, [..groups], restaurantId));
         }
         
         return  menus;
     }
 
-    static double GetRandomDouble(Random random, double min, double max)
+    private static double GetRandomDouble(Random random, double min, double max)
     {
         return min + (random.NextDouble() * (max - min));
     }
 
-    static List<T> GetRandomNumbersOfElements<T>(List<T> source, Random random, int numberOfElements)
-    {
-        return source.OrderBy(x => random.Next()).Take(Math.Min(numberOfElements, source.Count)).ToList();
-    }
+    private static List<T> GetRandomNumbersOfElements<T>(List<T> source, Random random, int numberOfElements)
+        => [..source.OrderBy(x => random.Next()).Take(Math.Min(numberOfElements, source.Count)).ToList()];
 }
