@@ -17,12 +17,15 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     {
     }
 
+    //TODO: TESTS CHECKING IF CATEGORIES ARE CREATED
     [Test]
     public async Task CreateRestaurant_Success()
     {
         var restuarantId = 1;
         var repo = CreateRepository();
-        var action = () => repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
+        var action = () =>
+            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
+                CancellationToken.None);
         await action.Should().NotThrowAsync();
 
         var dbRestuarant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id!.Value == restuarantId);
@@ -34,9 +37,12 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     {
         var restuarantId = 1;
         var repo = CreateRepository();
-        await repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
+        await repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
+            CancellationToken.None);
 
-        var action = () => repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)), CancellationToken.None);
+        var action = () =>
+            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
+                CancellationToken.None);
         await action.Should().NotThrowAsync();
     }
 

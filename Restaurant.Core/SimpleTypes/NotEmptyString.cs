@@ -37,4 +37,14 @@ public class NotEmptyString
         if (other == null) return false;
         return Value == other.Value;
     }
+
+    protected bool Equals(NotEmptyString other)
+    {
+        return Value == other.Value;
+    }
+
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
+    }
 }

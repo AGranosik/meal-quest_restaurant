@@ -35,10 +35,36 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10)[0], CancellationToken.None);
+        var menus = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10);
+        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint,
+            menus[0], CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
+    }
+
+    [Test]
+    public async Task CreateMenu_SameCategory_Created()
+    {
+        var restaurants = await MenuDataFaker.CreateRestaurantsAsync(_dbContext, 1);
+        var restaurantId = restaurants[0].Id!.Value;
+        const int numberOfCategories = 10;
+        var menus = MenuDataFaker.ValidRequests(2, 3, 3, 3, restaurantId, numberOfCategories);
+        await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint,
+            menus[0], CancellationToken.None);
+
+        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint,
+            menus[1], CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result!.Value.Should().BeGreaterThan(0);
+
+        var uniqueCategories = menus.SelectMany(m => m.Groups).SelectMany(g => g.Meals)
+            .SelectMany(m => m.Categories).Distinct();
+
+        uniqueCategories.Should().HaveCount(numberOfCategories);
+        var dbCategories = await _dbContext.Categories.ToListAsync(TestContext.CurrentContext.CancellationToken);
+        dbCategories.Should().HaveCount(numberOfCategories);
     }
 
     [Test]
@@ -47,7 +73,8 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
         var restaurantId = await MenuDataFaker.CreateRestaurantForSystem(_client);
 
         var request = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value, 10)[0];
-        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, request, CancellationToken.None);
+        var result =
+            await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, request, CancellationToken.None);
 
         var dbRestaurant = await _restaurantDbContext.Restaurants
             .Include(r => r.Menus)
@@ -70,7 +97,8 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     public async Task CreateMenu_Valid_EventStoredInEventStore()
     {
         var restaurantId = await MenuDataFaker.CreateRestaurantForSystem(_client);
-        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value, 10)[0], CancellationToken.None);
+        var result = await _client.TestPostAsync<CreateMenuRequest, MenuMenuId>(_endpoint,
+            MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId.Value, 10)[0], CancellationToken.None);
 
         var events = await _eventDbContext.GetDbSet<Menu, MenuMenuId>()
             .Where(e => e.StreamId == result!.Value)

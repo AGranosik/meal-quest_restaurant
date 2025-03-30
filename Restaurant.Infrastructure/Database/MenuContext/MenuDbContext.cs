@@ -14,6 +14,7 @@ internal class MenuDbContext : DbContext
 
     public DbSet<Menu> Menus { get; set; }
     public DbSet<MenuRestaurant> Restaurants { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

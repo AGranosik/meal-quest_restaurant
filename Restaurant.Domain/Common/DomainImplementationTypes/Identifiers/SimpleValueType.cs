@@ -15,4 +15,9 @@ public abstract class SimpleValueType<TValue, TKey>: ValueObject<TKey>
         if (obj is not SimpleValueType<TValue, TKey> other) return false;
         return Value!.Equals(other.Value);
     }
+
+    public override int GetHashCode()
+    {
+        return Value!.GetHashCode();
+    }
 }

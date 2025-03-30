@@ -70,25 +70,30 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
 
     private static Result<Menu> CreateDomainModel(CreateMenuCommand command)
     {
+        //SAME CATEGORY REFERENCE
         var groups = new List<Group>(command.Groups.Count);
-
+        var uniqueCategories = command.Groups.SelectMany(g => g.Meals)
+            .SelectMany(m => m.Categories).Select(c => c.Name).Distinct()
+            .Select(c => new Category(c))
+            .ToList();
+        
         foreach (var commandGroup in command.Groups)
         {
             var meals = new List<Meal>(commandGroup.Meals.Count);
 
             foreach(var commandMeal in commandGroup.Meals)
             {
-                var ingriedients = new List<Ingredient>(commandMeal.Ingredients.Count);
-                var categories = commandMeal.Categories.Select(c => new Category(c.Name)).ToList();
+                var ingredients = new List<Ingredient>(commandMeal.Ingredients.Count);
+                var categories =
+                    uniqueCategories.Where(uq => commandMeal.Categories.Any(c => c.Name == uq.Value.Value)).ToList();
                 
-                foreach(var commandIngredient in commandMeal.Ingredients)
+                foreach (var domainIngredient in commandMeal.Ingredients.Select(commandIngredient => Ingredient.Create(commandIngredient.Name!)))
                 {
-                    var domainIngredient = Ingredient.Create(commandIngredient.Name!);
                     if (domainIngredient.IsFailed)
                         return domainIngredient.ToResult();
-                    ingriedients.Add(domainIngredient.Value);
+                    ingredients.Add(domainIngredient.Value);
                 }
-                meals.Add(new Meal(ingriedients, categories, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
+                meals.Add(new Meal(ingredients, categories, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
             }
             var group = Group.Create(meals, new Name(commandGroup.GroupName!));
             if(group.IsFailed)
