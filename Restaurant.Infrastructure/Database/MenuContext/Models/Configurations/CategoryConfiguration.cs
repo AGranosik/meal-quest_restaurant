@@ -14,7 +14,11 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property<int>(idName)
             .ValueGeneratedOnAdd();
 
+        builder.HasIndex(c => c.Value)
+            .IsUnique();
+        
         builder.Property(c => c.Value)
             .HasConversion(name => name.Value, db => new NotEmptyString(db));
+        
     }
 }
