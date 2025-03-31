@@ -15,13 +15,13 @@ internal class BaseContainerIntegrationTests<TDbContext>
     private readonly List<IContainer> _containers;
     private readonly ApiWebApplicationFactory _factory;
 
-    protected HttpClient _client;
-    protected TDbContext _dbContext;
-    protected IServiceScope _scope;
-    protected Respawner? _respawner;
-    protected DbConnection? _connection;
+    protected HttpClient Client;
+    protected TDbContext DbContext;
+    private IServiceScope _scope;
+    protected Respawner? Respawner;
+    protected DbConnection? Connection;
 
-    protected Table[] _restaurantTables =
+    protected readonly Table[] RestaurantTables =
     [
         new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.WORKINGDAYS),
         new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.OPENINGHOURS),
@@ -30,13 +30,14 @@ internal class BaseContainerIntegrationTests<TDbContext>
         new Table(RestaurantDatabaseConstants.SCHEMA, RestaurantDatabaseConstants.RESTAURANTS)
     ];
 
-    protected Table[] _MenuTables =
+    protected readonly Table[] MenuTables =
     [
         new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Groups),
         new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Ingredients),
         new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Meals),
         new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Menus),
-        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants)
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants),
+        new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Categories)
     ];
 
     public BaseContainerIntegrationTests(List<IContainer> containers)
@@ -49,10 +50,10 @@ internal class BaseContainerIntegrationTests<TDbContext>
     protected virtual async Task OneTimeSetUp()
     {
         await StartContainersAsync();
-        _client = _factory.CreateClient();
+        Client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
         SetUpDbContext();
-        await _dbContext.Database.EnsureCreatedAsync();
+        await DbContext.Database.EnsureCreatedAsync();
     }
 
     [SetUp]
@@ -60,15 +61,15 @@ internal class BaseContainerIntegrationTests<TDbContext>
     {
         _scope = _factory.Services.CreateScope();
         SetUpDbContext();
-        var connection = _dbContext.Database.GetDbConnection();
+        var connection = DbContext.Database.GetDbConnection();
         await connection.OpenAsync();
-        await _respawner!.ResetAsync(connection);
+        await Respawner!.ResetAsync(connection);
     }
 
     [TearDown]
     public void TearDown()
     {
-        _dbContext.Dispose();
+        DbContext.Dispose();
         _scope.Dispose();
     }
 
@@ -78,8 +79,8 @@ internal class BaseContainerIntegrationTests<TDbContext>
         await StopContainersAsync();
 
         await _factory.DisposeAsync();
-        _client.Dispose();
-        await _dbContext.DisposeAsync();
+        Client.Dispose();
+        await DbContext.DisposeAsync();
         _scope.Dispose();
     }
 
@@ -113,13 +114,13 @@ internal class BaseContainerIntegrationTests<TDbContext>
 
     private void SetUpDbContext()
     {
-        _dbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
+        DbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
     }
 
-    protected async Task<DiffDbContext> GetDifferentDbContext<DiffDbContext>()
-        where DiffDbContext : DbContext
+    protected async Task<TDiffDbContext> GetDifferentDbContext<TDiffDbContext>()
+        where TDiffDbContext : DbContext
     {
-        var dbContext = _scope.ServiceProvider.GetRequiredService<DiffDbContext>();
+        var dbContext = _scope.ServiceProvider.GetRequiredService<TDiffDbContext>();
         await dbContext.Database.MigrateAsync();
         return dbContext;
     }

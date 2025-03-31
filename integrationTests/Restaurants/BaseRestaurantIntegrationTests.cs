@@ -22,13 +22,13 @@ internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<Re
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
-        _connection = _dbContext.Database.GetDbConnection();
-        await _connection.OpenAsync();
+        Connection = DbContext.Database.GetDbConnection();
+        await Connection.OpenAsync();
 
-        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = [.. _restaurantTables, new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants)],
+            TablesToInclude = [.. RestaurantTables, new Table(MenuDatabaseConstants.Schema, MenuDatabaseConstants.Restaurants)],
             SchemasToInclude =
             [
                 "public",
@@ -44,6 +44,6 @@ internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<Re
     public override async Task OneTimeTearDown()
     {
         await base.OneTimeTearDown();
-        await _connection!.DisposeAsync();
+        await Connection!.DisposeAsync();
     }
 }

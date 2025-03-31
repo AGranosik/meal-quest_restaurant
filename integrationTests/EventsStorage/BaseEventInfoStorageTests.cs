@@ -24,10 +24,10 @@ internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContai
     {
         await base.OneTimeSetUp();
 
-        _connection = _dbContext.Database.GetDbConnection();
-        await _connection.OpenAsync();
+        Connection = DbContext.Database.GetDbConnection();
+        await Connection.OpenAsync();
 
-        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
             TablesToInclude = [new Table(Constants.SCHEMA, typeof(TAggregate).Name + "s")]
@@ -47,7 +47,7 @@ internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContai
     {
         var handler = CreateHandler();
         await StorePendingEvent(handler);
-        var storedEvent = await _dbContext.GetDbSet<TAggregate, TKey>().ToListAsync();
+        var storedEvent = await DbContext.GetDbSet<TAggregate, TKey>().ToListAsync();
         storedEvent.Should().NotBeEmpty();
         storedEvent.Should().HaveCount(1);
     }
@@ -110,13 +110,13 @@ internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContai
 
     private async Task<DomainEventModel<TAggregate, TKey>> GetStoredEventAsync()
     {
-        var storedEvents = await _dbContext.GetDbSet<TAggregate, TKey>().AsNoTracking().ToListAsync();
+        var storedEvents = await DbContext.GetDbSet<TAggregate, TKey>().AsNoTracking().ToListAsync();
         storedEvents.Should().HaveCount(1);
         return storedEvents[0];
     }
 
     protected virtual EventInfoStorage<TAggregate, TKey> CreateHandler()
-        => new(_dbContext);
+        => new(DbContext);
 
     protected abstract TAggregate CreateAggregate();
 }

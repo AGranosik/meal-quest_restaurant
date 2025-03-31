@@ -20,7 +20,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
     [Test]
     public async Task GetRestaurant_NoneExist_EmptyList()
     {
-        var response = await _client.GetAsync("/api/Restaurant?ownerId=1");
+        var response = await Client.GetAsync("/api/Restaurant?ownerId=1");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var resultString = await response.Content.ReadAsStringAsync();
@@ -34,7 +34,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
         var restaurants = await AddRestaurants(1, 1);
         var maxId = MaxId(restaurants) + 1;
 
-        var response = await _client.GetAsync($@"/api/Restaurant?ownerId={maxId}");
+        var response = await Client.GetAsync($@"/api/Restaurant?ownerId={maxId}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var resultString = await response.Content.ReadAsStringAsync();
@@ -48,7 +48,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
         var restaurants = await AddRestaurants(1, 1);
         var maxId = MaxId(restaurants);
 
-        var response = await _client.GetAsync($@"/api/Restaurant?ownerId={maxId}");
+        var response = await Client.GetAsync($@"/api/Restaurant?ownerId={maxId}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var resultString = await response.Content.ReadAsStringAsync();
@@ -67,7 +67,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
         var restaurants = await AddRestaurants(10, 1);
         var restaurantToGet = restaurants[8];
 
-        var response = await _client.GetAsync($@"/api/Restaurant?ownerId={restaurantToGet.Owner.Id!.Value}");
+        var response = await Client.GetAsync($@"/api/Restaurant?ownerId={restaurantToGet.Owner.Id!.Value}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var resultString = await response.Content.ReadAsStringAsync();
@@ -87,7 +87,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
         var restaurantToGet = restaurants[8];
         var ownerId = restaurantToGet.Owner.Id!.Value;
 
-        var response = await _client.GetAsync($@"/api/Restaurant?ownerId={ownerId}");
+        var response = await Client.GetAsync($@"/api/Restaurant?ownerId={ownerId}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var resultString = await response.Content.ReadAsStringAsync();
@@ -131,8 +131,8 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
                 iRestaurant++;
             }
         }
-        _dbContext.Restaurants.AddRange(restaurants);
-        await _dbContext.SaveChangesAsync();
+        DbContext.Restaurants.AddRange(restaurants);
+        await DbContext.SaveChangesAsync();
         return restaurants;
     }
 

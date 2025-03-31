@@ -11,20 +11,20 @@ namespace integrationTests.Menus;
 
 internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbContext>
 {
-    protected RestaurantDbContext _restaurantDbContext;
-    protected EventDbContext _eventDbContext;
+    protected RestaurantDbContext RestaurantDbContext;
+    protected EventDbContext EventDbContext;
 
-    public BaseMenuIntegrationTests(List<IContainer> containers) : base(containers)
+    protected BaseMenuIntegrationTests(List<IContainer> containers) : base(containers)
     {
     }
 
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
-        _connection = _dbContext.Database.GetDbConnection();
-        await _connection.OpenAsync();
-        var tables = _restaurantTables.Concat(_MenuTables);
-        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        Connection = DbContext.Database.GetDbConnection();
+        await Connection.OpenAsync();
+        var tables = RestaurantTables.Concat(MenuTables);
+        Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
             TablesToInclude = tables.ToArray(),
@@ -36,13 +36,13 @@ internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbCo
             ]
         });
 
-        _eventDbContext = await GetDifferentDbContext<EventDbContext>();
-        _restaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
+        EventDbContext = await GetDifferentDbContext<EventDbContext>();
+        RestaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
     }
 
     public override async Task OneTimeTearDown()
     {
         await base.OneTimeTearDown();
-        await _connection!.DisposeAsync();
+        await Connection!.DisposeAsync();
     }
 }

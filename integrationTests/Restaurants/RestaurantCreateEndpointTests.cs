@@ -22,10 +22,10 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     [Test]
     public async Task CreateRestaurant_RequestIsNull_Repsonse()
     {
-        var response = await _client.PostAsJsonAsync<CreateRestaurantRequest?>(_endpoint, null, CancellationToken.None);
+        var response = await Client.PostAsJsonAsync<CreateRestaurantRequest?>(_endpoint, null, CancellationToken.None);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-        var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
+        var anyRestaurants = await DbContext.Restaurants.AnyAsync();
         anyRestaurants.Should().BeFalse();
     }
 
@@ -34,12 +34,12 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
 
-        var anyRestaurants = await _dbContext.Restaurants.AnyAsync();
+        var anyRestaurants = await DbContext.Restaurants.AnyAsync();
         anyRestaurants.Should().BeTrue();
     }
 
@@ -48,12 +48,12 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
 
-        var dbRestaurant = await _dbContext.Restaurants
+        var dbRestaurant = await DbContext.Restaurants
             .Include(r => r.Owner)
             .ThenInclude(o => o.Address)
             .Include(r => r.OpeningHours)
@@ -70,7 +70,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         var menuDb = await _menuDbContext.Restaurants
             .Where(r => r.Id!.Value == result!.Value)
@@ -84,7 +84,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await _client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)

@@ -28,7 +28,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
                 CancellationToken.None);
         await action.Should().NotThrowAsync();
 
-        var dbRestuarant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Id!.Value == restuarantId);
+        var dbRestuarant = await DbContext.Restaurants.FirstOrDefaultAsync(r => r.Id!.Value == restuarantId);
         dbRestuarant.Should().NotBeNull();
     }
 
@@ -57,12 +57,12 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
-        _connection = _dbContext.Database.GetDbConnection();
-        await _connection.OpenAsync();
-        _respawner = await Respawner.CreateAsync(_connection, new RespawnerOptions
+        Connection = DbContext.Database.GetDbConnection();
+        await Connection.OpenAsync();
+        Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = _MenuTables,
+            TablesToInclude = MenuTables,
             SchemasToInclude =
             [
                 "public",
@@ -72,5 +72,5 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     }
 
     private MenuRepository CreateRepository()
-        => new(_dbContext);
+        => new(DbContext);
 }
