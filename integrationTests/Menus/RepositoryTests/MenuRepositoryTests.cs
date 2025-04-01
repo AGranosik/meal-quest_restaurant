@@ -17,33 +17,34 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     {
     }
 
-    //TODO: TESTS CHECKING IF CATEGORIES ARE CREATED
     [Test]
     public async Task CreateRestaurant_Success()
     {
-        var restuarantId = 1;
+        const int restaurantId = 1;
         var repo = CreateRepository();
         var action = () =>
-            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
-                CancellationToken.None);
+            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restaurantId)),
+                TestContext.CurrentContext.CancellationToken);
         await action.Should().NotThrowAsync();
 
-        var dbRestuarant = await DbContext.Restaurants.FirstOrDefaultAsync(r => r.Id!.Value == restuarantId);
-        dbRestuarant.Should().NotBeNull();
+        var dbRestaurant = await DbContext.Restaurants
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == new  RestaurantIdMenuId(restaurantId));
+        dbRestaurant.Should().NotBeNull();
     }
 
     [Test]
-    public async Task CreateRestaurant_AlreadyExists_NotThrow()
+    public async Task CreateRestaurant_AlreadyExists_Throws()
     {
-        var restuarantId = 1;
+        const int restaurantId = 1;
         var repo = CreateRepository();
-        await repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
-            CancellationToken.None);
-
+        var restaurant = new MenuRestaurant(new RestaurantIdMenuId(restaurantId));
+        await repo.CreateRestaurantAsync(restaurant, TestContext.CurrentContext.CancellationToken);
+    DbContext.Restaurants.Entry(restaurant).State = EntityState.Detached;
         var action = () =>
-            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restuarantId)),
-                CancellationToken.None);
-        await action.Should().NotThrowAsync();
+            repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restaurantId)),
+                TestContext.CurrentContext.CancellationToken);
+        await action.Should().ThrowAsync<DbUpdateException>();
     }
 
     [Test]

@@ -16,7 +16,7 @@ public class RestaurantController : ApiController
     }
 
     [HttpPost]
-    [SwaggerOperation(Summary = "Create Resutarant.")]
+    [SwaggerOperation(Summary = "Create restaurant.")]
     [SwaggerResponse(200, "", typeof(Result<RestaurantId>))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
     public async Task<IActionResult> CreateRestaurantAsync(CreateRestaurantRequest request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ public class RestaurantController : ApiController
     }
 
     [HttpGet]
-    [SwaggerOperation(Summary = "Get owner's resutaurants.")]
+    [SwaggerOperation(Summary = "Get owner's restaurants.")]
     [SwaggerResponse(200, "", typeof(List<RestaurantDto>))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
     public async Task<IActionResult> GetOwnersRestaurantAsync([FromQuery] int ownerId, CancellationToken cancellationToken)

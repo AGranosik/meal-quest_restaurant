@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.Aggregates;
 using domain.Restaurants.ValueObjects.Identifiers;
 using FluentAssertions;
@@ -70,10 +71,10 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
         var menuDb = await _menuDbContext.Restaurants
-            .Where(r => r.Id!.Value == result!.Value)
+            .Where(r => r.Id! == new RestaurantIdMenuId(result!.Value))
             .ToListAsync();
 
         menuDb.Count.Should().Be(1);
@@ -84,7 +85,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
         var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
