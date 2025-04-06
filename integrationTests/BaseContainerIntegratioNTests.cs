@@ -49,7 +49,6 @@ internal class BaseContainerIntegrationTests<TDbContext>
     [OneTimeSetUp]
     protected virtual async Task OneTimeSetUp()
     {
-        await StartContainersAsync();
         Client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
         SetUpDbContext();
@@ -76,42 +75,12 @@ internal class BaseContainerIntegrationTests<TDbContext>
     [OneTimeTearDown]
     public virtual async Task OneTimeTearDown()
     {
-        await StopContainersAsync();
-
         await _factory.DisposeAsync();
         Client.Dispose();
         await DbContext.DisposeAsync();
         _scope.Dispose();
+
     }
-
-    private async Task StartContainersAsync()
-    {
-        var tasks = new List<Task>(_containers.Count);
-        foreach(var container in _containers)
-        {
-            if(container.State != TestcontainersStates.Running)
-                tasks.Add(container.StartAsync());
-        }
-
-        await Task.WhenAll(tasks);
-    }
-
-    private async Task StopContainersAsync()
-    {
-        var tasks = new List<Task>(_containers.Count);
-        foreach(var container in _containers)
-        {
-            tasks.Add(container.StopAsync());
-        }
-
-        await Task.WhenAll(tasks);
-
-        foreach(var container in _containers)
-        {
-            await container.DisposeAsync();
-        }
-    }
-
     private void SetUpDbContext()
     {
         DbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
@@ -121,8 +90,8 @@ internal class BaseContainerIntegrationTests<TDbContext>
         where TDiffDbContext : DbContext
     {
         var dbContext = _scope.ServiceProvider.GetRequiredService<TDiffDbContext>();
-        await dbContext.Database.MigrateAsync();
+
+        await dbContext.Database.EnsureCreatedAsync();
         return dbContext;
     }
-
 }

@@ -73,7 +73,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
 
         var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
-        var menuDb = await _menuDbContext.Restaurants
+        var menuDb = await MenuDbContext.Restaurants
             .Where(r => r.Id! == new RestaurantIdMenuId(result!.Value))
             .ToListAsync();
 
@@ -87,7 +87,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
 
         var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
-        var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
+        var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
             .ToListAsync();
 

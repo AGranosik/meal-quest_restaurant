@@ -55,6 +55,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         await action.Should().ThrowAsync<Exception>();
     }
 
+    [OneTimeSetUp]
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();

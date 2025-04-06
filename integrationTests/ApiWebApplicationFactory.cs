@@ -11,10 +11,10 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace integrationTests;
 
-internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
+internal sealed class ApiWebApplicationFactory : WebApplicationFactory<Program>
 {
-    public IConfiguration? Configuration { get; private set; }
-
+    private IConfiguration? Configuration { get; set; }
+    private IServiceCollection _services { get; set; }
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.ConfigureHostConfiguration(config =>
@@ -33,13 +33,14 @@ internal class ApiWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureTestServices(services =>
         {
             RemoveUnnecessaryServicesForTests(services);
+            _services = services;
             services.AddDbContext<RestaurantDbContext>(opt => opt.UseNpgsql(Configuration!.GetConnectionString("postgres")));
         });
 
         base.ConfigureWebHost(builder);
     }
 
-    protected virtual void RemoveUnnecessaryServicesForTests(IServiceCollection services)
+    private static void RemoveUnnecessaryServicesForTests(IServiceCollection services)
     {
         //trace
         var descriptor = services.FirstOrDefault(
