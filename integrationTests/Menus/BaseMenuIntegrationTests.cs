@@ -17,15 +17,13 @@ internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbCo
     protected BaseMenuIntegrationTests(List<IContainer> containers) : base(containers)
     {
     }
-    [OneTimeSetUp]
+
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
         Connection = DbContext.Database.GetDbConnection();
         await Connection.OpenAsync();
         var tables = RestaurantTables.Concat(MenuTables);
-        EventDbContext = await GetDifferentDbContext<EventDbContext>();
-        RestaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
@@ -38,9 +36,10 @@ internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbCo
             ]
         });
 
+        EventDbContext = await GetDifferentDbContext<EventDbContext>();
+        RestaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
     }
 
-    [OneTimeTearDown]
     public override async Task OneTimeTearDown()
     {
         await base.OneTimeTearDown();

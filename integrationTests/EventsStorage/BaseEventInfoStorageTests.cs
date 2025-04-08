@@ -30,11 +30,7 @@ internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContai
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = [new Table(Constants.SCHEMA, typeof(TAggregate).Name + "s")],
-            SchemasToInclude = [
-                "public",
-                Constants.SCHEMA
-            ]
+            TablesToInclude = [new Table(Constants.SCHEMA, typeof(TAggregate).Name + "s")]
         });
     }
 
