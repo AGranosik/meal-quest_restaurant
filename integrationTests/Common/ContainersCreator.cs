@@ -7,8 +7,8 @@ namespace integrationTests.Common;
 
 internal static class ContainersCreator
 {
-    public static IContainer Postgres
-        => new PostgreSqlBuilder()
+    internal static IContainer Postgres
+        = new PostgreSqlBuilder()
             .WithImage("postgres:14-alpine")
             .WithUsername("admin")
             .WithPassword("S3cret")
@@ -16,8 +16,9 @@ internal static class ContainersCreator
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
 
-    public static IContainer RabbitMq
-        => new RabbitMqBuilder()
+
+    internal static IContainer RabbitMq
+        = new RabbitMqBuilder()
             .WithImage("rabbitmq:3")
             .WithUsername("guest")
             .WithPassword("guest")

@@ -4,6 +4,7 @@ using infrastructure.Database.MenuContext.Models.Configurations;
 using infrastructure.Database.RestaurantContext;
 using infrastructure.Database.RestaurantContext.Models.Configurations;
 using infrastructure.EventStorage;
+using infrastructure.EventStorage.DatabaseModels.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 
@@ -23,21 +24,20 @@ internal class BaseMenuIntegrationTests : BaseContainerIntegrationTests<MenuDbCo
         await base.OneTimeSetUp();
         Connection = DbContext.Database.GetDbConnection();
         await Connection.OpenAsync();
-        var tables = RestaurantTables.Concat(MenuTables);
+        RestaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
+        EventDbContext = await GetDifferentDbContext<EventDbContext>();
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = tables.ToArray(),
             SchemasToInclude =
             [
                 "public",
                 RestaurantDatabaseConstants.SCHEMA,
-                MenuDatabaseConstants.Schema
+                MenuDatabaseConstants.Schema,
+                Constants.SCHEMA
             ]
         });
 
-        EventDbContext = await GetDifferentDbContext<EventDbContext>();
-        RestaurantDbContext = await GetDifferentDbContext<RestaurantDbContext>();
     }
 
     public override async Task OneTimeTearDown()

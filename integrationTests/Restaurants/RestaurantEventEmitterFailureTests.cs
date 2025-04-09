@@ -38,7 +38,7 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
 
         var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-        var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
+        var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
             .ToListAsync();
 
@@ -54,7 +54,7 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
 
         var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
-        var events = await _eventDbContext.GetDbSet<Restaurant, RestaurantId>()
+        var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
             .ToListAsync();
 

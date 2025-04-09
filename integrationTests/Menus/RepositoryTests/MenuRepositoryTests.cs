@@ -63,7 +63,6 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = MenuTables,
             SchemasToInclude =
             [
                 "public",
