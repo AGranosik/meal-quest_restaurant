@@ -1,6 +1,8 @@
 ﻿using domain.Common.DomainImplementationTypes;
 using domain.Common.DomainImplementationTypes.Identifiers;
 using FluentAssertions;
+using infrastructure.Database.MenuContext.Models.Configurations;
+using infrastructure.Database.RestaurantContext.Models.Configurations;
 using infrastructure.EventStorage;
 using infrastructure.EventStorage.DatabaseModels;
 using infrastructure.EventStorage.DatabaseModels.Configurations;
@@ -30,7 +32,13 @@ internal abstract class BaseEventInfoStorageTests<TAggregate, TKey> : BaseContai
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
-            TablesToInclude = [new Table(Constants.SCHEMA, typeof(TAggregate).Name + "s")]
+            SchemasToInclude =
+            [
+                "public",
+                RestaurantDatabaseConstants.SCHEMA,
+                MenuDatabaseConstants.Schema,
+                Constants.SCHEMA
+            ]
         });
     }
 

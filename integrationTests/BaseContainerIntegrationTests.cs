@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,24 +30,29 @@ internal class BaseContainerIntegrationTests<TDbContext>
         // await StartContainersAsync();
         Client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
-        SetUpDbContext();
-        await DbContext.Database.EnsureCreatedAsync();
+        await SetUpDbContext();
     }
 
     [SetUp]
     public async Task SetUp()
     {
         _scope = _factory.Services.CreateScope();
-        SetUpDbContext();
+        // await SetUpDbContext();
         var connection = DbContext.Database.GetDbConnection();
-        await connection.OpenAsync();
+        if(connection.State != ConnectionState.Open)
+            await connection.OpenAsync();
         await Respawner!.ResetAsync(connection);
+
+        foreach (var entity in DbContext.ChangeTracker.Entries())
+        {
+            entity.State = EntityState.Detached;
+        }
     }
 
     [TearDown]
     public void TearDown()
     {
-        DbContext.Dispose();
+        // DbContext.Dispose();
         _scope.Dispose();
     }
 
@@ -61,9 +67,24 @@ internal class BaseContainerIntegrationTests<TDbContext>
         _scope.Dispose();
     }
 
-    private void SetUpDbContext()
+    private async Task SetUpDbContext()
     {
         DbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
+        var migrations = await DbContext.Database.GetAppliedMigrationsAsync();
+        //for some reasone sometimes they are nto applied 
+        if (!migrations.Any())
+        {
+            try
+            {
+                await DbContext.Database.MigrateAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                // throw;
+            }
+            
+        }
     }
 
     protected async Task<TDiffDbContext> GetDifferentDbContext<TDiffDbContext>()
@@ -71,8 +92,17 @@ internal class BaseContainerIntegrationTests<TDbContext>
     {
         var dbContext = _scope.ServiceProvider.GetRequiredService<TDiffDbContext>();
         var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
-        if(!migrations.Any())
+        //for some reasone sometimes they are nto applied 
+        if (migrations.Any()) return dbContext;
+        try
+        {
             await dbContext.Database.MigrateAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            // throw;
+        }
         return dbContext;
     }
 

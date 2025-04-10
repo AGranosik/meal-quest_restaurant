@@ -25,7 +25,7 @@ internal class BaseRestaurantIntegrationTests : BaseContainerIntegrationTests<Re
         await Connection.OpenAsync();
         MenuDbContext = await GetDifferentDbContext<MenuDbContext>();
         EventDbContext = await GetDifferentDbContext<EventDbContext>();
-
+        
         Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
