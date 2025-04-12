@@ -6,7 +6,7 @@ namespace integrationTests;
 [SetUpFixture]
 internal sealed class IntegrationSetup
 {
-    private static readonly List<IContainer> Containers = [ContainersCreator.Postgres, ContainersCreator.RabbitMq];
+    internal static readonly List<IContainer> Containers = [ContainersCreator.Postgres, ContainersCreator.RabbitMq];
 
     
     [OneTimeSetUp]

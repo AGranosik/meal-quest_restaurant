@@ -27,7 +27,11 @@ internal class BaseContainerIntegrationTests<TDbContext>
     [OneTimeSetUp]
     protected virtual async Task OneTimeSetUp()
     {
-        // await StartContainersAsync();
+        var containersToStop = IntegrationSetup.Containers.Where(c => !_containers.Contains(c)).ToList();
+        foreach (var container in containersToStop)
+        {
+            await container.StopAsync();
+        }
         Client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
         await SetUpDbContext();
@@ -60,7 +64,11 @@ internal class BaseContainerIntegrationTests<TDbContext>
     public virtual async Task OneTimeTearDown()
     {
         // await StopContainersAsync();
-
+        var containersToRun = IntegrationSetup.Containers.Where(c => c.State != TestcontainersStates.Running).ToList();
+        foreach (var container in containersToRun)
+        {
+            await container.StartAsync();
+        }
         await _factory.DisposeAsync();
         Client.Dispose();
         await DbContext.DisposeAsync();
