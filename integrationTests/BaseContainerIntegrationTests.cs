@@ -91,9 +91,9 @@ internal class BaseContainerIntegrationTests<TDbContext>
         where TDiffDbContext : DbContext
     {
         var dbContext = _scope.ServiceProvider.GetRequiredService<TDiffDbContext>();
-        var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
-        //for some reasone sometimes they are nto applied 
-        if (migrations.Any()) return dbContext;
+        // var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
+        // //for some reasone sometimes they are nto applied 
+        // if (migrations.Any()) return dbContext;
         try
         {
             await dbContext.Database.MigrateAsync();

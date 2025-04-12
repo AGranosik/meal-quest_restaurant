@@ -13,6 +13,7 @@ namespace integrationTests.Restaurants;
 internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTests
 {
     private const string _endpoint = "/api/Restaurant";
+
     public RestaurantEventEmitterFailureTests() : base([ContainersCreator.Postgres])
     {
     }
@@ -22,7 +23,9 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result =
+            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+                CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
@@ -36,7 +39,9 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result =
+            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+                CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
@@ -52,7 +57,9 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result =
+            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+                CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)
