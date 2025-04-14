@@ -27,7 +27,7 @@ internal class MenuRepository : IMenuRepository
     public async Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
     {
         await HandleCategoriesUniqueness(menu, cancellationToken);
-        _context.Restaurants.Attach(menu.Restaurant);
+        // _context.Restaurants.Attach(menu.Restaurant);
         _context.Menus.Add(menu);
         await _context.SaveChangesAsync(cancellationToken);
         return menu.Id!;
@@ -48,16 +48,22 @@ internal class MenuRepository : IMenuRepository
         var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name != c.Value.Value)).Distinct().ToList();
         _context.Categories.AddRange(notExistingCategories);
         await _context.SaveChangesAsync(cancellationToken);
-        foreach (var category in categoriesDomain)
+
+        foreach (var dbCategory in dbCategories)
         {
-            var dbCategory = dbCategories.FirstOrDefault(db => db.Name == category.Value.Value);
-            if (dbCategory == null)
-                continue;
+            var category = categoriesDomain.FirstOrDefault(cd => cd.Value.Value == dbCategory.Name);
+                // .ToList();
             
-            _context.Categories.Entry(category).Property<int>("CategoryID").CurrentValue = dbCategory.Id;
-            _context.Categories.Attach(category);
+            // if(categories.Count == 0)
+            //     continue;
+
+            // foreach (var category in categories)
+            // {
+                _context.Categories.Entry(category)
+                    .Property<int>("CategoryID").CurrentValue = dbCategory.Id;
+                _context.Categories.Attach(category);
+            // }
+            
         }
-        // var existingCategories = categoriesDomain.Where(c => !notExistingCategories.Contains(c)).ToList();
-        // _context.Categories.AttachRange(existingCategories);
     }
 }
