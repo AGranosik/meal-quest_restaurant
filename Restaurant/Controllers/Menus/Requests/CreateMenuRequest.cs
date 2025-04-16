@@ -12,7 +12,7 @@ public sealed class CreateMenuRequest
         RestaurantId = restaurantId;
     }
 
-    public CreateMenuCommand CastToCommand()
+    public CreateMenusCommand CastToCommand()
     {
         var groups = new List<CreateGroupCommand>(Groups.Count);
         foreach(var group in Groups)
@@ -31,7 +31,7 @@ public sealed class CreateMenuRequest
             groups.Add(groupCommand);
         }
 
-        return new CreateMenuCommand(Name,  groups, RestaurantId);
+        return new CreateMenusCommand(Name,  groups, RestaurantId);
     }
 
     public string? Name { get; init; }

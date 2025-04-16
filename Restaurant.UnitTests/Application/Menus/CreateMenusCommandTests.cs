@@ -9,7 +9,7 @@ using sharedTests.DataFakers;
 namespace unitTests.Application.Menus;
 
 [TestFixture]
-internal class CreateMenuCommandTests
+internal class CreateMenusCommandTests
 {
     private Mock<IMenuRepository> _repositoryMock;
     private Mock<IMediator> _mediatorMock;
@@ -56,7 +56,7 @@ internal class CreateMenuCommandTests
     public async Task Creation_GroupsCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null, null!, default), CancellationToken.None);
+        var result = await handler.Handle(new CreateMenusCommand(null, null!, default), CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -64,7 +64,7 @@ internal class CreateMenuCommandTests
     public async Task Creation_MealsCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null,
+        var result = await handler.Handle(new CreateMenusCommand(null,
                 [
                     new CreateGroupCommand(null, null!)
                 ],
@@ -77,7 +77,7 @@ internal class CreateMenuCommandTests
     public async Task Creation_IngredientsCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null,
+        var result = await handler.Handle(new CreateMenusCommand(null,
         [
             new CreateGroupCommand(null, [
                 new(null, 0, null!, null!)
@@ -90,7 +90,7 @@ internal class CreateMenuCommandTests
     public async Task Creation_CategoriesCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null,
+        var result = await handler.Handle(new CreateMenusCommand(null,
         [
             new CreateGroupCommand(null, [
                 new(null, 0, [new CreateIngredientCommand("test")], null!)
@@ -103,7 +103,7 @@ internal class CreateMenuCommandTests
     public async Task Creation_NameCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null, [
+        var result = await handler.Handle(new CreateMenusCommand(null, [
             new CreateGroupCommand(null, [
                 new(null, 1, [new CreateIngredientCommand("test")], [new CreateCategoryCommand("cat")])
             ])
