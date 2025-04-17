@@ -21,4 +21,15 @@ internal static class MediatorExtensions
             logger.LogError(ex, "Error publishing messages for {Aggregate} with Id: {Id}", nameof(entity), entity.Id!.Value);
         }
     }
+
+    public static async Task PublishEventsAsync<TAggregate, TKey>(this IMediator mediator, List<TAggregate> entities,
+        ILogger logger, CancellationToken cancellationToken)
+        where TAggregate : Aggregate<TKey>
+        where TKey : SimpleValueType<int, TKey>
+    {
+        foreach (var aggregate in entities)
+        {
+            await mediator.PublishEventsAsync<TAggregate, TKey>(aggregate, logger, cancellationToken);
+        }
+    }
 }

@@ -12,26 +12,26 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands;
 
-internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, Result<List<MenuId>>>
+internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenusCommand, Result<List<MenuId>>>
 {
     private readonly IMenuRepository _menuRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<CreateMenuCommandHandler> _logger;
 
-    public CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator, ILogger<CreateMenuCommandHandler> logger)
+    public CreateMenuCommandHandler(IMenuRepository menuRepository, IMediator mediator,
+        ILogger<CreateMenuCommandHandler> logger)
     {
         _menuRepository = menuRepository ?? throw new ArgumentNullException(nameof(menuRepository));
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<Result<List<MenuId>>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
+    public async Task<Result<List<MenuId>>> Handle(CreateMenusCommand menusCommand, CancellationToken cancellationToken)
     {
-        var validationResult = Validation(command);
+        var validationResult = Validation(menusCommand);
         if (validationResult.IsFailed)
             return validationResult;
-
-        var domainResult = CreateDomainModel(command);
+        var domainResult = CreateDomainModel(menusCommand.MenusCommand);
         if (domainResult.IsFailed)
             return domainResult.ToResult();
 
@@ -40,8 +40,11 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
         return domainResult.Value.Select(d => d.Id!).ToList();
     }
 
-    private static Result Validation(List<CreateMenuCommand>? command)
+    private static Result Validation(CreateMenusCommand? menusCommand)
     {
+        if (menusCommand == null)
+            return Result.Fail("Command cannot be null.");
+        var command = menusCommand.MenusCommand;
         if (command is null || command.Count == 0)
             return Result.Fail("Command cannot be null.");
 
@@ -51,12 +54,12 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
             if (!groups.Any())
                 return Result.Fail("Groups cannot be null.");
 
-            
+
             var meals = groups.SelectMany(g => g.Meals).ToList();
             if (meals.Count == 0)
                 return Result.Fail("Meals cannot be null.");
 
-            
+
             var ingredients = meals.SelectMany(m => m.Ingredients).ToList();
             if (ingredients.Count == 0)
                 return Result.Fail("Ingredients cannot be null.");
@@ -67,9 +70,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
 
             if (string.IsNullOrEmpty(menuCommand.Name))
                 return Result.Fail("Menu name cannot be empty.");
-            
         }
-        
 
         return Result.Ok();
     }
@@ -83,7 +84,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
             .SelectMany(m => m.Categories).Select(c => c.Name).Distinct()
             .Select(c => new Category(c))
             .ToList();
-        
+
         var menus = new List<Menu>(command.Count);
 
         foreach (var menuCommand in command)
@@ -92,32 +93,37 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
             {
                 var meals = new List<Meal>(commandGroup.Meals.Count);
 
-                foreach(var commandMeal in commandGroup.Meals)
+                foreach (var commandMeal in commandGroup.Meals)
                 {
                     var ingredients = new List<Ingredient>(commandMeal.Ingredients.Count);
                     var categories =
-                        uniqueCategories.Where(uq => commandMeal.Categories.Any(c => c.Name == uq.Value.Value)).ToList();
-                
-                    foreach (var domainIngredient in commandMeal.Ingredients.Select(commandIngredient => Ingredient.Create(commandIngredient.Name!)))
+                        uniqueCategories.Where(uq => commandMeal.Categories.Any(c => c.Name == uq.Value.Value))
+                            .ToList();
+
+                    foreach (var domainIngredient in commandMeal.Ingredients.Select(commandIngredient =>
+                                 Ingredient.Create(commandIngredient.Name!)))
                     {
                         if (domainIngredient.IsFailed)
                             return domainIngredient.ToResult();
                         ingredients.Add(domainIngredient.Value);
                     }
-                    meals.Add(new Meal(ingredients, categories, new Price(commandMeal.Price), new Name(commandMeal.Name!)));
+
+                    meals.Add(new Meal(ingredients, categories, new Price(commandMeal.Price),
+                        new Name(commandMeal.Name!)));
                 }
+
                 var group = Group.Create(meals, new Name(commandGroup.GroupName!));
-                if(group.IsFailed)
+                if (group.IsFailed)
                     return group.ToResult();
 
                 groups.Add(group.Value);
             }
-            // var categories = command.Categories.Select(c => new Category(c.Name)).ToList();
-        
-            var menu = Menu.Create(groups, new Name(menuCommand.Name!), new MenuRestaurant(new RestaurantIdMenuId(menuCommand.RestaurantId)));
+
+            var menu = Menu.Create(groups, new Name(menuCommand.Name!),
+                new MenuRestaurant(new RestaurantIdMenuId(menuCommand.RestaurantId)));
             if (menu.IsFailed)
                 return Result.Fail(menu.Errors);
-            
+
             menus.Add(menu.Value);
         }
 
@@ -125,7 +131,17 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
     }
 }
 
-public sealed class CreateMenuCommand : IRequest<Result<List<MenuId>>>
+public sealed class CreateMenusCommand : IRequest<Result<List<MenuId>>>
+{
+    public CreateMenusCommand(List<CreateMenuCommand> menusCommand)
+    {
+        MenusCommand = menusCommand ?? [];
+    }
+
+    public List<CreateMenuCommand> MenusCommand { get; init; }
+}
+
+public sealed class CreateMenuCommand
 {
     public CreateMenuCommand(string? name, List<CreateGroupCommand> groups, int restaurantId)
     {
@@ -158,7 +174,8 @@ public sealed class CreateMealCommand
     public List<CreateIngredientCommand> Ingredients { get; }
     public List<CreateCategoryCommand> Categories { get; }
 
-    public CreateMealCommand(string? name, decimal price, List<CreateIngredientCommand> ingredients, List<CreateCategoryCommand> categories)
+    public CreateMealCommand(string? name, decimal price, List<CreateIngredientCommand> ingredients,
+        List<CreateCategoryCommand> categories)
     {
         Name = name;
         Price = price;

@@ -24,18 +24,18 @@ internal class MenuRepository : IMenuRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
+    public async Task<Result<List<MenuId>>> CreateMenuAsync(List<Menu> menus, CancellationToken cancellationToken)
     {
-        await HandleCategoriesUniqueness(menu, cancellationToken);
+        await HandleCategoriesUniqueness(menus, cancellationToken);
         // _context.Restaurants.Attach(menu.Restaurant);
-        _context.Menus.Add(menu);
+        _context.Menus.AddRange(menus);
         await _context.SaveChangesAsync(cancellationToken);
-        return menu.Id!;
+        return Result.Ok(menus.Select(m => m.Id!).ToList());
     }
 
-    private async Task HandleCategoriesUniqueness(Menu menu, CancellationToken cancellationToken)
+    private async Task HandleCategoriesUniqueness(List<Menu> menus, CancellationToken cancellationToken)
     {
-        var categoriesDomain = menu.Groups.SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
+        var categoriesDomain = menus.SelectMany(m => m.Groups).SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
         var uniqueCategories = categoriesDomain.Select(c => c.Value).Distinct();
 
         var dbCategories = await _context.Categories.Where(db => uniqueCategories.Contains(db.Value))
@@ -51,18 +51,10 @@ internal class MenuRepository : IMenuRepository
 
         foreach (var dbCategory in dbCategories)
         {
-            var category = categoriesDomain.FirstOrDefault(cd => cd.Value.Value == dbCategory.Name);
-                // .ToList();
-            
-            // if(categories.Count == 0)
-            //     continue;
-
-            // foreach (var category in categories)
-            // {
+            var category = categoriesDomain.First(cd => cd.Value.Value == dbCategory.Name);
                 _context.Categories.Entry(category)
                     .Property<int>("CategoryID").CurrentValue = dbCategory.Id;
                 _context.Categories.Attach(category);
-            // }
             
         }
     }

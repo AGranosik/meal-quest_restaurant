@@ -7,6 +7,6 @@ namespace application.Menus.Commands.Interfaces;
 
 public interface IMenuRepository
 {
-    Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken);
+    Task<Result<List<MenuId>>> CreateMenuAsync(List<Menu> menus, CancellationToken cancellationToken);
     Task CreateRestaurantAsync(MenuRestaurant restaurant, CancellationToken cancellationToken);
 }

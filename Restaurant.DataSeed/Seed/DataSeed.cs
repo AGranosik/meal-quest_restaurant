@@ -64,15 +64,12 @@ public class DataSeed
         foreach (var restaurantId in restaurantsId)
         {
             var menus = CreateMenus(4, restaurantId, ingredients, categories);
-            foreach (var menu in menus)
-            {
-                var scope = _serviceProvider.CreateScope();
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                var menuController = new MenuController(mediator);
-                await menuController.CreateMenuAsync(menu, CancellationToken.None);
-                scope.Dispose();
-            }
-
+            var scope = _serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var menuController = new MenuController(mediator);
+            
+            await menuController.CreateMenuAsync(new CreateMenusRequest(menus), CancellationToken.None);
+            scope.Dispose();
             Console.WriteLine($"Menus for Restaurant: {restaurantId}");
         }
     }

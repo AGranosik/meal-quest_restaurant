@@ -10,7 +10,7 @@ namespace integrationTests.Menus.DataMocks;
 
 internal static class MenuDataFaker
 {
-    internal static List<CreateMenuRequest> ValidRequests(int numberOfMenus, int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId, int numberOfCategories)
+    internal static CreateMenusRequest ValidRequests(int numberOfMenus, int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId, int numberOfCategories)
     {
         var result = new List<CreateMenuRequest>(numberOfMenus);
         for(var m = 0; m < numberOfMenus; m++)
@@ -43,7 +43,7 @@ internal static class MenuDataFaker
             result.Add(new CreateMenuRequest("Menu" + m, groups, restaurantId));
         }
 
-        return result;
+        return new(result);
     }
 
     private static List<MenuRestaurant> Restaurants(int numberOfRestaurants)
