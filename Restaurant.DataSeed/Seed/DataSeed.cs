@@ -32,7 +32,7 @@ public class DataSeed
         var openingHours = new List<short> { 6, 7, 8, 9 };
         var closingHours = new List<short> { 20, 21, 22, 23 };
         const string categoryName = "cat-";
-        var restaurants = GenerateRestaurants(10, openingHours, closingHours);
+        var restaurants = GenerateRestaurants(100, openingHours, closingHours);
         var ingredients = Enumerable.Range(0, 1000)
             .Select(i => new CreateIngredientRequest($"ingredient-{i}")).ToList();
 
@@ -41,8 +41,8 @@ public class DataSeed
         var restaurantsId = new List<int>(restaurants.Count);
         
         var i = 0;
-        const int tasksLimit = 10;
-        var tasks = new List<Task>(tasksLimit);
+        var start = DateTime.Now;
+        Console.WriteLine("started.");
         foreach (var restaurant in restaurants)
         {
             var scope = _serviceProvider.CreateScope();
@@ -60,7 +60,7 @@ public class DataSeed
             Console.WriteLine($"Restaurant: {i}");
             Console.WriteLine(DateTime.Now);
         }
-
+        
         foreach (var restaurantId in restaurantsId)
         {
             var menus = CreateMenus(4, restaurantId, ingredients, categories);
@@ -71,7 +71,11 @@ public class DataSeed
             await menuController.CreateMenuAsync(new CreateMenusRequest(menus), CancellationToken.None);
             scope.Dispose();
             Console.WriteLine($"Menus for Restaurant: {restaurantId}");
+            Console.WriteLine(DateTime.Now);
         }
+
+        var end = DateTime.Now;
+        Console.WriteLine((end - start).Minutes);
     }
 
     //lodz cooridnates
