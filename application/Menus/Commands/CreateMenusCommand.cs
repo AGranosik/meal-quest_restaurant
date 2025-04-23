@@ -3,6 +3,7 @@ using application.Menus.Commands.Interfaces;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
 using domain.Menus.Aggregates;
+using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
@@ -97,7 +98,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenusComm
                 {
                     var ingredients = new List<Ingredient>(commandMeal.Ingredients.Count);
                     var categories =
-                        uniqueCategories.Where(uq => commandMeal.Categories.Any(c => c.Name == uq.Value.Value))
+                        uniqueCategories.Where(uq => commandMeal.Categories.Any(c => c.Name == uq.Name.Value))
                             .ToList();
 
                     foreach (var domainIngredient in commandMeal.Ingredients.Select(commandIngredient =>

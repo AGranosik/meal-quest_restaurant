@@ -3,6 +3,7 @@ using core.Extensions;
 using domain.Common.DomainImplementationTypes;
 using domain.Common.ValueTypes.Numeric;
 using domain.Common.ValueTypes.Strings;
+using domain.Menus.Aggregates.Entities;
 
 namespace domain.Menus.ValueObjects;
 

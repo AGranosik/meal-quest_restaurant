@@ -1,3 +1,4 @@
+using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
 using FluentAssertions;
 

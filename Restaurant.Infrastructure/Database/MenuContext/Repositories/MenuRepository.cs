@@ -36,26 +36,20 @@ internal class MenuRepository : IMenuRepository
     private async Task HandleCategoriesUniqueness(List<Menu> menus, CancellationToken cancellationToken)
     {
         var categoriesDomain = menus.SelectMany(m => m.Groups).SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
-        var uniqueCategories = categoriesDomain.Select(c => c.Value).Distinct();
+        var uniqueCategories = categoriesDomain.Select(c => c.Name.Value.Value).Distinct();
 
-        var dbCategories = await _context.Categories.Where(db => uniqueCategories.Contains(db.Value))
-            .Select(c => new
-            {
-                Name = c.Value,
-                Id = EF.Property<int>(c, "CategoryID")
-            })
+        var dbCategories = await _context.Categories.Where(db => uniqueCategories.Any(uq => uq == db.Name.Value.Value))
             .ToListAsync(cancellationToken);
-        var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name != c.Value.Value)).Distinct().ToList();
+        //TODO: AVOID LOH ALLOCATIONS
+        var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name.Value != c.Name.Value.Value)).Distinct().ToList();
         _context.Categories.AddRange(notExistingCategories);
         await _context.SaveChangesAsync(cancellationToken);
-
-        foreach (var dbCategory in dbCategories)
-        {
-            var category = categoriesDomain.First(cd => cd.Value.Value == dbCategory.Name);
-                _context.Categories.Entry(category)
-                    .Property<int>("CategoryID").CurrentValue = dbCategory.Id;
-                _context.Categories.Attach(category);
-            
-        }
+        
+        // foreach (var dbCategory in dbCategories)
+        // {
+        //     var category = categoriesDomain.First(cd => cd.Name.Value == dbCategory.Name.Value);
+        //         category.SetId(dbCategory.Id);
+        //     
+        // }
     }
 }

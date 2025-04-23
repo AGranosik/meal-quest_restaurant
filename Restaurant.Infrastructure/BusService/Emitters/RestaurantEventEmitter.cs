@@ -8,7 +8,6 @@ namespace infrastructure.BusService.Emitters;
 [EntityName("restaurants.changes")]
 public class RestaurantChangedDto
 {
-
     public string Name { get; private set; }
     public double XAxis { get; private set; }
     public double YAxis { get; private set; }
@@ -32,7 +31,7 @@ internal sealed class RestaurantEventEmitter : IEventEmitter<Restaurant>
     {
         try
         {
-            using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(BusServiceConfiguration.TIMEOUT_LIMIT));
+            using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(BusServiceConfiguration.TimeoutLimit));
             using var mergedCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, rabbitTimeout.Token);
                 
             await _publishEndpoint.Publish(new RestaurantChangedDto(@event), mergedCancellationToken.Token);

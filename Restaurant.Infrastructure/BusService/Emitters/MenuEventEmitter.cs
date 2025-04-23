@@ -6,7 +6,7 @@ using MassTransit;
 namespace infrastructure.BusService.Emitters;
 
 [EntityName("menus.changes")]
-internal class MenuChangedDto
+public class MenuChangedDto
 {
     public Menu Menu { get; init; }
     public int RestaurantId { get; set; }
@@ -20,7 +20,6 @@ internal class MenuChangedDto
 internal sealed class MenuEventEmitter : IEventEmitter<Menu>
 {
     private readonly IPublishEndpoint _publishEndpoint;
-
     public MenuEventEmitter(IPublishEndpoint publishEndpoint)
     {
         _publishEndpoint = publishEndpoint;
@@ -30,7 +29,10 @@ internal sealed class MenuEventEmitter : IEventEmitter<Menu>
     {
         try
         {
-            await _publishEndpoint.Publish(new MenuChangedDto(@event), cancellationToken);
+            //TODO: GENERIC
+            using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(BusServiceConfiguration.TimeoutLimit));
+            using var mergedCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, rabbitTimeout.Token);
+            await _publishEndpoint.Publish(new MenuChangedDto(@event), mergedCancellationToken.Token);
             return Result.Ok();
         }
         catch (Exception ex)

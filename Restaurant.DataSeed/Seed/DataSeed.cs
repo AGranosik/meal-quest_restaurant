@@ -32,7 +32,7 @@ public class DataSeed
         var openingHours = new List<short> { 6, 7, 8, 9 };
         var closingHours = new List<short> { 20, 21, 22, 23 };
         const string categoryName = "cat-";
-        var restaurants = GenerateRestaurants(100, openingHours, closingHours);
+        var restaurants = GenerateRestaurants(10, openingHours, closingHours);
         var ingredients = Enumerable.Range(0, 1000)
             .Select(i => new CreateIngredientRequest($"ingredient-{i}")).ToList();
 

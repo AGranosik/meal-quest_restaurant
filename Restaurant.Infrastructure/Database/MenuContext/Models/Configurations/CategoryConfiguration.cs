@@ -1,5 +1,8 @@
 using core.SimpleTypes;
+using domain.Common.ValueTypes.Strings;
+using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
+using domain.Menus.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,14 +14,15 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
         const string idName = "CategoryID";
         builder.ToTable(MenuDatabaseConstants.Categories, MenuDatabaseConstants.Schema);
-        builder.Property<int>(idName)
+        builder.Property(c => c.Id)
+            .HasConversion(c => c!.Value, db => new CategoryId(db))
             .ValueGeneratedOnAdd();
 
-        builder.HasIndex(c => c.Value)
+        builder.HasIndex(c => c.Name)
             .IsUnique();
         
-        builder.Property(c => c.Value)
-            .HasConversion(name => name.Value, db => new NotEmptyString(db));
+        builder.Property(c => c.Name)
+            .HasConversion(name => name.Value.Value, db => new Name(db));
         
     }
 }

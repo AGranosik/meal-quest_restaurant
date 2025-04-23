@@ -11,7 +11,7 @@ namespace infrastructure.BusService;
 //TODO: observability & metrics for grafana of rabbitmq
 internal static class BusServiceConfiguration
 {
-    public const int TIMEOUT_LIMIT = 2;
+    public const int TimeoutLimit = 2;
     public static IServiceCollection ConfigureBusService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMassTransit(x =>
@@ -19,6 +19,7 @@ internal static class BusServiceConfiguration
             x.UsingRabbitMq((bus, cfg) =>
             {
                 cfg.Host(configuration.GetConnectionString("rabbitmq"));
+                cfg.Durable = true;
             });
         });
 

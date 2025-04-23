@@ -1,4 +1,5 @@
 ﻿using domain.Menus.Aggregates;
+using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using infrastructure.Database.MenuContext.Models.Configurations;
