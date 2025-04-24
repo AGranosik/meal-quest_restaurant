@@ -1,5 +1,6 @@
 ﻿using application.Menus.Commands.Interfaces;
 using domain.Menus.Aggregates;
+using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using FluentResults;
@@ -36,20 +37,22 @@ internal class MenuRepository : IMenuRepository
     private async Task HandleCategoriesUniqueness(List<Menu> menus, CancellationToken cancellationToken)
     {
         var categoriesDomain = menus.SelectMany(m => m.Groups).SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
-        var uniqueCategories = categoriesDomain.Select(c => c.Name.Value.Value).Distinct();
+        var uniqueCategories = categoriesDomain.Select(c => c.Name).Distinct();
 
-        var dbCategories = await _context.Categories.Where(db => uniqueCategories.Any(uq => uq == db.Name.Value.Value))
+        var dbCategories = await _context.Categories
+            .Where(db => uniqueCategories.Contains(db.Name))
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
         //TODO: AVOID LOH ALLOCATIONS
-        var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name.Value != c.Name.Value.Value)).Distinct().ToList();
+        var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name.Value != c.Name.Value)).Distinct().ToList();
         _context.Categories.AddRange(notExistingCategories);
         await _context.SaveChangesAsync(cancellationToken);
         
-        // foreach (var dbCategory in dbCategories)
-        // {
-        //     var category = categoriesDomain.First(cd => cd.Name.Value == dbCategory.Name.Value);
-        //         category.SetId(dbCategory.Id);
-        //     
-        // }
+        foreach (var dbCategory in dbCategories)
+        {
+            var category = categoriesDomain.First(cd => cd.Name.Value == dbCategory.Name.Value);
+            category.SetId(dbCategory.Id!);
+            _context.Categories.Attach(category);
+        }
     }
 }

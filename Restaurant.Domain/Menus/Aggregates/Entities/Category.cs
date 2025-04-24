@@ -7,10 +7,10 @@ namespace domain.Menus.Aggregates.Entities;
 
 public class Category : Entity<CategoryId>
 {
-    public Name Name { get; set; }
+    public NotEmptyString Name { get; set; }
     public Category(NotEmptyString name)
     {
-        Name = new Name(name.Value);
+        Name = name ?? throw new ArgumentException(nameof(name));
     }
     
     protected Category() : base(){}

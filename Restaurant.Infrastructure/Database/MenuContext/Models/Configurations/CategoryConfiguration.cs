@@ -22,7 +22,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .IsUnique();
         
         builder.Property(c => c.Name)
-            .HasConversion(name => name.Value.Value, db => new Name(db));
+            .HasConversion(name => name.Value, db => new NotEmptyString(db));
         
     }
 }

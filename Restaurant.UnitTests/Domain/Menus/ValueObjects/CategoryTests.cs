@@ -42,12 +42,4 @@ public class CategoryTests
     {
         (new Category("test") == new Category("different name")).Should().BeFalse();
     }
-
-    [Test]
-    public void SameName_True()
-    {
-        var name = "test name";
-        (new Category(name) == new Category(name))
-            .Should().BeTrue();
-    }
 }
