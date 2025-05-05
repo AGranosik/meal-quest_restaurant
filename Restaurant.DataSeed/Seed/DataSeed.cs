@@ -109,8 +109,8 @@ public class DataSeed
     private static List<CreateMenuRequest> CreateMenus(int n, int restaurantId,
         List<CreateIngredientRequest> ingredients, List<string> categories)
     {
-        const int groupsPerMenu = 10;
-        const int mealsPerGroup = 25;
+        const int groupsPerMenu = 1;
+        const int mealsPerGroup = 1;
         const string menuName = "menu-name-seed-";
         const string groupName = "group-name-seed-";
         const string mealName = "meal-name-seed-";

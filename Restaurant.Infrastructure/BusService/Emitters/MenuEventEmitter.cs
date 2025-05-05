@@ -1,22 +1,10 @@
 ﻿using application.EventHandlers.Interfaces;
 using domain.Menus.Aggregates;
+using domain.Menus.ValueObjects;
 using FluentResults;
 using MassTransit;
 
 namespace infrastructure.BusService.Emitters;
-
-[EntityName("menus.changes")]
-public class MenuChangedDto
-{
-    public Menu Menu { get; init; }
-    public int RestaurantId { get; set; }
-    internal MenuChangedDto(Menu menu)
-    {
-        Menu =  menu;
-        RestaurantId = menu.Restaurant.Id!.Value;
-    }
-}
-
 internal sealed class MenuEventEmitter : IEventEmitter<Menu>
 {
     private readonly IPublishEndpoint _publishEndpoint;
@@ -41,3 +29,29 @@ internal sealed class MenuEventEmitter : IEventEmitter<Menu>
         }
     }
 }
+
+[EntityName("menus.changes")]
+public sealed class MenuChangedDto
+{
+    public string Name { get; init; }
+    public int RestaurantId { get; init; }
+    public List<GroupDto> Groups { get; init; }
+
+    internal MenuChangedDto(Menu menu)
+    {
+        RestaurantId = menu.Restaurant.Id!.Value;
+        Name = menu.Name.Value.Value;
+        Groups = menu.Groups
+            .Select(g => new GroupDto(g.GroupName.Value.Value,
+                g.Meals.Select(m => new MealDto(
+                    m.Name!.Value.Value, m.Price!.Value,
+                    m.Categories.Select(c => new CategoryDto(c.Id!.Value, c.Name.Value)).ToList(),
+                    m.Ingredients!.Select(i => new IngredientDto(i.Name.Value)).ToList())).ToList())).ToList();
+    }
+
+}
+
+public sealed record GroupDto(string Name, List<MealDto> Meals);
+public sealed record MealDto(string Name, decimal Price, List<CategoryDto> Categories, List<IngredientDto> Ingredients);
+public sealed record IngredientDto(string Name);
+public sealed record CategoryDto(int Id, string Name);
