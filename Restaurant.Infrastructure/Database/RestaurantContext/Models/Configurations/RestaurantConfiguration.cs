@@ -1,5 +1,6 @@
 ﻿using domain.Common.ValueTypes.Strings;
 using domain.Restaurants.Aggregates;
+using domain.Restaurants.ValueObjects;
 using domain.Restaurants.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,5 +28,8 @@ internal class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
 
         builder.HasMany(r => r.Menus)
             .WithOne();
+
+        builder.HasOne<Address>(r => r.Address)
+            .WithMany();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using domain.Menus.Aggregates;
 using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
+using domain.Restaurants.Aggregates;
+using domain.Restaurants.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +24,7 @@ internal class RestaurantConfiguration : IEntityTypeConfiguration<MenuRestaurant
 
         builder.Property(r => r.Id)
             .HasConversion(id => id!.Value, db => new RestaurantIdMenuId(db));
+        
 
     }
 }
