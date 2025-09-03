@@ -4,7 +4,7 @@ using FluentResults;
 
 namespace domain.Restaurants.ValueObjects;
 
-public class OpeningHours : ValueObject<OpeningHours>
+public sealed class OpeningHours : ValueObject<OpeningHours>
 {
     private const int WEEK_DAYS = 7;
 

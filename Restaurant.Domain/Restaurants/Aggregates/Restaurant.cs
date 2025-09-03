@@ -20,10 +20,7 @@ public sealed class Restaurant: Aggregate<RestaurantId>
     public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours, Address address)
     {
         var creationResult = CreationValidation(name, owner, openingHours, address);
-        if (creationResult.IsFailed)
-            return creationResult;
-
-        return Result.Ok(new Restaurant(name, owner, openingHours, address));
+        return creationResult.IsFailed ? creationResult : Result.Ok(new Restaurant(name, owner, openingHours, address));
     }
 
     public Result AddMenu(Menu menu)
