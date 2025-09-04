@@ -4,12 +4,13 @@ namespace webapi.Controllers.Restaurants.Requests;
 
 public record CreateRestaurantRequest
 {
-    public CreateRestaurantRequest(string? Name, CreateOwnerRequest? Owner, OpeningHoursRequest? OpeningHours, CreateAddressRequest? Address)
+    public CreateRestaurantRequest(string? Name, CreateOwnerRequest? Owner, OpeningHoursRequest? OpeningHours, CreateAddressRequest? Address, string Description)
     {
         this.Name = Name;
         this.Owner = Owner;
         this.OpeningHours = OpeningHours;
         this.Address = Address;
+        this.Description = Description;
     }
 
     public CreateRestaurantCommand CastoCommand()
@@ -18,13 +19,14 @@ public record CreateRestaurantRequest
         var owner = new CreateOwnerCommand(Owner?.Name, Owner?.Surname, ownerAddress);
         var openingHours = new OpeningHoursCommand(OpeningHours?.WorkingDays.Select(wd => new WorkingDayCommand(wd.Day, wd.From, wd.To)).ToList() ?? []);
         var restaurantAddress = new CreateAddressCommand(Address?.Street, Address? .City, Address?.XCoordinate ?? 0, Address?.YCoordinate ?? 0);
-        return new CreateRestaurantCommand(Name, owner, openingHours, restaurantAddress);
+        return new CreateRestaurantCommand(Name, owner, openingHours, restaurantAddress, Description);
     }
 
     public string? Name { get; init; }
     public CreateOwnerRequest? Owner { get; init; }
     public OpeningHoursRequest? OpeningHours { get; init; }
     public CreateAddressRequest? Address { get; init; }
+    public string Description { get; init; }
 }
 
 public record CreateOwnerRequest
