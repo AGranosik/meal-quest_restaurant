@@ -125,7 +125,7 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
                     WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                 ]).Value;
 
-                var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours , restaurantAddress);
+                var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours , restaurantAddress, new Description("description"), null!);
                 restaurants.Add(restaurant.Value);
                 iOwner++;
                 iRestaurant++;
@@ -168,8 +168,11 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
            || dtoAddress.YCoordinate != domainAddress.Coordinates.Y)
             return false;
 
-        return dto.OpeningHours.WorkingDays.Exists(dtoWd => domain.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
-               && dto.OpeningHours.WorkingDays.Count == domain.OpeningHours.WorkingDays.Count;
+        if(!dto.OpeningHours.WorkingDays.Exists(dtoWd => domain.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
+               && dto.OpeningHours.WorkingDays.Count == domain.OpeningHours.WorkingDays.Count)
+            return false;
+        
+        return dto.Description == domain.Description.Value;
     }
 
     private static int MaxId(List<Restaurant> restaurants)

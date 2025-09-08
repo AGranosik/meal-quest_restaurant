@@ -79,6 +79,9 @@ internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRes
 
         if (command.Address is null)
             return Result.Fail("Restaurant address cannot be null.");
+        
+        if(command.Description is null)
+            return Result.Fail("Description cannot be null.");
 
         return Result.Ok();
     }
@@ -128,25 +131,29 @@ internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRes
 
         if(restaurantAddressResult.IsFailed) return restaurantAddressResult.ToResult();
 
-        return Restaurant.Create(new Name(request.Name), owner.Value, openingHours.Value, restaurantAddressResult.Value);
+        return Restaurant.Create(new Name(request.Name), owner.Value, openingHours.Value, restaurantAddressResult.Value, new Description(request.Description!), new RestaurantLogo(request.LogoData));
     }
 }
 
 
 public record CreateRestaurantCommand : IRequest<Result<RestaurantId>>
 {
-    public CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours, CreateAddressCommand? Address)
+    public CreateRestaurantCommand(string? Name, CreateOwnerCommand? Owner, OpeningHoursCommand? OpeningHours, CreateAddressCommand? Address, string? Description, byte[]? LogoData)
     {
         this.Name = Name;
         this.Owner = Owner;
         this.OpeningHours = OpeningHours;
         this.Address = Address;
+        this.Description = Description;
+        this.LogoData = LogoData;
     }
 
     public string? Name { get; init; }
     public CreateOwnerCommand? Owner { get; init; }
-    public OpeningHoursCommand? OpeningHours { get; init; }
+    public OpeningHoursCommand? OpeningHours { get; }
     public CreateAddressCommand? Address { get; init; }
+    public string? Description { get; init; }
+    public byte[]? LogoData { get; init; }
 }
 
 public record CreateOwnerCommand

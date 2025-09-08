@@ -4,22 +4,30 @@ namespace webapi.Controllers.Restaurants.Requests;
 
 public record CreateRestaurantRequest
 {
-    public CreateRestaurantRequest(string? Name, CreateOwnerRequest? Owner, OpeningHoursRequest? OpeningHours, CreateAddressRequest? Address, string Description)
+    public CreateRestaurantRequest(string? Name, CreateOwnerRequest? Owner, OpeningHoursRequest? OpeningHours, CreateAddressRequest? Address, string Description, IFormFile? Logo)
     {
         this.Name = Name;
         this.Owner = Owner;
         this.OpeningHours = OpeningHours;
         this.Address = Address;
         this.Description = Description;
+        this.Logo = Logo;
     }
 
-    public CreateRestaurantCommand CastoCommand()
+    public async Task<CreateRestaurantCommand> CastToCommand()
     {
         var ownerAddress = new CreateAddressCommand(Owner?.Address?.Street, Owner?.Address?.City, Owner?.Address?.XCoordinate ?? 0, Owner?.Address?.YCoordinate ?? 0);
         var owner = new CreateOwnerCommand(Owner?.Name, Owner?.Surname, ownerAddress);
         var openingHours = new OpeningHoursCommand(OpeningHours?.WorkingDays.Select(wd => new WorkingDayCommand(wd.Day, wd.From, wd.To)).ToList() ?? []);
         var restaurantAddress = new CreateAddressCommand(Address?.Street, Address? .City, Address?.XCoordinate ?? 0, Address?.YCoordinate ?? 0);
-        return new CreateRestaurantCommand(Name, owner, openingHours, restaurantAddress, Description);
+        byte[]? logoData = null;
+        if (Logo != null && Logo.Length != 0)
+        {
+            using var memoryStream = new MemoryStream();
+            await Logo.CopyToAsync(memoryStream);
+            logoData = memoryStream.ToArray();
+        }
+        return new CreateRestaurantCommand(Name, owner, openingHours, restaurantAddress, Description, logoData);
     }
 
     public string? Name { get; init; }
@@ -27,6 +35,7 @@ public record CreateRestaurantRequest
     public OpeningHoursRequest? OpeningHours { get; init; }
     public CreateAddressRequest? Address { get; init; }
     public string Description { get; init; }
+    public IFormFile? Logo { get; init; }
 }
 
 public record CreateOwnerRequest

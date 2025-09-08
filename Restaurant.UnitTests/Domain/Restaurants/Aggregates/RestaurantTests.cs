@@ -16,12 +16,16 @@ public class RestaurantTests
     private readonly Owner _validOwner;
     private readonly OpeningHours _validOpeningHours;
     private readonly Address _validAddress;
+    private readonly Description _validDescription;
+    private readonly RestaurantLogo _validRestaurantLogo;
     public RestaurantTests()
     {
         _validName = RestaurantDataFaker.ValidRestaurantName;
         _validOwner = RestaurantDataFaker.ValidOwner;
         _validOpeningHours = RestaurantDataFaker.ValidOpeningHours;
         _validAddress = RestaurantDataFaker.ValidRestaurantAddress;
+        _validDescription = RestaurantDataFaker.ValidDescription;
+        _validRestaurantLogo = RestaurantDataFaker.ValidRestaurantLogo;
     }
 
     [Test]
@@ -33,21 +37,21 @@ public class RestaurantTests
     [Test]
     public void Creation_NameCannotBeNull_Failure()
     {
-        var creationResult = Restaurant.Create(null!, null!, null!, null!);
+        var creationResult = Restaurant.Create(null!, null!, null!, null!, null!,null!);
         creationResult.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_IdOwnerCannotBeNull_Failure()
     {
-        var creationResult = Restaurant.Create(_validName, null!, null!, null!);
+        var creationResult = Restaurant.Create(_validName, null!, null!, null!, null!,null!);
         creationResult.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_IdOpenningHoursCannotBeNull_Failure()
     {
-        var creationResult = Restaurant.Create(_validName, _validOwner, null!, null!);
+        var creationResult = Restaurant.Create(_validName, _validOwner, null!, null!, null!,null!);
         creationResult.IsFailed.Should().BeTrue();
     }
 
@@ -55,14 +59,28 @@ public class RestaurantTests
     [Test]
     public void Creation_AddressCannotBeNull_Failure()
     {
-        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, null!);
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, null!, null!,null!);
         creationResult.IsFailed.Should().BeTrue();
+    }
+    
+    [Test]
+    public void Creation_DescriptionCannotBeNull_Failure()
+    {
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, null!,null!);
+        creationResult.IsFailed.Should().BeTrue();
+    }
+    
+    [Test]
+    public void Creation_LogoCannotBeNull_Success()
+    {
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, _validDescription,null!);
+        creationResult.IsSuccess.Should().BeTrue();
     }
 
     [Test]
     public void Creation_Success()
     {
-        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress);
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, _validDescription,_validRestaurantLogo);
         creationResult.IsSuccess.Should().BeTrue();
     }
 
@@ -70,7 +88,7 @@ public class RestaurantTests
     public void AddMenu_None_Success()
     {
         var menuResult = Menu.Create(new MenuId(1), new Name("test"));
-        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress);
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, _validDescription,_validRestaurantLogo);
         var restaurant = creationResult.Value;
 
         var addResult = restaurant.AddMenu(menuResult.Value);
@@ -87,7 +105,7 @@ public class RestaurantTests
     {
         var menuResult = Menu.Create(new MenuId(1), new Name("test"));
         var menuResult2 = Menu.Create(new MenuId(2), new Name("test2"));
-        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress);
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, _validDescription,_validRestaurantLogo);
         var restaurant = creationResult.Value;
         restaurant.AddMenu(menuResult.Value);
 
@@ -104,7 +122,7 @@ public class RestaurantTests
     {
         var menuResult = Menu.Create(new MenuId(1), new Name("test"));
         var menuResult2 = Menu.Create(new MenuId(2), new Name("test2"));
-        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress);
+        var creationResult = Restaurant.Create(_validName, _validOwner, _validOpeningHours, _validAddress, _validDescription,_validRestaurantLogo);
         var restaurant = creationResult.Value;
         restaurant.AddMenu(menuResult.Value);
         restaurant.AddMenu(menuResult2.Value);

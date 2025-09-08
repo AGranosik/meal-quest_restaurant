@@ -17,10 +17,12 @@ public sealed class Restaurant: Aggregate<RestaurantId>
     public Owner Owner { get; }
     public OpeningHours OpeningHours { get; }
     public Address Address { get; }
-    public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours, Address address)
+    public Description Description { get; }
+    public RestaurantLogo? Logo { get; set; }
+    public static Result<Restaurant> Create(Name name, Owner owner, OpeningHours openingHours, Address address, Description description, RestaurantLogo? logo)
     {
-        var creationResult = CreationValidation(name, owner, openingHours, address);
-        return creationResult.IsFailed ? creationResult : Result.Ok(new Restaurant(name, owner, openingHours, address));
+        var creationResult = CreationValidation(name, owner, openingHours, address, description);
+        return creationResult.IsFailed ? creationResult : Result.Ok(new Restaurant(name, owner, openingHours, address, description, logo));
     }
 
     public Result AddMenu(Menu menu)
@@ -35,15 +37,17 @@ public sealed class Restaurant: Aggregate<RestaurantId>
     [JsonConstructor]
     private Restaurant() : base() { }
 
-    private Restaurant(Name name, Owner owner, OpeningHours openingHours, Address address)
+    private Restaurant(Name name, Owner owner, OpeningHours openingHours, Address address, Description description, RestaurantLogo? logo)
     {
         Owner = owner;
         OpeningHours = openingHours;
         Name = name;
         Address = address;
+        Description = description;
+        Logo = logo;
     }
 
-    private static Result CreationValidation(Name name, Owner owner, OpeningHours openingHours, Address address)
+    private static Result CreationValidation(Name name, Owner owner, OpeningHours openingHours, Address address, Description description)
     {
         if (name is null)
             return Result.Fail("Name cannot be null.");
@@ -56,6 +60,9 @@ public sealed class Restaurant: Aggregate<RestaurantId>
 
         if (address is null)
             return Result.Fail("Address cannot be null.");
+        
+        if(description is null)
+            return Result.Fail("Description cannot be null.");
 
         return Result.Ok();
     }

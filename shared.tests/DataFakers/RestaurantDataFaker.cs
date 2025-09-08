@@ -16,6 +16,10 @@ public static class RestaurantDataFaker
 
     public static Address ValidRestaurantAddress
         => Address.Create(new Street("street"), new City("city"), new Coordinates(10, 10)).Value;
+    
+    public static Description ValidDescription => new("test description");
+
+    public static RestaurantLogo ValidRestaurantLogo = new([]);
 
     public static OpeningHours ValidOpeningHours
         => OpeningHours.Create(
@@ -31,7 +35,7 @@ public static class RestaurantDataFaker
 
     public static Restaurant ValidRestaurant()
     {
-        var result = Restaurant.Create(ValidRestaurantName, ValidOwner, ValidOpeningHours, ValidRestaurantAddress).Value;
+        var result = Restaurant.Create(ValidRestaurantName, ValidOwner, ValidOpeningHours, ValidRestaurantAddress, ValidDescription, ValidRestaurantLogo).Value;
         result.SetId(new RestaurantId(2));
         return result;
     }

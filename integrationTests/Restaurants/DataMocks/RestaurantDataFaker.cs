@@ -18,7 +18,7 @@ internal static class RestaurantDataFaker
         ]);
         var address = new CreateAddressRequest("street", "City", 0, 0);
         var owner = new CreateOwnerRequest("name", "surname", address);
-        return new CreateRestaurantRequest("restaurantName", owner, openingHours, address);
+        return new CreateRestaurantRequest("restaurantName", owner, openingHours, address, "Description.", null!);
     }
             
 }

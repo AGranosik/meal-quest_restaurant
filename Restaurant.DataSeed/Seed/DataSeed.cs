@@ -100,7 +100,8 @@ public class DataSeed
                     new DateTime(2020, 12, 12, openingHours[i % openingHours.Count], 00, 00),
                     new DateTime(2020, 12, 12, closingHours[i % closingHours.Count], 00, 00))).ToList();
             var openinghours = new OpeningHoursRequest(openDays);
-            result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress));
+            var description = $"desc - {i}";
+            result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress, description, null!));
         }
 
         return result;
