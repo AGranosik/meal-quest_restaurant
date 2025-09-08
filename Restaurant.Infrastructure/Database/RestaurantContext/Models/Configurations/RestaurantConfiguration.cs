@@ -32,6 +32,10 @@ internal class RestaurantConfiguration : IEntityTypeConfiguration<Restaurant>
         builder.HasOne<Address>(r => r.Address)
             .WithMany();
         
+        builder.Property(r => r.Logo)
+            .HasConversion(l => l.Data, data => new RestaurantLogo(data))
+            .IsRequired(false);
+        
         builder.Property(r => r.Description)
             .HasConversion(r => r.Value.Value, db => new Description(db));
     }
