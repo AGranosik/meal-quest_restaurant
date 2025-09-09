@@ -19,7 +19,7 @@ public class RestaurantController : ApiController
     [SwaggerOperation(Summary = "Create restaurant.")]
     [SwaggerResponse(200, "", typeof(Result<RestaurantId>))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
-    public async Task<IActionResult> CreateRestaurantAsync(CreateRestaurantRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateRestaurantAsync([FromForm] CreateRestaurantRequest request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(await request.CastToCommand(), cancellationToken);
         return MapApplicationResultToHttpResponse(result);
