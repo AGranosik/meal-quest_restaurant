@@ -2,18 +2,20 @@
 
 public record RestaurantDto
 {
-    public RestaurantDto(int Id, OwnerDto Owner, OpeningHorusDto OpeningHours, string Description)
+    public RestaurantDto(int Id, OwnerDto Owner, OpeningHorusDto OpeningHours, string Description, string Base64Logo)
     {
         this.Id = Id;
         this.Owner = Owner;
         this.OpeningHours = OpeningHours;
         this.Description = Description;
+        this.Base64Logo = Base64Logo;
     }
 
     public int Id { get; init; }
     public OwnerDto Owner { get; init; }
     public OpeningHorusDto OpeningHours { get; init; }
     public string Description { get; set; }
+    public string Base64Logo { get; set; }
 }
 
 public record OwnerDto
