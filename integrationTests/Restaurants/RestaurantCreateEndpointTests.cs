@@ -35,7 +35,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
@@ -49,7 +49,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
+        var result = await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request, CancellationToken.None);
 
         result.Should().NotBeNull();
         result!.Value.Should().BeGreaterThan(0);
@@ -71,7 +71,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
+        var result = await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
         var menuDb = await MenuDbContext.Restaurants
             .Where(r => r.Id! == new RestaurantIdMenuId(result!.Value))
@@ -85,7 +85,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var result = await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
+        var result = await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request, TestContext.CurrentContext.CancellationToken);
 
         var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
             .Where(e => e.StreamId == result!.Value)

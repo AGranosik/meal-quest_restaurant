@@ -24,7 +24,7 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
         var request = RestaurantDataFaker.ValidRequest();
 
         var result =
-            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+            await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
                 CancellationToken.None);
 
         result.Should().NotBeNull();
@@ -40,7 +40,7 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
         var request = RestaurantDataFaker.ValidRequest();
 
         var result =
-            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+            await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
                 CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()
@@ -58,7 +58,7 @@ internal class RestaurantEventEmitterFailureTests : BaseRestaurantIntegrationTes
         var request = RestaurantDataFaker.ValidRequest();
 
         var result =
-            await Client.TestPostAsync<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
+            await Client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>(_endpoint, request,
                 CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Restaurant, RestaurantId>()

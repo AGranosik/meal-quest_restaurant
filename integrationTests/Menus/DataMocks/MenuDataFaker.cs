@@ -3,8 +3,10 @@ using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using domain.Restaurants.ValueObjects.Identifiers;
 using infrastructure.Database.MenuContext;
+using integrationTests.Common;
 using integrationTests.Restaurants.DataMocks;
 using webapi.Controllers.Menus.Requests;
+using webapi.Controllers.Restaurants.Requests;
 
 namespace integrationTests.Menus.DataMocks;
 
@@ -56,13 +58,11 @@ internal static class MenuDataFaker
         return result;
     }
 
-    internal static async Task<RestaurantId> CreateRestaurantForSystem(HttpClient client)
+    internal static Task<RestaurantId?> CreateRestaurantForSystem(HttpClient client)
     {
         var request = RestaurantDataFaker.ValidRequest();
 
-        var response = await client.PostAsJsonAsync("/api/Restaurant", request, CancellationToken.None);
-        var resultString = await response.Content.ReadAsStringAsync();
-        return ApiResponseDeserializator.Deserialize<RestaurantId>(resultString)!;
+        return client.TestPostMultipartForm<CreateRestaurantRequest, RestaurantId>("/api/Restaurant", request, TestContext.CurrentContext.CancellationToken);
     }
 
     internal static async Task<List<MenuRestaurant>> CreateRestaurantsAsync(MenuDbContext dbContext, int numberOfRestaurants)

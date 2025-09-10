@@ -1,21 +1,39 @@
 ﻿using application.EventHandlers.Interfaces;
 using domain.Restaurants.Aggregates;
+using domain.Restaurants.ValueObjects;
 using FluentResults;
 using MassTransit;
 
 namespace infrastructure.BusService.Emitters;
 
 [EntityName("restaurants.changes")]
-public class RestaurantChangedDto
+public sealed class RestaurantChangedDto
 {
     public string Name { get; private set; }
-    public double XAxis { get; private set; }
-    public double YAxis { get; private set; }
+    public string Description { get; private set; }
+    public byte[]? LogoData { get; private set; }
+
     internal RestaurantChangedDto(Restaurant restaurant)
     {
         Name = restaurant.Name.Value.Value;
-        XAxis = restaurant.Address.Coordinates.X;
-        YAxis = restaurant.Address.Coordinates.Y;
+        Description = restaurant.Description.Value.Value;
+        LogoData = restaurant.Logo?.Data;
+    }
+}
+
+public sealed class AddressQueueDto
+{
+    public string StreetName { get; private set; }
+    public string City { get; private set; }
+    public double XAxis { get; private set; }
+    public double YAxis { get; private set; }
+
+    internal AddressQueueDto(Address address)
+    {
+        XAxis = address.Coordinates.X;
+        YAxis = address.Coordinates.Y;
+        StreetName = address.Street.Value.Value;
+        City = address.City.Value.Value;
     }
 }
 internal sealed class RestaurantEventEmitter : IEventEmitter<Restaurant>
