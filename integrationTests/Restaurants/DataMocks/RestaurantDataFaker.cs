@@ -1,4 +1,5 @@
-﻿using webapi.Controllers.Restaurants.Requests;
+﻿using Microsoft.AspNetCore.Http;
+using webapi.Controllers.Restaurants.Requests;
 
 namespace integrationTests.Restaurants.DataMocks;
 
@@ -18,7 +19,15 @@ internal static class RestaurantDataFaker
         ]);
         var address = new CreateAddressRequest("street", "City", 0, 0);
         var owner = new CreateOwnerRequest("name", "surname", address);
-        return new CreateRestaurantRequest("restaurantName", owner, openingHours, address, "Description.", null!);
+        var currentDir = Directory.GetCurrentDirectory();
+        var logoPath = Path.Combine(currentDir, "..\\..\\..\\Restaurants\\logos\\1.jpeg");
+        var fileStream = new FileStream(logoPath, FileMode.Open, FileAccess.Read);
+        var formFile = new FormFile(fileStream, 0, fileStream.Length, "1.jpeg", Path.GetFileName(logoPath))
+        {
+            Headers = new HeaderDictionary(),
+            ContentType = "image/jpeg"
+        };
+        return new CreateRestaurantRequest("restaurantName", owner, openingHours, address, "Description.", formFile);
     }
             
 }

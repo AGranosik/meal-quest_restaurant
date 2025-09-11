@@ -1,9 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 
 namespace integrationTests.Common;
 
@@ -31,7 +33,7 @@ internal static class ClientExtensions
             {
                 var fileContent = new ByteArrayContent(fileBytes);
                 fileContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                content.Add(fileContent, kv.Key, "upload.bin");
+                content.Add(fileContent, kv.Key, "image_test.jpg");
             }
             else if (kv.Value is Stream stream) // file as stream
             {
@@ -71,16 +73,25 @@ internal static class ClientExtensions
             {
                 dict[key] = value;
             }
-            else if (value is IEnumerable<object> list) // Handle collections
+            else if (value is IFormFile formFile) // special handling
+            {
+                using var ms = new MemoryStream();
+                formFile.CopyTo(ms);
+                dict[key] = ms.ToArray(); // store as byte[]
+            }
+            else if (value is IEnumerable enumerable && !(value is string))
             {
                 int index = 0;
-                foreach (var item in list)
+                foreach (var item in enumerable)
                 {
+                    if (item == null) continue;
+
                     if (IsSimple(item.GetType()))
                         dict[$"{key}[{index}]"] = item;
                     else
                         foreach (var kv in item.ToDictionary($"{key}[{index}]"))
                             dict[kv.Key] = kv.Value;
+
                     index++;
                 }
             }
