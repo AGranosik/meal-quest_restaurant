@@ -82,6 +82,9 @@ public class DataSeed
     //lodz cooridnates
     // Latitude: ~ 51.65°N to 51.85°N
     //Longitude: ~ 19.30°E to 19.65°E
+    
+    //flutter: latx: 37.4219983
+    // laty: 37.4219983
 
     private static List<CreateRestaurantRequest> GenerateRestaurants(int n, List<short> openingHours,
         List<short> closingHours)
@@ -91,8 +94,9 @@ public class DataSeed
 
         for (var i = 0; i < n; i++)
         {
+            var (lat, lng) = GeoUtils.GetRandomNearby(Random.Shared, 37.4219983, -122.084, 200);
             var restaurantAddress = new CreateAddressRequest($"restaurant-seed-street-{i}", $"restaurant-city-seed-{i}",
-                GetRandomDouble(Random.Shared, 16.30, 22.65), GetRandomDouble(Random.Shared, 50.65, 53.85));
+                lat, lng);
             var owner = new CreateOwnerRequest($"owner-seed-name-{i}", $"owner-seed-surname-{i}",
                 new CreateAddressRequest($"seed-street-{i}", $"city-seed-{i}", Random.Shared.NextDouble(),
                     Random.Shared.NextDouble()));
