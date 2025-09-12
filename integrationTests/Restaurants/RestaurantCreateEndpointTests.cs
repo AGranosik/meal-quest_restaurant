@@ -21,7 +21,7 @@ internal class RestaurantCreateEndpointTests : BaseRestaurantIntegrationTests
     }
 
     [Test]
-    public async Task CreateRestaurant_RequestIsNull_Repsonse()
+    public async Task CreateRestaurant_RequestIsNull_Response()
     {
         var response = await Client.PostAsJsonAsync<CreateRestaurantRequest?>(_endpoint, null, CancellationToken.None);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);

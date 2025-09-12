@@ -7,6 +7,7 @@ using domain.Restaurants.Aggregates.Entities;
 using domain.Restaurants.ValueObjects;
 using FluentAssertions;
 using integrationTests.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace integrationTests.Restaurants;
 
@@ -125,7 +126,10 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
                     WorkingDay.Create(DayOfWeek.Sunday, new TimeOnly(12, 00), new TimeOnly(14, 00)).Value,
                 ]).Value;
 
-                var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant.ToString()), owner, openingHours , restaurantAddress, new Description("description"), null!);
+                var currentDir = Directory.GetCurrentDirectory();
+                var logoPath = Path.Combine(currentDir, "..\\..\\..\\Restaurants\\logos\\1.jpeg");
+                var logo = File.ReadAllBytes(logoPath);
+                var restaurant = Restaurant.Create(new Name(restaurantName + iRestaurant), owner, openingHours , restaurantAddress, new Description("description"), new RestaurantLogo(logo));
                 restaurants.Add(restaurant.Value);
                 iOwner++;
                 iRestaurant++;
@@ -170,6 +174,9 @@ internal class GetRestaurantEndpointTests : BaseRestaurantIntegrationTests
 
         if(!dto.OpeningHours.WorkingDays.Exists(dtoWd => domain.OpeningHours.WorkingDays.Any(domainWWd => dtoWd.Day == domainWWd.Day))
                && dto.OpeningHours.WorkingDays.Count == domain.OpeningHours.WorkingDays.Count)
+            return false;
+
+        if (string.IsNullOrEmpty(dto.Base64Logo))
             return false;
         
         return dto.Description == domain.Description.Value;
