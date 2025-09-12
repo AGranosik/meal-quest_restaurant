@@ -12,12 +12,14 @@ public sealed class RestaurantChangedDto
     public string Name { get; private set; }
     public string Description { get; private set; }
     public byte[]? LogoData { get; private set; }
+    public AddressQueueDto Address { get; set; }
 
     internal RestaurantChangedDto(Restaurant restaurant)
     {
         Name = restaurant.Name.Value.Value;
         Description = restaurant.Description.Value.Value;
         LogoData = restaurant.Logo?.Data;
+        Address = new AddressQueueDto(restaurant.Address);
     }
 }
 

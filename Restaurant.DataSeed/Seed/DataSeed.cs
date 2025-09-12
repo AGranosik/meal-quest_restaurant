@@ -2,6 +2,7 @@
 using FluentResults;
 using infrastructure.Database.RestaurantContext;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -101,7 +102,15 @@ public class DataSeed
                     new DateTime(2020, 12, 12, closingHours[i % closingHours.Count], 00, 00))).ToList();
             var openinghours = new OpeningHoursRequest(openDays);
             var description = $"desc - {i}";
-            result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress, description, null!));
+            var currentDir = Directory.GetCurrentDirectory();
+            var logoPath = Path.Combine(currentDir, "..\\..\\..\\logos\\1.jpeg");
+            var fileStream = new FileStream(logoPath, FileMode.Open, FileAccess.Read);
+            var formFile = new FormFile(fileStream, 0, fileStream.Length, "1.jpeg", Path.GetFileName(logoPath))
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
+            result.Add(new CreateRestaurantRequest($"Data-seed-{i}", owner, openinghours, restaurantAddress, description, formFile));
         }
 
         return result;
