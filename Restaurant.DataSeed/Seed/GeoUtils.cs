@@ -6,21 +6,32 @@ public static class GeoUtils
 
     public static (double lat, double lng) GetRandomNearby(Random rng, double baseLat, double baseLng, double maxMeters = 200)
     {
-        // Convert meters to degrees
-        var lat = baseLat;
-        var lng = baseLng;
+        // convert from degrees to radians
+        var latRad = baseLat * Math.PI / 180.0;
+        var lngRad = baseLng * Math.PI / 180.0;
 
-        // random distance and angle
+        // pick a random distance (0..maxMeters) and bearing (0..360°)
         var distance = rng.NextDouble() * maxMeters;
-        var angle = rng.NextDouble() * 2 * Math.PI;
+        var bearing = rng.NextDouble() * 2 * Math.PI;
 
-        // offset in radians
-        var dLat = (distance * Math.Cos(angle)) / EarthRadiusMeters;
-        var dLng = (distance * Math.Sin(angle)) / (EarthRadiusMeters * Math.Cos(baseLat * Math.PI / 180));
+        // angular distance
+        var angularDistance = distance / EarthRadiusMeters;
 
-        // apply offsets (convert back to degrees)
-        var newLat = lat + dLat * (180 / Math.PI);
-        var newLng = lng + dLng * (180 / Math.PI);
+        // new latitude
+        var newLatRad = Math.Asin(
+            Math.Sin(latRad) * Math.Cos(angularDistance) +
+            Math.Cos(latRad) * Math.Sin(angularDistance) * Math.Cos(bearing)
+        );
+
+        // new longitude
+        var newLngRad = lngRad + Math.Atan2(
+            Math.Sin(bearing) * Math.Sin(angularDistance) * Math.Cos(latRad),
+            Math.Cos(angularDistance) - Math.Sin(latRad) * Math.Sin(newLatRad)
+        );
+
+        // convert back to degrees
+        var newLat = newLatRad * 180.0 / Math.PI;
+        var newLng = newLngRad * 180.0 / Math.PI;
 
         return (newLat, newLng);
     }

@@ -94,7 +94,8 @@ public class DataSeed
 
         for (var i = 0; i < n; i++)
         {
-            var (lat, lng) = GeoUtils.GetRandomNearby(Random.Shared, 37.4219983, -122.084, 200);
+            var (lat, lng) = GeoUtils.GetRandomNearby(Random.Shared,37.4219983, -122.084, 2000);
+            // var (lat, lng) = (-122.084, 37.4219983);
             var restaurantAddress = new CreateAddressRequest($"restaurant-seed-street-{i}", $"restaurant-city-seed-{i}",
                 lat, lng);
             var owner = new CreateOwnerRequest($"owner-seed-name-{i}", $"owner-seed-surname-{i}",

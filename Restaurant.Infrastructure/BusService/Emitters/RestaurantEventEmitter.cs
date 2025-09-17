@@ -9,6 +9,7 @@ namespace infrastructure.BusService.Emitters;
 [EntityName("restaurants.changes")]
 public sealed class RestaurantChangedDto
 {
+    public int RestaurantId { get; set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
     public byte[]? LogoData { get; private set; }
@@ -16,6 +17,7 @@ public sealed class RestaurantChangedDto
 
     internal RestaurantChangedDto(Restaurant restaurant)
     {
+        RestaurantId = restaurant.Id!.Value;
         Name = restaurant.Name.Value.Value;
         Description = restaurant.Description.Value.Value;
         LogoData = restaurant.Logo?.Data;
