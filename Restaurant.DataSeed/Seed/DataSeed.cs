@@ -33,7 +33,7 @@ public class DataSeed
         var openingHours = new List<short> { 6, 7, 8, 9 };
         var closingHours = new List<short> { 20, 21, 22, 23 };
         const string categoryName = "cat-";
-        var restaurants = GenerateRestaurants(10, openingHours, closingHours);
+        var restaurants = GenerateRestaurants(10_000, openingHours, closingHours);
         var ingredients = Enumerable.Range(0, 1000)
             .Select(i => new CreateIngredientRequest($"ingredient-{i}")).ToList();
 
@@ -108,9 +108,9 @@ public class DataSeed
             var openinghours = new OpeningHoursRequest(openDays);
             var description = $"desc - {i}";
             var currentDir = Directory.GetCurrentDirectory();
-            var logoPath = Path.Combine(currentDir, "..\\..\\..\\logos\\1.jpeg");
+            var logoPath = Path.Combine(currentDir, $@"..\\..\\..\\logos\\{i%4 + 1}.jpeg");
             var fileStream = new FileStream(logoPath, FileMode.Open, FileAccess.Read);
-            var formFile = new FormFile(fileStream, 0, fileStream.Length, "1.jpeg", Path.GetFileName(logoPath))
+            var formFile = new FormFile(fileStream, 0, fileStream.Length, $"{i%4 + 1}.jpeg", Path.GetFileName(logoPath))
             {
                 Headers = new HeaderDictionary(),
                 ContentType = "image/jpeg"

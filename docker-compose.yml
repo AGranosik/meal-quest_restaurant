@@ -62,6 +62,18 @@ services:
       - 15692:15692
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+  search-engine:
+    build: ../meal-quest-search-engine
+    container_name: search-engine
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_SERVER: "postgres://admin:S3cret@postgres:5432"
+      SEARCH_ENGINE_DATABASE: "search_engine"
+      RABBITMQ: "amqp://guest:guest@rabbitmq:5672/"
+    depends_on:
+      - postgres
+      - rabbitmq  
 volumes:
   esdata:
       driver: local
