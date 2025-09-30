@@ -140,7 +140,7 @@ internal class OwnerRestaurantTests : BaseRestaurantIntegrationTests
         
         return dto.Description == domain.Description.Value;
     }
-
+    
     private static int MaxId(List<Restaurant> restaurants)
         => restaurants.Max(r => r.Owner.Id!.Value);
 }

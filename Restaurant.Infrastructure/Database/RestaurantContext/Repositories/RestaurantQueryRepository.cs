@@ -30,7 +30,7 @@ internal sealed class RestaurantQueryRepository : IRestaurantQueryRepository
                     r.Logo == null ? null : Convert.ToBase64String(r.Logo.Data)))
             .ToListAsync(cancellationToken);
 
-    public Task<RestaurantDetailsDto> GetRestaurantsForRestaurant(int restaurantId, CancellationToken cancellationToken)
+    public Task<RestaurantDetailsDto?> GetRestaurantsForRestaurant(int restaurantId, CancellationToken cancellationToken)
         => _dbContext.Restaurants
             .AsNoTracking()
             .Where(r => r.Id! == new RestaurantId(restaurantId))
