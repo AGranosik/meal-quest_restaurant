@@ -36,11 +36,18 @@ public class RestaurantController : ApiController
         {
             OwnerId = ownerId,
         }, cancellationToken));
-    
+
     [HttpGet()]
     [SwaggerOperation(Summary = "Get restaurant's details.")]
     [SwaggerResponse(200, "", typeof(RestaurantDetailsDto))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
-    public async Task<IActionResult> GetRestaurantDetails([FromQuery] int restaurantId, CancellationToken cancellationToken)
-        => Ok(await _mediator.Send(new RestaurantDetailsQuery(restaurantId), cancellationToken));
+    public async Task<IActionResult> GetRestaurantDetails([FromQuery] int restaurantId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new RestaurantDetailsQuery(restaurantId), cancellationToken);
+        if(result is null)
+            return BadRequest();
+
+        return Ok(result);
+    }
 }
