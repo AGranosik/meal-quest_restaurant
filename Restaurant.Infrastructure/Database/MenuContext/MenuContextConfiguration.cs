@@ -1,4 +1,5 @@
 ﻿using application.Menus.Commands.Interfaces;
+using application.Menus.Queries.Interfaces;
 using infrastructure.Database.MenuContext.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,8 @@ internal static class MenuContextConfiguration
     private static IServiceCollection ConfigureRepositories(this IServiceCollection services)
     {
         services
-            .AddScoped<IMenuRepository, MenuRepository>();
+            .AddScoped<IMenuRepository, MenuRepository>()
+            .AddScoped<IReadMenuRepository, ReadMenuRepository>();
 
         return services;
     }
