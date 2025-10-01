@@ -29,9 +29,9 @@ public class MenuController : ApiController
     [SwaggerOperation(Summary = "Get restaurant menus.")]
     [SwaggerResponse(200, "", typeof(MenuRestaurantDto))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
-    public async Task<IActionResult> GetMenus(GetRestaurantMenusRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetMenus(int restaurantId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new GetRestaurantMenusQuery(request.RestaurantId), cancellationToken);
+        var result = await _mediator.Send(new GetRestaurantMenusQuery(restaurantId), cancellationToken);
         if (result is null)
             return BadRequest();
         
