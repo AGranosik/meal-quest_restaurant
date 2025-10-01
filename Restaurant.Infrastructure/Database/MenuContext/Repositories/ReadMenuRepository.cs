@@ -1,5 +1,6 @@
 using application.Menus.Queries.Dto;
 using application.Menus.Queries.Interfaces;
+using domain.Menus.ValueObjects;
 using domain.Menus.ValueObjects.Identifiers;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,8 @@ internal sealed class ReadMenuRepository : IReadMenuRepository
 
     public Task<MenuRestaurantDto?> GetRestaurantMenu(int restaurantId, CancellationToken cancellationToken)
         => _dbContext.Menus
-            .Where(m => m.Restaurant.Id! == new RestaurantIdMenuId(restaurantId))
+            .AsNoTracking()
+            .Where(m => m.Restaurant == new MenuRestaurant(new RestaurantIdMenuId(restaurantId)))
             .Select(m =>
                 new MenuRestaurantDto(m.Name.Value.Value,
                 m.Groups.Select(g => new MenuGroupDto(

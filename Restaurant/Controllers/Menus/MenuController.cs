@@ -15,6 +15,8 @@ public class MenuController : ApiController
     {
     }
 
+    //TODO: change to single element
+    //TODO: make some flag to mark as active
     [HttpPost]
     [SwaggerOperation(Summary = "Create menu for restaurant.")]
     [SwaggerResponse(200, "", typeof(Result<MenuId>))]
