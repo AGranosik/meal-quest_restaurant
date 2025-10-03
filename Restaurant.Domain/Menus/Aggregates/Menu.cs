@@ -21,9 +21,9 @@ public sealed class Menu : Aggregate<MenuId>
 
     public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant restaurant)
     {
-        var validatioNResult = CreationValidation(groups, restaurant);
-        if (validatioNResult.IsFailed)
-            return validatioNResult;
+        var validationResult = CreationValidation(groups, restaurant);
+        if (validationResult.IsFailed)
+            return validationResult;
 
         var menu = new Menu(groups, name, restaurant);
         return Result.Ok(menu);

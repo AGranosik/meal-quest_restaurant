@@ -10,7 +10,7 @@ namespace domain.Restaurants.Aggregates;
 
 public sealed class Restaurant: Aggregate<RestaurantId>
 {
-    private List<Menu> _menus = new();
+    private readonly List<Menu> _menus = [];
     public IReadOnlyCollection<Menu> Menus => _menus.AsReadOnly();
 
     public Name Name { get; }
@@ -29,7 +29,7 @@ public sealed class Restaurant: Aggregate<RestaurantId>
     {
         if (_menus.Contains(menu))
             return Result.Fail("Menu already at restaurant.");
-
+        
         _menus.Add(menu);
         return Result.Ok();
     }

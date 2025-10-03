@@ -15,13 +15,11 @@ public class MenuController : ApiController
     {
     }
 
-    //TODO: change to single element
-    //TODO: make some flag to mark as active
     [HttpPost]
     [SwaggerOperation(Summary = "Create menu for restaurant.")]
     [SwaggerResponse(200, "", typeof(Result<MenuId>))]
     [SwaggerResponse(400, "Some error occured. Check logs with provided requestId.", typeof(Result))]
-    public async Task<IActionResult> CreateMenu(CreateMenusRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateMenu(CreateMenuRequest request, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(request.CastToCommand(), cancellationToken);
         return MapApplicationResultToHttpResponse(result);

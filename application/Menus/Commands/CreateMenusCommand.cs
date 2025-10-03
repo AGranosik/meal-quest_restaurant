@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Menus.Commands;
 
-internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenusCommand, Result<List<MenuId>>>
+internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuCommand, Result<MenuId>>
 {
     private readonly IMenuRepository _menuRepository;
     private readonly IMediator _mediator;
@@ -27,70 +27,59 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenusComm
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<Result<List<MenuId>>> Handle(CreateMenusCommand menusCommand, CancellationToken cancellationToken)
+    public async Task<Result<MenuId>> Handle(CreateMenuCommand command, CancellationToken cancellationToken)
     {
-        var validationResult = Validation(menusCommand);
+        var validationResult = Validation(command);
         if (validationResult.IsFailed)
             return validationResult;
-        var domainResult = CreateDomainModel(menusCommand.MenusCommand);
+        var domainResult = CreateDomainModel(command);
         if (domainResult.IsFailed)
             return domainResult.ToResult();
 
         await _menuRepository.CreateMenuAsync(domainResult.Value, cancellationToken);
         await _mediator.PublishEventsAsync<Menu, MenuId>(domainResult.Value, _logger, cancellationToken);
-        return domainResult.Value.Select(d => d.Id!).ToList();
+        return domainResult.Value.Id!;
     }
 
-    private static Result Validation(CreateMenusCommand? menusCommand)
+    private static Result Validation(CreateMenuCommand? command)
     {
-        if (menusCommand == null)
+        if (command is null)
             return Result.Fail("Command cannot be null.");
-        var command = menusCommand.MenusCommand;
-        if (command is null || command.Count == 0)
-            return Result.Fail("Command cannot be null.");
-
-        foreach (var menuCommand in command)
-        {
-            var groups = menuCommand.Groups;
-            if (!groups.Any())
-                return Result.Fail("Groups cannot be null.");
-
-
-            var meals = groups.SelectMany(g => g.Meals).ToList();
-            if (meals.Count == 0)
-                return Result.Fail("Meals cannot be null.");
+        
+        var groups = command.Groups;
+        if (!groups.Any())
+            return Result.Fail("Groups cannot be null.");
+        
+        var meals = groups.SelectMany(g => g.Meals).ToList();
+        if (meals.Count == 0)
+            return Result.Fail("Meals cannot be null.");
 
 
-            var ingredients = meals.SelectMany(m => m.Ingredients).ToList();
-            if (ingredients.Count == 0)
-                return Result.Fail("Ingredients cannot be null.");
+        var ingredients = meals.SelectMany(m => m.Ingredients).ToList();
+        if (ingredients.Count == 0)
+            return Result.Fail("Ingredients cannot be null.");
 
-            var categories = meals.SelectMany(m => m.Categories).ToList();
-            if (categories.Count == 0)
-                return Result.Fail("Categories cannot be null.");
+        var categories = meals.SelectMany(m => m.Categories).ToList();
+        if (categories.Count == 0)
+            return Result.Fail("Categories cannot be null.");
 
-            if (string.IsNullOrEmpty(menuCommand.Name))
-                return Result.Fail("Menu name cannot be empty.");
-        }
+        if (string.IsNullOrEmpty(command.Name))
+            return Result.Fail("Menu name cannot be empty.");
 
         return Result.Ok();
     }
 
-    private static Result<List<Menu>> CreateDomainModel(List<CreateMenuCommand> command)
+    private static Result<Menu> CreateDomainModel(CreateMenuCommand command)
     {
+        var commandGroups = command.Groups;
         //SAME CATEGORY REFERENCE
-        var commandGroups = command.SelectMany(c => c.Groups).ToList();
         var groups = new List<Group>(commandGroups.Count);
         var uniqueCategories = commandGroups.SelectMany(g => g.Meals)
             .SelectMany(m => m.Categories).Select(c => c.Name).Distinct()
             .Select(c => new Category(c))
             .ToList();
-
-        var menus = new List<Menu>(command.Count);
-
-        foreach (var menuCommand in command)
-        {
-            foreach (var commandGroup in menuCommand.Groups)
+        
+            foreach (var commandGroup in commandGroups)
             {
                 var meals = new List<Meal>(commandGroup.Meals.Count);
 
@@ -120,29 +109,17 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenusComm
                 groups.Add(group.Value);
             }
 
-            var menu = Menu.Create(groups, new Name(menuCommand.Name!),
-                new MenuRestaurant(new RestaurantIdMenuId(menuCommand.RestaurantId)));
+            var menu = Menu.Create(groups, new Name(command.Name!),
+                new MenuRestaurant(new RestaurantIdMenuId(command.RestaurantId)));
+            
             if (menu.IsFailed)
                 return Result.Fail(menu.Errors);
 
-            menus.Add(menu.Value);
-        }
-
-        return Result.Ok(menus);
+            return menu;
     }
 }
 
-public sealed class CreateMenusCommand : IRequest<Result<List<MenuId>>>
-{
-    public CreateMenusCommand(List<CreateMenuCommand> menusCommand)
-    {
-        MenusCommand = menusCommand ?? [];
-    }
-
-    public List<CreateMenuCommand> MenusCommand { get; init; }
-}
-
-public sealed class CreateMenuCommand
+public sealed class CreateMenuCommand : IRequest<Result<MenuId>>
 {
     public CreateMenuCommand(string? name, List<CreateGroupCommand> groups, int restaurantId)
     {

@@ -12,7 +12,7 @@ namespace integrationTests.Menus;
 [TestFixture]
 internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
 {
-    private const string _endpoint = "/api/Menu";
+    private const string Endpoint = "/api/Menu";
     public MenuEventEmitterFailureTests() : base([ContainersCreator.Postgres])
     {
     }
@@ -22,10 +22,10 @@ internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var result = await Client.TestPostAsync<CreateMenusRequest, List<MenuMenuId>>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10), CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(Endpoint, MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10), CancellationToken.None);
 
         result.Should().NotBeNull();
-        result![0].Value.Should().BeGreaterThan(0);
+        result!.Value.Should().BeGreaterThan(0);
     }
 
     [Test]
@@ -33,27 +33,25 @@ internal class MenuEventEmitterFailureTests : BaseMenuIntegrationTests
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var result = await Client.TestPostAsync<CreateMenusRequest, List<MenuMenuId>>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10), CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(Endpoint, MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10), CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Menu, MenuMenuId>()
-            .Where(e => e.StreamId == result![0].Value)
+            .Where(e => e.StreamId == result!.Value)
             .ToListAsync();
 
         events.Count.Should().Be(1);
         events[0].Data.Should().BeAssignableTo<Menu>();
     }
-
-    //TODO: TEST MULTIPLE MENUS
-    //TODO: REPLACE RESULT[0] WITH SOME METHODS -> JUST REFACTOR
+    
     [Test]
     public async Task CreateMenu_Valid_StoredFailureInEventStore()
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var result = await Client.TestPostAsync<CreateMenusRequest, List<MenuMenuId>>(_endpoint, MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10), CancellationToken.None);
+        var result = await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(Endpoint, MenuDataFaker.ValidRequests (3, 3, 3, restaurantId, 10), CancellationToken.None);
 
         var events = await EventDbContext.GetDbSet<Menu, MenuMenuId>()
-            .Where(e => e.StreamId == result![0].Value)
+            .Where(e => e.StreamId == result!.Value)
             .ToListAsync();
 
         events.Count.Should().Be(1);

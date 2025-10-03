@@ -25,18 +25,17 @@ internal class MenuRepository : IMenuRepository
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Result<List<MenuId>>> CreateMenuAsync(List<Menu> menus, CancellationToken cancellationToken)
+    public async Task<Result<MenuId>> CreateMenuAsync(Menu menu, CancellationToken cancellationToken)
     {
-        await HandleCategoriesUniqueness(menus, cancellationToken);
-        // _context.Restaurants.Attach(menu.Restaurant);
-        _context.Menus.AddRange(menus);
+        await HandleCategoriesUniqueness(menu, cancellationToken);
+        _context.Menus.Add(menu);
         await _context.SaveChangesAsync(cancellationToken);
-        return Result.Ok(menus.Select(m => m.Id!).ToList());
+        return Result.Ok(menu.Id!);
     }
 
-    private async Task HandleCategoriesUniqueness(List<Menu> menus, CancellationToken cancellationToken)
+    private async Task HandleCategoriesUniqueness(Menu menu, CancellationToken cancellationToken)
     {
-        var categoriesDomain = menus.SelectMany(m => m.Groups).SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
+        var categoriesDomain = menu.Groups.SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
         var uniqueCategories = categoriesDomain.Select(c => c.Name).Distinct();
 
         var dbCategories = await _context.Categories

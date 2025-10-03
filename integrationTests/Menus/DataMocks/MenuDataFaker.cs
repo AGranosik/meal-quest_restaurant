@@ -12,40 +12,33 @@ namespace integrationTests.Menus.DataMocks;
 
 internal static class MenuDataFaker
 {
-    internal static CreateMenusRequest ValidRequests(int numberOfMenus, int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId, int numberOfCategories)
+    internal static CreateMenuRequest ValidRequests(int numberOfGroupsPerMenu, int numberOfMealsPerGroup, int numberOfIngredientsPerMeal, int restaurantId, int numberOfCategories)
     {
-        var result = new List<CreateMenuRequest>(numberOfMenus);
-        for(var m = 0; m < numberOfMenus; m++)
+        var groups = new List<CreateGroupRequest>(numberOfGroupsPerMenu);
+
+        for(var g = 0; g < numberOfGroupsPerMenu; g++)
         {
-            var groups = new List<CreateGroupRequest>(numberOfGroupsPerMenu);
+            var meals = new List<CreateMealRequest>(numberOfMealsPerGroup);
 
-            for(var g = 0; g < numberOfGroupsPerMenu; g++)
+            for(var mealI = 0; mealI < numberOfMealsPerGroup; mealI++)
             {
-                var meals = new List<CreateMealRequest>(numberOfMealsPerGroup);
-
-                for(var mealI = 0; mealI < numberOfMealsPerGroup; mealI++)
+                var ingredients = new List<CreateIngredientRequest>(numberOfIngredientsPerMeal);
+                for(var i  = 0; i < numberOfIngredientsPerMeal; i++)
                 {
-                    var ingredients = new List<CreateIngredientRequest>(numberOfIngredientsPerMeal);
-                    for(var i  = 0; i < numberOfIngredientsPerMeal; i++)
-                    {
-                        ingredients.Add(new CreateIngredientRequest("ingredient" + i));
-                    }
-
-                    var categories = new List<string>(numberOfCategories);
-                    for (var i = 0; i < numberOfCategories; i++)
-                    {
-                        categories.Add(i.ToString());
-                    }
-                    meals.Add(new CreateMealRequest("meal" + mealI, mealI + 1, ingredients, categories));
+                    ingredients.Add(new CreateIngredientRequest("ingredient" + i));
                 }
 
-                groups.Add(new CreateGroupRequest("group" + g, meals));
+                var categories = new List<string>(numberOfCategories);
+                for (var i = 0; i < numberOfCategories; i++)
+                {
+                    categories.Add(i.ToString());
+                }
+                meals.Add(new CreateMealRequest("meal" + mealI, mealI + 1, ingredients, categories));
             }
-            
-            result.Add(new CreateMenuRequest("Menu" + m, groups, restaurantId));
+            groups.Add(new CreateGroupRequest("group" + g, meals));
         }
 
-        return new(result);
+        return new CreateMenuRequest("Menu", groups, restaurantId);
     }
 
     private static List<MenuRestaurant> Restaurants(int numberOfRestaurants)

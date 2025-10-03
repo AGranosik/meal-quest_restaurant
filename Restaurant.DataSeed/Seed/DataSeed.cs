@@ -68,8 +68,11 @@ public class DataSeed
             var scope = _serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
             var menuController = new MenuController(mediator);
-            
-            await menuController.CreateMenu(new CreateMenusRequest(menus), CancellationToken.None);
+
+            foreach (var menu in menus)
+            {
+                await menuController.CreateMenu(menu, CancellationToken.None);
+            }
             scope.Dispose();
             Console.WriteLine($"Menus for Restaurant: {restaurantId}");
             Console.WriteLine(DateTime.Now);

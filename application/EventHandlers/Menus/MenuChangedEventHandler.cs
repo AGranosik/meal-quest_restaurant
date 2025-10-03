@@ -29,8 +29,9 @@ internal sealed class MenuChangedEventHandler : AggregateChangedEventHandler<Men
         var policyResult = await FallbackRetryPolicies.AsyncRetry.ExecuteAndCaptureAsync(
             () => _restaurantRepository.AddMenuAsync(
                 RestaurantMenu.Create(
-                    new RestaurantMenuId(notification.Aggregate.Id!.Value),
-                    notification.Aggregate.Name!).Value,
+                    menuId: new RestaurantMenuId(notification.Aggregate.Id!.Value),
+                    name: notification.Aggregate.Name!
+                    ).Value,
                 new RRestaurantId(notification.Aggregate.Restaurant!.Id!.Value), cancellationToken));
 
         if (policyResult.Outcome == OutcomeType.Successful)

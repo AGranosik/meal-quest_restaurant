@@ -31,9 +31,9 @@ internal sealed class GetRestaurantMenuIntegrationTests : BaseMenuIntegrationTes
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var menus = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10);
-        await Client.TestPostAsync<CreateMenusRequest, List<MenuMenuId>>(ENDPOINT,
-            menus, TestContext.CurrentContext.CancellationToken);
+        var menu = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10);
+        await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT,
+            menu, TestContext.CurrentContext.CancellationToken);
         var response = await Client.GetAsync($"{ENDPOINT}{restaurantId + 1}");
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
@@ -43,20 +43,20 @@ internal sealed class GetRestaurantMenuIntegrationTests : BaseMenuIntegrationTes
     {
         var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
         var restaurantId = restaurants[0].Id!.Value;
-        var menus = MenuDataFaker.ValidRequests(1, 3, 3, 3, restaurantId, 10);
-        await Client.TestPostAsync<CreateMenusRequest, List<MenuMenuId>>(ENDPOINT,
-            menus, TestContext.CurrentContext.CancellationToken);
+        var menu = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10);
+        await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT,
+            menu, TestContext.CurrentContext.CancellationToken);
         var response = await Client.GetAsync($"{ENDPOINT}{restaurantId}");
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var resultString = await response.Content.ReadAsStringAsync();
         var result = resultString.Deserialize<MenuRestaurantDto>();
 
-        Compare(result!, menus.MenusRequest.First());
+        Compare(result!, menu);
     }
     
     private static bool Compare(MenuRestaurantDto dto, CreateMenuRequest request)
     {
-        return CompareName(dto.Name, request.Name)
+        return CompareName(dto.Name, request.Name!)
                && CompareGroups(dto.Groups, request.Groups);
     }
     private static bool CompareName(string dtoName, string requestName) =>
