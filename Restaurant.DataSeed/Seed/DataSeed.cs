@@ -159,7 +159,7 @@ public class DataSeed
                 groups.Add(group);
             }
 
-            menus.Add(new CreateMenuRequest(name, [..groups], restaurantId));
+            menus.Add(new CreateMenuRequest(name, [..groups], restaurantId, i == 0 ? true : false));
         }
 
         return menus;

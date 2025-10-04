@@ -36,14 +36,14 @@ public class MenuTests
     [Test]
     public void Creation_GroupsCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(null!,null!, null!);
+        var result = Menu.Create(null!,null!, null!, true);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_GroupsCannotBeEmpty_FailureResult()
     {
-        var result = Menu.Create([],null!, null!);
+        var result = Menu.Create([],null!, null!, true);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -51,42 +51,42 @@ public class MenuTests
     public void Creation_GroupsHaveToBeUnique_FailureResult()
     {
         var group = _validGroups[0];
-        var result = Menu.Create([group, group],null!, null!);
+        var result = Menu.Create([group, group],null!, null!, true);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_CategoriesCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(_validGroups,null!, null!);
+        var result = Menu.Create(_validGroups,null!, null!, true);
         result.IsFailed.Should().BeTrue();
     }
     
     [Test]
     public void Creation_NameCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(_validGroups,null!, null!);
+        var result = Menu.Create(_validGroups,null!, null!, true);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_RestaurantIdCannotBeNull_FailureResult()
     {
-        var result = Menu.Create(_validGroups, _validName, null!);
+        var result = Menu.Create(_validGroups, _validName, null!, true);
         result.IsFailed.Should().BeTrue();
     }
 
     [Test]
     public void Creation_SuccessResult()
     {
-        var menu = Menu.Create(_validGroups, _validName, _validRestaurant);
+        var menu = Menu.Create(_validGroups, _validName, _validRestaurant, true);
         menu.IsSuccess.Should().BeTrue();
     }
 
     [Test]
     public void Equality_SameReference_True()
     {
-        var menu = Menu.Create(_validGroups, _validName, _validRestaurant).Value;
+        var menu = Menu.Create(_validGroups, _validName, _validRestaurant, true).Value;
         (menu == menu).Should().BeTrue();
     }
 

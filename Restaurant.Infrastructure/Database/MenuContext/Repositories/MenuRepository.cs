@@ -36,10 +36,10 @@ internal class MenuRepository : IMenuRepository
     private async Task HandleCategoriesUniqueness(Menu menu, CancellationToken cancellationToken)
     {
         var categoriesDomain = menu.Groups.SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
-        var uniqueCategories = categoriesDomain.Select(c => c.Name).Distinct();
+        var uniqueCategories = categoriesDomain.Select(c => c.Name.Value).Distinct();
 
         var dbCategories = await _context.Categories
-            .Where(db => uniqueCategories.Contains(db.Name))
+            .Where(db => uniqueCategories.Contains(db.Name.Value))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
         //TODO: AVOID LOH ALLOCATIONS

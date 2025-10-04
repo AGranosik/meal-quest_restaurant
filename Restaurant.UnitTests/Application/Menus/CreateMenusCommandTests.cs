@@ -56,7 +56,7 @@ internal class CreateMenusCommandTests
     public async Task Creation_GroupsCannotBeNull_Fail()
     {
         var handler = new CreateMenuCommandHandler(_repositoryMock.Object, _mediatorMock.Object, _loggerMock.Object);
-        var result = await handler.Handle(new CreateMenuCommand(null, null!, 0), CancellationToken.None);
+        var result = await handler.Handle(new CreateMenuCommand(null, null!, 0, true), CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -68,7 +68,7 @@ internal class CreateMenusCommandTests
                 [
                     new CreateGroupCommand(null, null!)
                 ],
-                default),
+                default, true),
             CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
@@ -82,7 +82,7 @@ internal class CreateMenusCommandTests
             new CreateGroupCommand(null, [
                 new CreateMealCommand(null, 0, null!, null!)
             ])
-        ], default), CancellationToken.None);
+        ], default, true), CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -95,7 +95,7 @@ internal class CreateMenusCommandTests
             new CreateGroupCommand(null, [
                 new CreateMealCommand(null, 0, [new CreateIngredientCommand("test")], null!)
             ])
-        ], default), CancellationToken.None);
+        ], default, true), CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
 
@@ -107,7 +107,7 @@ internal class CreateMenusCommandTests
             new CreateGroupCommand(null, [
                 new CreateMealCommand(null, 1, [new CreateIngredientCommand("test")], [new CreateCategoryCommand("cat")])
             ])
-        ], default), CancellationToken.None);
+        ], default, true), CancellationToken.None);
         result.IsFailed.Should().BeTrue();
     }
 }

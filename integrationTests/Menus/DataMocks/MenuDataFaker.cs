@@ -38,7 +38,7 @@ internal static class MenuDataFaker
             groups.Add(new CreateGroupRequest("group" + g, meals));
         }
 
-        return new CreateMenuRequest("Menu", groups, restaurantId);
+        return new CreateMenuRequest("Menu", groups, restaurantId, true);
     }
 
     private static List<MenuRestaurant> Restaurants(int numberOfRestaurants)

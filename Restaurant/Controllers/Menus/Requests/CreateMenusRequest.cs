@@ -5,16 +5,18 @@ namespace webapi.Controllers.Menus.Requests;
 
 public sealed class CreateMenuRequest
 {
-    public CreateMenuRequest(string? name, List<CreateGroupRequest> groups, int restaurantId)
+    public CreateMenuRequest(string? name, List<CreateGroupRequest> groups, int restaurantId, bool isActive)
     {
         Name = name;
         Groups = groups;
         RestaurantId = restaurantId;
+        IsActive = isActive;
     }
 
     public string? Name { get; }
     public List<CreateGroupRequest> Groups { get; }
     public int RestaurantId { get; }
+    public bool IsActive { get; set; }
 
     public CreateMenuCommand CastToCommand()
     {
@@ -36,7 +38,7 @@ public sealed class CreateMenuRequest
             groups.Add(groupCommand);
         }
         
-        return new CreateMenuCommand(Name, groups, RestaurantId);
+        return new CreateMenuCommand(Name, groups, RestaurantId, IsActive);
     }
 }
 

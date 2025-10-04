@@ -12,9 +12,9 @@ public static class MenuDataFaker
     public const int RestaurantId = 2;
     public const int MenuId = 1;
 
-    public static Menu ValidMenu()
+    public static Menu ValidMenu(bool isActive = true)
     {
-        var menu = Menu.Create(ValidGroups, ValidName, ValidRestaurant).Value;
+        var menu = Menu.Create(ValidGroups, ValidName, ValidRestaurant, isActive).Value;
         menu.SetId(new MenuId(MenuId));
         return menu;
     }

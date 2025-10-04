@@ -110,7 +110,7 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
             }
 
             var menu = Menu.Create(groups, new Name(command.Name!),
-                new MenuRestaurant(new RestaurantIdMenuId(command.RestaurantId)));
+                new MenuRestaurant(new RestaurantIdMenuId(command.RestaurantId)), command.IsActive);
             
             if (menu.IsFailed)
                 return Result.Fail(menu.Errors);
@@ -121,16 +121,18 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
 
 public sealed class CreateMenuCommand : IRequest<Result<MenuId>>
 {
-    public CreateMenuCommand(string? name, List<CreateGroupCommand> groups, int restaurantId)
+    public CreateMenuCommand(string? name, List<CreateGroupCommand> groups, int restaurantId, bool isActive)
     {
         Name = name;
         Groups = groups ?? [];
         RestaurantId = restaurantId;
+        IsActive = isActive;
     }
 
-    public string? Name { get; init; }
-    public List<CreateGroupCommand> Groups { get; init; }
-    public int RestaurantId { get; init; }
+    public string? Name { get; }
+    public List<CreateGroupCommand> Groups { get; }
+    public int RestaurantId { get; }
+    public bool IsActive { get; }
 }
 
 public record CreateGroupCommand

@@ -12,25 +12,27 @@ public sealed class Menu : Aggregate<MenuId>
 {
     [JsonConstructor]
     private Menu() { }
-    private Menu(List<Group> groups, Name name, MenuRestaurant restaurant)
+    private Menu(List<Group> groups, Name name, MenuRestaurant restaurant, bool isActive)
     {
         Groups = groups;
         Name = name;
         Restaurant = restaurant;
+        IsActive = isActive;
     }
 
-    public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant restaurant)
+    public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant restaurant, bool isActive)
     {
         var validationResult = CreationValidation(groups, restaurant);
         if (validationResult.IsFailed)
             return validationResult;
 
-        var menu = new Menu(groups, name, restaurant);
+        var menu = new Menu(groups, name, restaurant, isActive);
         return Result.Ok(menu);
     }
     public Name Name { get; }
     public List<Group> Groups { get; }
     public MenuRestaurant Restaurant { get; }
+    public bool IsActive { get; }
 
     private static Result CreationValidation(List<Group> groups, MenuRestaurant restaurantId)
     {

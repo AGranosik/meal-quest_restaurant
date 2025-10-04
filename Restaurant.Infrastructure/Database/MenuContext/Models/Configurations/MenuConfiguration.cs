@@ -22,9 +22,8 @@ internal class MenuConfiguration : IEntityTypeConfiguration<Menu>
         builder.Property(m => m.Restaurant)
             .HasConversion(r => r.Id!.Value, db => new MenuRestaurant(new RestaurantIdMenuId(db)))
             .HasColumnName("RestaurantID");
-        
-        // builder.Property(m => m.Restaurant)
-        //     .HasConversion(r => r.Value, db => new RestaurantIdMenuId(db));
+
+        builder.Property(m => m.IsActive);
         
 
         builder.Property(m => m.Name)
@@ -32,5 +31,10 @@ internal class MenuConfiguration : IEntityTypeConfiguration<Menu>
 
         builder.HasMany(m => m.Groups)
             .WithMany();
+        
+        builder
+            .HasIndex(e => e.Id)
+            .HasFilter(@"""IsActive"" = TRUE")
+            .IsUnique();
     }
 }

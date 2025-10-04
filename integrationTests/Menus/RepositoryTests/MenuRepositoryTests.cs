@@ -7,6 +7,7 @@ using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using domain.Menus.ValueObjects.Identifiers;
+using sharedTests.DataFakers;
 
 namespace integrationTests.Menus.RepositoryTests;
 
@@ -51,7 +52,21 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     public async Task CreateMenu_CannotBeNull_ThrowsException()
     {
         var repo = CreateRepository();
-        var action = () => repo.CreateMenuAsync(null!, CancellationToken.None);
+        var action = () => repo.CreateMenuAsync(null!, TestContext.CurrentContext.CancellationToken);
+        await action.Should().ThrowAsync<Exception>();
+    }
+    
+    [Test]
+    public async Task CreateMenu_AlreadyActiveExists_Throws()
+    {
+        var menu = MenuDataFaker.ValidMenu();
+        var repo = CreateRepository();
+        await CreateRestaurant(repo, menu.Restaurant.Id!.Value);
+        
+        await repo.CreateMenuAsync(menu, TestContext.CurrentContext.CancellationToken);
+        
+        var menu2 = MenuDataFaker.ValidMenu();
+        var action = () => repo.CreateMenuAsync(menu2, TestContext.CurrentContext.CancellationToken);
         await action.Should().ThrowAsync<Exception>();
     }
 
@@ -73,4 +88,8 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
 
     private MenuRepository CreateRepository()
         => new(DbContext);
+
+    private Task CreateRestaurant(MenuRepository repository, int restaurantId)
+        => repository.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restaurantId)),
+            TestContext.CurrentContext.CancellationToken);
 }
