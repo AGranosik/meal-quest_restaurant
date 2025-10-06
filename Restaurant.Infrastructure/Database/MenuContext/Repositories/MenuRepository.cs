@@ -1,4 +1,5 @@
 ﻿using application.Menus.Commands.Interfaces;
+using core.SimpleTypes;
 using domain.Menus.Aggregates;
 using domain.Menus.Aggregates.Entities;
 using domain.Menus.ValueObjects;
@@ -35,23 +36,45 @@ internal class MenuRepository : IMenuRepository
 
     private async Task HandleCategoriesUniqueness(Menu menu, CancellationToken cancellationToken)
     {
-        var categoriesDomain = menu.Groups.SelectMany(g => g.Meals).SelectMany(m => m.Categories).ToList();
-        var uniqueCategories = categoriesDomain.Select(c => c.Name.Value).Distinct();
+        var allCategories = menu.Groups
+            .SelectMany(g => g.Meals)
+            .SelectMany(m => m.Categories)
+            .ToList();
+
+        var uniqueCategoryNames = allCategories
+            .Select(c => c.Name)
+            .DistinctBy(c => c.Value)
+            .ToList();
 
         var dbCategories = await _context.Categories
-            .Where(db => uniqueCategories.Contains(db.Name.Value))
+            .Where(db => uniqueCategoryNames.Contains(db.Name))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-        //TODO: AVOID LOH ALLOCATIONS
-        var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name.Value != c.Name.Value)).Distinct().ToList();
-        _context.Categories.AddRange(notExistingCategories);
-        await _context.SaveChangesAsync(cancellationToken);
-        
-        foreach (var dbCategory in dbCategories)
+
+        var dbCategoryNames = new HashSet<string>(dbCategories.Select(c => c.Name.Value));
+
+        var notExistingCategories = allCategories
+            .Where(c => !dbCategoryNames.Contains(c.Name.Value))
+            .GroupBy(c => c.Name.Value)
+            .Select(g => g.First())
+            .ToList();
+
+        if (notExistingCategories.Count > 0)
         {
-            var category = categoriesDomain.First(cd => cd.Name.Value == dbCategory.Name.Value);
-            category.SetId(dbCategory.Id!);
-            _context.Categories.Attach(category);
+            _context.Categories.AddRange(notExistingCategories);
+            await _context.SaveChangesAsync(cancellationToken);
+            _context.Categories.
+        }
+
+        var dbCategoryLookup = dbCategories.ToDictionary(c => c.Name.Value, c => c.Id);
+
+        foreach (var category in allCategories)
+        {
+            if (dbCategoryLookup.TryGetValue(category.Name.Value, out var id))
+            {
+                category.SetId(id!);
+                _context.Categories.Attach(category);
+            }
         }
     }
 }
