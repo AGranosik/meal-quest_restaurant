@@ -25,6 +25,7 @@ public static class MenuDataFaker
     public static List<Category> ValidCategories
         => [new Category("Restaurant"), new Category("Meal")];
     
+    // fix creation
     public static List<Group> ValidGroups
         =>
         [

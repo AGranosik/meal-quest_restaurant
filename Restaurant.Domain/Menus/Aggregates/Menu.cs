@@ -47,4 +47,6 @@ public sealed class Menu : Aggregate<MenuId>
 
         return Result.Ok();
     }
+    
+    
 }
