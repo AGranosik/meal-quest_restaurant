@@ -21,7 +21,7 @@ public class MenuTests
     public void SetUp()
     {
         _validName = MenuDataFaker.ValidName;
-        _validGroups = MenuDataFaker.ValidGroups;
+        _validGroups = MenuDataFaker.ValidGroups();
         _validRestaurant = MenuDataFaker.ValidRestaurant;
         _validCategories = MenuDataFaker.ValidCategories;
         

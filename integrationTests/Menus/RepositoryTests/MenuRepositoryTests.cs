@@ -7,6 +7,7 @@ using integrationTests.Common;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using domain.Menus.ValueObjects.Identifiers;
+using Npgsql;
 using sharedTests.DataFakers;
 
 namespace integrationTests.Menus.RepositoryTests;
@@ -30,7 +31,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
 
         var dbRestaurant = await DbContext.Restaurants
             .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.Id == new  RestaurantIdMenuId(restaurantId));
+            .FirstOrDefaultAsync(r => r.Id! == new  RestaurantIdMenuId(restaurantId));
         dbRestaurant.Should().NotBeNull();
     }
 
@@ -41,7 +42,8 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         var repo = CreateRepository();
         var restaurant = new MenuRestaurant(new RestaurantIdMenuId(restaurantId));
         await repo.CreateRestaurantAsync(restaurant, TestContext.CurrentContext.CancellationToken);
-    DbContext.Restaurants.Entry(restaurant).State = EntityState.Detached;
+        
+        DbContext.ChangeTracker.Clear();
         var action = () =>
             repo.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restaurantId)),
                 TestContext.CurrentContext.CancellationToken);
@@ -56,6 +58,8 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         await action.Should().ThrowAsync<Exception>();
     }
     
+
+    
     [Test]
     public async Task CreateMenu_AlreadyActiveExists_Throws()
     {
@@ -65,17 +69,50 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         
         await repo.CreateMenuAsync(menu, TestContext.CurrentContext.CancellationToken);
         
+        DbContext.ChangeTracker.Clear();
         var menu2 = MenuDataFaker.ValidMenu();
         var action = () => repo.CreateMenuAsync(menu2, TestContext.CurrentContext.CancellationToken);
-        await action.Should().ThrowAsync<Exception>();
+        await action.Should().ThrowAsync<DbUpdateException>();
+    }
+    
+    [Test]
+    public async Task CreateInactiveMenu_AlreadyActiveExists_Success()
+    {
+        var menu = MenuDataFaker.ValidMenu();
+        var repo = CreateRepository();
+        await CreateRestaurant(repo, menu.Restaurant.Id!.Value);
+        
+        await repo.CreateMenuAsync(menu, TestContext.CurrentContext.CancellationToken);
+        
+        DbContext.ChangeTracker.Clear();
+        var menu2 = MenuDataFaker.ValidMenu(false, menu.Id!.Value + 1);
+        var action = () => repo.CreateMenuAsync(menu2, TestContext.CurrentContext.CancellationToken);
+        await action.Should().NotThrowAsync();
+    
+        var menus = await DbContext.Menus.ToListAsync();
+        menus.Should().Contain(menu => menu.Id! == menu2.Id!);
+        menus.Count.Should().Be(2);
+    }
+    
+    [Test]
+    public async Task CreateMenu_Success()
+    {
+        var menu = MenuDataFaker.ValidMenu();
+        var repo = CreateRepository();
+        await CreateRestaurant(repo, menu.Restaurant.Id!.Value);
+        
+        await repo.CreateMenuAsync(menu, TestContext.CurrentContext.CancellationToken);
+        var dbMenu = DbContext.Menus.FirstAsync(m => m.Id == menu.Id);
+        dbMenu.Should().NotBeNull();
     }
 
     protected override async Task OneTimeSetUp()
     {
         await base.OneTimeSetUp();
-        Connection = DbContext.Database.GetDbConnection();
-        await Connection.OpenAsync();
-        Respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
+        var connString = DbContext.Database.GetConnectionString();
+        await using var conn = new NpgsqlConnection(connString);
+        await conn.OpenAsync();
+        Respawner = await Respawner.CreateAsync(conn, new RespawnerOptions
         {
             DbAdapter = DbAdapter.Postgres,
             SchemasToInclude =
@@ -89,7 +126,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
     private MenuRepository CreateRepository()
         => new(DbContext);
 
-    private Task CreateRestaurant(MenuRepository repository, int restaurantId)
+    private static Task CreateRestaurant(MenuRepository repository, int restaurantId)
         => repository.CreateRestaurantAsync(new MenuRestaurant(new RestaurantIdMenuId(restaurantId)),
             TestContext.CurrentContext.CancellationToken);
 }

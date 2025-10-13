@@ -30,7 +30,7 @@ internal class MenuChangedEventHandlerTests : AggregateChangedEventHandlerTests<
         var action = () => handler.Handle(@event, CancellationToken.None);
 
         await action.Should().NotThrowAsync();
-        _restaurantRepository.Verify(r => r.AddMenuAsync(It.Is<Menu>(m => m.Id!.Value == MenuDataFaker.MenuId), It.Is<RestaurantId>(r => r.Value == MenuDataFaker.RestaurantId), It.IsAny<CancellationToken>()));
+        _restaurantRepository.Verify(r => r.AddMenuAsync(It.Is<Menu>(m => m.Id!.Value == 1), It.Is<RestaurantId>(r => r.Value == MenuDataFaker.RestaurantId), It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -44,7 +44,7 @@ internal class MenuChangedEventHandlerTests : AggregateChangedEventHandlerTests<
         var action = () => handler.Handle(@event, CancellationToken.None);
 
         await action.Should().NotThrowAsync();
-        _restaurantRepository.Verify(r => r.AddMenuAsync(It.Is<Menu>(m => m.Id!.Value == MenuDataFaker.MenuId), It.Is<RestaurantId>(r => r.Value == MenuDataFaker.RestaurantId), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
+        _restaurantRepository.Verify(r => r.AddMenuAsync(It.Is<Menu>(m => m.Id!.Value == 1), It.Is<RestaurantId>(r => r.Value == MenuDataFaker.RestaurantId), It.IsAny<CancellationToken>()), Times.Exactly(FallbackRetryPolicies.NUMBER_OF_RETRIES + 1));
         CheckIfLoggedError();
     }
 

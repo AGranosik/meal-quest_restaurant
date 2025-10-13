@@ -75,7 +75,9 @@ internal sealed class CreateMenuCommandHandler : IRequestHandler<CreateMenuComma
         //SAME CATEGORY REFERENCE
         var groups = new List<Group>(commandGroups.Count);
         var uniqueCategories = commandGroups.SelectMany(g => g.Meals)
-            .SelectMany(m => m.Categories).Select(c => c.Name).Distinct()
+            .SelectMany(m => m.Categories)
+            .Select(c => c.Name)
+            .Distinct()
             .Select(c => new Category(c))
             .ToList();
         

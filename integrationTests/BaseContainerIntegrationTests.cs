@@ -3,6 +3,7 @@ using System.Data.Common;
 using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Respawn;
 
 namespace integrationTests;
@@ -42,10 +43,13 @@ internal class BaseContainerIntegrationTests<TDbContext>
     {
         _scope = _factory.Services.CreateScope();
         // await SetUpDbContext();
-        var connection = DbContext.Database.GetDbConnection();
-        if(connection.State != ConnectionState.Open)
-            await connection.OpenAsync();
-        await Respawner!.ResetAsync(connection);
+        var connString = DbContext.Database.GetConnectionString();
+        await using var conn = new NpgsqlConnection(connString);
+        await conn.OpenAsync();
+        await Respawner!.ResetAsync(conn);
+        if(conn.State != ConnectionState.Open)
+            await conn.OpenAsync();
+        await Respawner!.ResetAsync(conn);
 
         foreach (var entity in DbContext.ChangeTracker.Entries())
         {
