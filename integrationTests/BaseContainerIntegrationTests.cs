@@ -28,11 +28,18 @@ internal class BaseContainerIntegrationTests<TDbContext>
     [OneTimeSetUp]
     protected virtual async Task OneTimeSetUp()
     {
-        var containersToStop = IntegrationSetup.Containers.Where(c => !_containers.Contains(c)).ToList();
-        foreach (var container in containersToStop)
+        var tasks = new List<Task>();
+        foreach (var container in IntegrationSetup.Containers)
         {
-            await container.StopAsync();
+            if(container.State != TestcontainersStates.Running && _containers.Contains(container))
+                tasks.Add(container.StartAsync());
+            else if (container.State is TestcontainersStates.Running or TestcontainersStates.Restarting && !_containers.Contains(container))
+            {
+                tasks.Add(container.StopAsync());
+            }
         }
+
+        await Task.WhenAll(tasks);
         Client = _factory.CreateClient();
         _scope = _factory.Services.CreateScope();
         await SetUpDbContext();
@@ -42,11 +49,9 @@ internal class BaseContainerIntegrationTests<TDbContext>
     public async Task SetUp()
     {
         _scope = _factory.Services.CreateScope();
-        // await SetUpDbContext();
         var connString = DbContext.Database.GetConnectionString();
         await using var conn = new NpgsqlConnection(connString);
         await conn.OpenAsync();
-        await Respawner!.ResetAsync(conn);
         if(conn.State != ConnectionState.Open)
             await conn.OpenAsync();
         await Respawner!.ResetAsync(conn);
@@ -60,19 +65,12 @@ internal class BaseContainerIntegrationTests<TDbContext>
     [TearDown]
     public void TearDown()
     {
-        // DbContext.Dispose();
         _scope.Dispose();
     }
 
     [OneTimeTearDown]
     public virtual async Task OneTimeTearDown()
     {
-        // await StopContainersAsync();
-        var containersToRun = IntegrationSetup.Containers.Where(c => c.State != TestcontainersStates.Running).ToList();
-        foreach (var container in containersToRun)
-        {
-            await container.StartAsync();
-        }
         await _factory.DisposeAsync();
         Client.Dispose();
         await DbContext.DisposeAsync();
@@ -103,9 +101,6 @@ internal class BaseContainerIntegrationTests<TDbContext>
         where TDiffDbContext : DbContext
     {
         var dbContext = _scope.ServiceProvider.GetRequiredService<TDiffDbContext>();
-        // var migrations = await dbContext.Database.GetAppliedMigrationsAsync();
-        // //for some reasone sometimes they are nto applied 
-        // if (migrations.Any()) return dbContext;
         try
         {
             await dbContext.Database.MigrateAsync();
@@ -113,7 +108,7 @@ internal class BaseContainerIntegrationTests<TDbContext>
         catch (Exception e)
         {
             Console.WriteLine(e);
-            // throw;
+            throw;
         }
         return dbContext;
     }
