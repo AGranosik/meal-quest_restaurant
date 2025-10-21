@@ -15,6 +15,7 @@ public sealed class GetRestaurantMenusQueryHandler : IRequestHandler<GetRestaura
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     }
 
+    //TODO: filt based on isActive flag
     public Task<MenuRestaurantDto?> Handle(GetRestaurantMenusQuery request, CancellationToken cancellationToken)
         => _repository.GetRestaurantMenu(request.RestaurantId, cancellationToken);
 }

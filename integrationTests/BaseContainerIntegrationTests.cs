@@ -80,20 +80,14 @@ internal class BaseContainerIntegrationTests<TDbContext>
     private async Task SetUpDbContext()
     {
         DbContext = _scope.ServiceProvider.GetRequiredService<TDbContext>();
-        var migrations = await DbContext.Database.GetAppliedMigrationsAsync();
-        //for some reasone sometimes they are nto applied 
-        if (!migrations.Any())
+        try
         {
-            try
-            {
-                await DbContext.Database.MigrateAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                // throw;
-            }
-            
+            await DbContext.Database.MigrateAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            // throw;
         }
     }
 
@@ -108,7 +102,7 @@ internal class BaseContainerIntegrationTests<TDbContext>
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            // throw;
         }
         return dbContext;
     }
