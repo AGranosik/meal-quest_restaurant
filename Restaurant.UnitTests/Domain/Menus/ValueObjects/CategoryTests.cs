@@ -4,7 +4,6 @@ using FluentAssertions;
 
 namespace unitTests.Domain.Menus.ValueObjects;
 
-//TODO: generic tests
 [TestFixture]
 public class CategoryTests
 {

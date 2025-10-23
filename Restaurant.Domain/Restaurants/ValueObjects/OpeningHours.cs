@@ -11,8 +11,6 @@ public sealed class OpeningHours : ValueObject<OpeningHours>
     private readonly List<WorkingDay> _workingDays = [];
     public IReadOnlyCollection<WorkingDay> WorkingDays => _workingDays;
 
-
-    //TODO: omit migrations files from code coverage
     public static Result<OpeningHours> Create(List<WorkingDay> workingDays)
     {
         var validationResult = Validation(workingDays);

@@ -17,7 +17,6 @@ internal sealed class MenuEventEmitter : IEventEmitter<Menu>
     {
         try
         {
-            //TODO: GENERIC
             using var rabbitTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(BusServiceConfiguration.TimeoutLimit));
             using var mergedCancellationToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, rabbitTimeout.Token);
             await _publishEndpoint.Publish(new MenuChangedDto(@event), mergedCancellationToken.Token);

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Database.MenuContext.Repositories;
 
-// TODO: SHould not throw on the same menu 
 internal class MenuRepository : IMenuRepository
 {
     private readonly MenuDbContext _context;
@@ -41,7 +40,6 @@ internal class MenuRepository : IMenuRepository
             .Where(db => uniqueCategories.Contains(db.Name))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-        //TODO: AVOID LOH ALLOCATIONS
         var notExistingCategories = categoriesDomain.Where(c => dbCategories.All(db => db.Name.Value != c.Name.Value)).Distinct().ToList();
         _context.Categories.AddRange(notExistingCategories);
         await _context.SaveChangesAsync(cancellationToken);
@@ -51,8 +49,6 @@ internal class MenuRepository : IMenuRepository
             var category = categoriesDomain.First(cd => cd.Name.Value == dbCategory.Name.Value);
             category.SetId(dbCategory.Id!);
             _context.Categories.Attach(category);
-
-
         }
     }
 }
