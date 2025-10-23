@@ -18,7 +18,9 @@ internal sealed class ReadMenuRepository : IReadMenuRepository
     public Task<MenuRestaurantDto?> GetRestaurantMenu(int restaurantId, CancellationToken cancellationToken)
         => _dbContext.Menus
             .AsNoTracking()
-            .Where(m => m.Restaurant == new MenuRestaurant(new RestaurantIdMenuId(restaurantId)))
+            .Where(m => m.Restaurant == new MenuRestaurant(new RestaurantIdMenuId(restaurantId))
+                && m.IsActive
+            )
             .Select(m =>
                 new MenuRestaurantDto(m.Name.Value.Value,
                 m.Groups.Select(g => new MenuGroupDto(

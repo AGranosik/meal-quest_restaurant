@@ -51,7 +51,40 @@ internal sealed class GetRestaurantMenuIntegrationTests : BaseMenuIntegrationTes
         var resultString = await response.Content.ReadAsStringAsync();
         var result = resultString.Deserialize<MenuRestaurantDto>();
 
-        Compare(result!, menu);
+        Compare(result!, menu).Should().BeTrue();
+    }
+    
+    [Test]
+    public async Task GetMenu_SingleNotActiveElementInDb_NotFound()
+    {
+        var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
+        var restaurantId = restaurants[0].Id!.Value;
+        var menu = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10, false);
+        await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT,
+            menu, TestContext.CurrentContext.CancellationToken);
+        var response = await Client.GetAsync($"{ENDPOINT}{restaurantId}");
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+    
+    [Test]
+    public async Task GetMenu_MultipleInDb_OnlyActiveReturned()
+    {
+        var restaurants = await MenuDataFaker.CreateRestaurantsAsync(DbContext, 1);
+        var restaurantId = restaurants[0].Id!.Value;
+        var activeMenu = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10);
+        await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT,
+            activeMenu, TestContext.CurrentContext.CancellationToken);
+        
+        var inActiveMenu = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId, 10, false);
+        await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT,
+            inActiveMenu, TestContext.CurrentContext.CancellationToken);
+        
+        var response = await Client.GetAsync($"{ENDPOINT}{restaurantId}");
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var resultString = await response.Content.ReadAsStringAsync();
+        var result = resultString.Deserialize<MenuRestaurantDto>();
+
+        Compare(result!, activeMenu).Should().BeTrue();
     }
     
     private static bool Compare(MenuRestaurantDto dto, CreateMenuRequest request)
