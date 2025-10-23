@@ -20,13 +20,13 @@ public sealed class Menu : Aggregate<MenuId>
         IsActive = isActive;
     }
 
-    public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant restaurant, bool isActive)
+    public static Result<Menu> Create(List<Group> groups,Name name, MenuRestaurant? restaurant, bool isActive)
     {
         var validationResult = CreationValidation(groups, restaurant);
         if (validationResult.IsFailed)
             return validationResult;
 
-        var menu = new Menu(groups, name, restaurant, isActive);
+        var menu = new Menu(groups, name, restaurant!, isActive);
         return Result.Ok(menu);
     }
     public Name Name { get; }
@@ -34,19 +34,14 @@ public sealed class Menu : Aggregate<MenuId>
     public MenuRestaurant Restaurant { get; }
     public bool IsActive { get; }
 
-    private static Result CreationValidation(List<Group> groups, MenuRestaurant restaurantId)
+    private static Result CreationValidation(List<Group> groups, MenuRestaurant? restaurantId)
     {
-        if (groups is null || groups.Count == 0)
+        if (groups.Count == 0)
             return Result.Fail("Groups are missing.");
 
         if (!groups.HasUniqueValues())
             return Result.Fail("Groups has to be unique.");
 
-        if (restaurantId is null)
-            return Result.Fail("Restaurant id cannot be null.");
-
-        return Result.Ok();
+        return restaurantId is null ? Result.Fail("Restaurant id cannot be null.") : Result.Ok();
     }
-    
-    
 }

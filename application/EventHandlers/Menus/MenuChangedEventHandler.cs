@@ -37,7 +37,7 @@ internal sealed class MenuChangedEventHandler : AggregateChangedEventHandler<Men
         if (policyResult.Outcome == OutcomeType.Successful)
             return true;
 
-        _logger.LogError(policyResult.FinalException, "Problem with handling menu repository save. {AggregateName}, Id: {Id}", nameof(Restaurant), notification.Aggregate.Id!.Value);
+        Logger.LogError(policyResult.FinalException, "Problem with handling menu repository save. {AggregateName}, Id: {Id}", nameof(Restaurant), notification.Aggregate.Id!.Value);
 
         return false;
     }

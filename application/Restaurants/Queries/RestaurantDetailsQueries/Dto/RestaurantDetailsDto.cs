@@ -6,4 +6,4 @@ public sealed record RestaurantDetailsDto(int Id,
     OpeningHoursDto OpeningHours,
     AddressDto Address,
     string Description,
-    string Base64Logo);
+    string? Base64Logo);

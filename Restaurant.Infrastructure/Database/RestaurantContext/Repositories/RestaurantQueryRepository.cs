@@ -27,7 +27,7 @@ internal sealed class RestaurantQueryRepository : IRestaurantQueryRepository
                         new AddressDto(r.Owner.Address.Street!.Value.Value, r.Owner.Address.City!.Value.Value, r.Owner.Address.Coordinates!.X, r.Owner.Address.Coordinates.Y)),
                     new OpeningHoursDto(r.OpeningHours.WorkingDays.Select(wd => new WorkingDayDto(wd.Day, wd.From, wd.To)).ToList()),
                     r.Description.Value.Value,
-                    r.Logo == null ? null : Convert.ToBase64String(r.Logo.Data)))
+                    r.Logo == null ? null : Convert.ToBase64String(r.Logo.Data!)))
             .ToListAsync(cancellationToken);
 
     public Task<RestaurantDetailsDto?> GetRestaurantsForRestaurant(int restaurantId, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ internal sealed class RestaurantQueryRepository : IRestaurantQueryRepository
                  r.Id!.Value!, new OpeningHoursDto(r.OpeningHours.WorkingDays.Select(wd => new WorkingDayDto(wd.Day, wd.From, wd.To)).ToList()),
                  new AddressDto(r.Address.Street!.Value.Value, r.Address.City.Value.Value, r.Address.Coordinates!.X, r.Address.Coordinates.Y),
                  r.Description.Value.Value,
-                 r.Logo == null ? null : Convert.ToBase64String(r.Logo.Data)
+                 r.Logo == null ? null : Convert.ToBase64String(r.Logo.Data!)
                  ))
             .FirstOrDefaultAsync(cancellationToken);
 }

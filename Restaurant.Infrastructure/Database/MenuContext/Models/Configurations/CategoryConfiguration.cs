@@ -12,7 +12,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        const string idName = "CategoryID";
         builder.ToTable(MenuDatabaseConstants.Categories, MenuDatabaseConstants.Schema);
         builder.Property(c => c.Id)
             .HasConversion(c => c!.Value, db => new CategoryId(db))

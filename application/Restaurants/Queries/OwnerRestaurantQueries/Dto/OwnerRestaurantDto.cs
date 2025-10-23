@@ -7,7 +7,7 @@ public sealed record OwnerRestaurantDto(
     OwnerDto Owner,
     OpeningHoursDto OpeningHours,
     string Description,
-    string Base64Logo);
+    string? Base64Logo);
 
 
 

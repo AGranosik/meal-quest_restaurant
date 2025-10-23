@@ -24,14 +24,14 @@ internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotifi
     where TKey : SimpleValueType<int, TKey>
     where TAggregate : Aggregate<TKey>
 {
-    protected readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
-    protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> _logger;
-    protected readonly IEventEmitter<TAggregate> _eventEmitter;
+    private readonly IEventInfoStorage<TAggregate, TKey> _eventInfoStorage;
+    protected readonly ILogger<AggregateChangedEventHandler<TAggregate, TKey>> Logger;
+    private readonly IEventEmitter<TAggregate> _eventEmitter;
 
     protected AggregateChangedEventHandler(IEventInfoStorage<TAggregate, TKey> eventInfoStorage, ILogger<AggregateChangedEventHandler<TAggregate, TKey>> logger, IEventEmitter<TAggregate> eventEmitter)
     {
         _eventInfoStorage = eventInfoStorage;
-        _logger = logger;
+        Logger = logger;
         _eventEmitter = eventEmitter;
     }
 
@@ -44,7 +44,7 @@ internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotifi
         var storedSuccessfully = policyResult.Outcome == OutcomeType.Successful;
 
         if (!storedSuccessfully)
-            _logger.LogError(policyResult.FinalException, "Problem with storage {AggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
+            Logger.LogError(policyResult.FinalException, "Problem with storage {AggreateName} Id: {Id}", typeof(TAggregate).Name, notification.Aggregate.Id!.Value);
 
         var result = await HandleEventAsync(notification, cancellationToken);
         if (result && storedSuccessfully)
@@ -60,7 +60,7 @@ internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotifi
             .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreFailureAsync(eventId, cancellationToken));
 
         if (policyResult.Outcome == OutcomeType.Failure)
-            _logger.LogError(policyResult.FinalException, "Problem with failure storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
+            Logger.LogError(policyResult.FinalException, "Problem with failure storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
     }
 
     private async Task ProcessSuccessAsync(TKey notificationId, int eventId, CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ internal abstract class AggregateChangedEventHandler<TAggregate, TKey> : INotifi
             .ExecuteAndCaptureAsync(() => _eventInfoStorage.StoreSuccessAsyncAsync(eventId, cancellationToken));
 
         if (policyResult.Outcome == OutcomeType.Failure)
-            _logger.LogError(policyResult.FinalException, "Problem with success storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
+            Logger.LogError(policyResult.FinalException, "Problem with success storage. {AggregateName}, Id: {Id}", typeof(TAggregate).Name, notificationId);
     }
 
     protected abstract Task<bool> ProcessEventAsync(AggregateChangedEvent<TAggregate, TKey> notification, CancellationToken cancellationToken);

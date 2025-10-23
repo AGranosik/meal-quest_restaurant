@@ -40,7 +40,7 @@ internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRes
         return Result.Ok(domainResult.Value.Id!);
     }
 
-    private static Result CommandValidation(CreateRestaurantCommand command)
+    private static Result CommandValidation(CreateRestaurantCommand? command)
     {
         if (command is null)
             return Result.Fail("Command cannot be null.");
@@ -80,10 +80,7 @@ internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRes
         if (command.Address is null)
             return Result.Fail("Restaurant address cannot be null.");
         
-        if(command.Description is null)
-            return Result.Fail("Description cannot be null.");
-
-        return Result.Ok();
+        return command.Description is null ? Result.Fail("Description cannot be null.") : Result.Ok();
     }
 
     private static Result<Restaurant> CreateDomainModel(CreateRestaurantCommand request)
@@ -127,7 +124,10 @@ internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRes
 
         if (openingHours.IsFailed) return openingHours.ToResult();
 
-        var restaurantAddressResult = Address.Create(new Street(request.Address.Street!), new City(request.Address.City!), new Coordinates(request.Address.XCoordinate, request.Address.YCoordinate));
+        if(request.Address is null)
+            Result.Fail("Restaurant address cannot be null.");
+        
+        var restaurantAddressResult = Address.Create(new Street(request.Address!.Street!), new City(request.Address.City!), new Coordinates(request.Address.XCoordinate, request.Address.YCoordinate));
 
         if(restaurantAddressResult.IsFailed) return restaurantAddressResult.ToResult();
 
@@ -148,12 +148,12 @@ public record CreateRestaurantCommand : IRequest<Result<RestaurantId>>
         this.LogoData = LogoData;
     }
 
-    public string? Name { get; init; }
-    public CreateOwnerCommand? Owner { get; init; }
+    public string? Name { get; }
+    public CreateOwnerCommand? Owner { get; }
     public OpeningHoursCommand? OpeningHours { get; }
-    public CreateAddressCommand? Address { get; init; }
-    public string? Description { get; init; }
-    public byte[]? LogoData { get; init; }
+    public CreateAddressCommand? Address { get; }
+    public string? Description { get; }
+    public byte[]? LogoData { get; }
 }
 
 public record CreateOwnerCommand
@@ -180,10 +180,10 @@ public record CreateAddressCommand
         this.YCoordinate = YCoordinate;
     }
 
-    public string? Street { get; init; }
-    public string? City { get; init; }
-    public double XCoordinate { get; init; }
-    public double YCoordinate { get; init; }
+    public string? Street { get; }
+    public string? City { get; }
+    public double XCoordinate { get; }
+    public double YCoordinate { get; }
 }
 
 public record OpeningHoursCommand
@@ -205,7 +205,7 @@ public record  WorkingDayCommand
         this.To = To;
     }
 
-    public DayOfWeek Day { get; init; }
-    public DateTime From { get; init; }
-    public DateTime To { get; init; }
+    public DayOfWeek Day { get; }
+    public DateTime From { get; }
+    public DateTime To { get; }
 }

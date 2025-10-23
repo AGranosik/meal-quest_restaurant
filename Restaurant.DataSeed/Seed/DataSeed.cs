@@ -53,8 +53,8 @@ public class DataSeed
             i++;
             var result = await restaurantController.CreateRestaurantAsync(restaurant, CancellationToken.None);
             var okResult = result as OkObjectResult;
-            var data = okResult.Value as RestaurantId;
-            restaurantsId.Add(data.Value);
+            var data = okResult!.Value as RestaurantId;
+            restaurantsId.Add(data!.Value);
 
 
             scope.Dispose();

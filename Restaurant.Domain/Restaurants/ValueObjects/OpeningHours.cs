@@ -12,22 +12,25 @@ public sealed class OpeningHours : ValueObject<OpeningHours>
     public IReadOnlyCollection<WorkingDay> WorkingDays => _workingDays;
 
 
+    //TODO: omit migrations files from code coverage
     public static Result<OpeningHours> Create(List<WorkingDay> workingDays)
     {
-        var validatioNresult = Validation(workingDays);
-        if (validatioNresult.IsFailed)
-            return validatioNresult;
+        var validationResult = Validation(workingDays);
+        if (validationResult.IsFailed)
+            return validationResult;
 
         return Result.Ok(new OpeningHours(workingDays));
     }
+#pragma warning disable CS0628 // New protected member declared in sealed type
     protected OpeningHours() { }
+#pragma warning restore CS0628 // New protected member declared in sealed type
 
     private OpeningHours(List<WorkingDay> workingDays)
     {
         _workingDays = workingDays;
     }
 
-    private static Result Validation(List<WorkingDay> workingDays)
+    private static Result Validation(List<WorkingDay>? workingDays)
     {
         if (workingDays is null)
             return Result.Fail("");

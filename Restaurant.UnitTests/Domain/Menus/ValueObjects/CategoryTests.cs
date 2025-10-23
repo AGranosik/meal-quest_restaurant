@@ -5,7 +5,6 @@ using FluentAssertions;
 namespace unitTests.Domain.Menus.ValueObjects;
 
 //TODO: generic tests
-//TODO: REMOVE WARNINGS
 [TestFixture]
 public class CategoryTests
 {

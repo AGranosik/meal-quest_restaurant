@@ -58,8 +58,6 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         await action.Should().ThrowAsync<Exception>();
     }
     
-
-    
     [Test]
     public async Task CreateMenu_AlreadyActiveExists_Throws()
     {
@@ -90,7 +88,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         await action.Should().NotThrowAsync();
     
         var menus = await DbContext.Menus.ToListAsync();
-        menus.Should().Contain(menu => menu.Id! == menu2.Id!);
+        menus.Should().Contain(m => m.Id! == menu2.Id!);
         menus.Count.Should().Be(2);
     }
     
@@ -102,7 +100,7 @@ internal class MenuRepositoryTests : BaseContainerIntegrationTests<MenuDbContext
         await CreateRestaurant(repo, menu.Restaurant.Id!.Value);
         
         await repo.CreateMenuAsync(menu, TestContext.CurrentContext.CancellationToken);
-        var dbMenu = DbContext.Menus.FirstAsync(m => m.Id == menu.Id);
+        var dbMenu = DbContext.Menus.FirstAsync(m => m.Id! == menu.Id!);
         dbMenu.Should().NotBeNull();
     }
 

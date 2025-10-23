@@ -133,7 +133,7 @@ internal sealed class GetRestaurantMenuIntegrationTests : BaseMenuIntegrationTes
                 return false;
 
             if (!CompareLists(dtoMeal.Ingredients.Select(i => i.Name), 
-                              requestMeal.Ingredients?.Select(i => i.Name) ?? Enumerable.Empty<string>()))
+                              requestMeal.Ingredients.Select(i => i.Name!)))
                 return false;
         }
 

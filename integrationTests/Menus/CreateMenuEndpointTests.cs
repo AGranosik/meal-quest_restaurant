@@ -23,7 +23,7 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     [Test]
     public async Task CreateMenu_RequestIsNull_BadRequest()
     {
-        var response = await Client.PostAsJsonAsync<CreateMenuRequest?>(ENDPOINT, null, CancellationToken.None);
+        var response = await Client.PostAsJsonAsync<CreateMenuRequest?>(ENDPOINT, null, TestContext.CurrentContext.CancellationToken);
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         var anyMenus = await DbContext.Menus.AnyAsync();
@@ -72,7 +72,7 @@ internal class CreateMenuEndpointTests : BaseMenuIntegrationTests
     {
         var restaurantId = await MenuDataFaker.CreateRestaurantForSystem(Client);
 
-        var request = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId.Value, 10);
+        var request = MenuDataFaker.ValidRequests(3, 3, 3, restaurantId!.Value, 10);
         var result =
             await Client.TestPostAsync<CreateMenuRequest, MenuMenuId>(ENDPOINT, request, CancellationToken.None);
 
