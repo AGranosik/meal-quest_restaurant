@@ -16,28 +16,12 @@ public sealed class CreateMenuRequest
     public string? Name { get; }
     public List<CreateGroupRequest> Groups { get; }
     public int RestaurantId { get; }
-    public bool IsActive { get; set; }
+    public bool IsActive { get; }
 
     public CreateMenuCommand CastToCommand()
     {
         var groups = new List<CreateGroupCommand>(Groups.Count);
-        foreach (var group in Groups)
-        {
-            var meals = new List<CreateMealCommand>(group.Meals.Count);
-
-            foreach (var meal in group.Meals)
-            {
-                //TODO: MAP METHODS ON EACH CLASS 
-                var categories = meal.Categories.Select(c => new CreateCategoryCommand(c)).ToList();
-                meals.Add(new CreateMealCommand(meal.Name, meal.Price,
-                    meal.Ingredients.Select(i => new CreateIngredientCommand(i.Name)).ToList(),
-                    categories));
-            }
-
-            var groupCommand = new CreateGroupCommand(group.Name, meals);
-            groups.Add(groupCommand);
-        }
-        
+        groups.AddRange(Groups.Select(group => group.CastToCommand()));
         return new CreateMenuCommand(Name, groups, RestaurantId, IsActive);
     }
 }
@@ -52,6 +36,15 @@ public record CreateGroupRequest
 
     public string? Name { get; }
     public List<CreateMealRequest> Meals { get; }
+
+    public CreateGroupCommand CastToCommand()
+    {
+        var meals = new List<CreateMealCommand>(Meals.Count);
+        meals.AddRange(Meals.Select(meal => meal.CastToCommand()));
+
+        var groupCommand = new CreateGroupCommand(Name, meals);
+        return groupCommand;
+    }
 }
 
 public sealed class CreateMealRequest
@@ -68,6 +61,14 @@ public sealed class CreateMealRequest
     public decimal Price { get; }
     public List<CreateIngredientRequest> Ingredients { get; }
     public List<string> Categories { get; }
+
+    public CreateMealCommand CastToCommand()
+    {
+        var categories = Categories.Select(c => new CreateCategoryCommand(c)).ToList();
+        return new CreateMealCommand(Name, Price,
+            Ingredients.Select(i => new CreateIngredientCommand(i.Name)).ToList(),
+            categories);
+    }
 }
 
 public record CreateIngredientRequest
