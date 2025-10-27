@@ -1,0 +1,383 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.UnitTests\\unitTests.csproj": {}
+  },
+  "projects": {
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\application.csproj",
+        "projectName": "application",
+        "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\application.csproj",
+        "packagesPath": "C:\\Users\\Adrian Granosik\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Adrian Granosik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj"
+              },
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "MassTransit": {
+              "target": "Package",
+              "version": "[8.3.4, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj",
+        "projectName": "core",
+        "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj",
+        "packagesPath": "C:\\Users\\Adrian Granosik\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Adrian Granosik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "FluentResults": {
+              "target": "Package",
+              "version": "[3.16.0, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[12.4.1, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj",
+        "projectName": "domain",
+        "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj",
+        "packagesPath": "C:\\Users\\Adrian Granosik\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Adrian Granosik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core\\core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\sharedTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\sharedTests.csproj",
+        "projectName": "sharedTests",
+        "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\sharedTests.csproj",
+        "packagesPath": "C:\\Users\\Adrian Granosik\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Adrian Granosik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.UnitTests\\unitTests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.UnitTests\\unitTests.csproj",
+        "projectName": "unitTests",
+        "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.UnitTests\\unitTests.csproj",
+        "packagesPath": "C:\\Users\\Adrian Granosik\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.UnitTests\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Adrian Granosik\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\application.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application\\application.csproj"
+              },
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain\\domain.csproj"
+              },
+              "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\sharedTests.csproj": {
+                "projectPath": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared\\sharedTests.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "FluentAssertions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.10.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[4.3.2, )"
+            },
+            "NUnit.Analyzers": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[4.6.0, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

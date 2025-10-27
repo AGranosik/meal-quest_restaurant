@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 
 namespace application.Restaurants.Commands;
 
-//TODO: reduce mappings
 internal sealed class CreateRestaurantCommandHandler : IRequestHandler<CreateRestaurantCommand, Result<RestaurantId>>
 {
     private readonly IRestaurantRepository _repository;

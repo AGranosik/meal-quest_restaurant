@@ -36,7 +36,7 @@ public sealed class Menu : Aggregate<MenuId>
 
     private static Result CreationValidation(List<Group> groups, MenuRestaurant? restaurantId)
     {
-        if (groups.Count == 0)
+        if (groups is null || groups.Count == 0)
             return Result.Fail("Groups are missing.");
 
         if (!groups.HasUniqueValues())

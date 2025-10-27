@@ -1,0 +1,8 @@
+{
+  "application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\application",
+  "core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Core",
+  "domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Domain",
+  "infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant.Infrastructure",
+  "sharedTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Tests\\Restaurant.Shared",
+  "webapi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\Coding\\MealQuest\\meal-quest_restaurant\\Restaurant"
+}
