@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="unitTests" />
+		<InternalsVisibleTo Include="integrationTests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Restaurant.Core\core.csproj" />
+    <ProjectReference Include="..\Restaurant.Domain\domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.3.4" />
+  </ItemGroup>
+
+</Project>
